@@ -1,35 +1,5 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "Dr. Clément Coïc",
-    "section": "",
-    "text": "Hey there! I am Clément - Clem for you!\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
-    "crumbs": [
-      "About"
-    ]
-  },
-  {
-    "objectID": "about.html#about-the-site",
-    "href": "about.html#about-the-site",
-    "title": "Dr. Clément Coïc",
-    "section": "About the site",
-    "text": "About the site\nBut you are not here for me, you are here for the reading about modeling and simulation! With this series of articles, I try to bring you all the knowledge you need to understand the topic progressively. These are all articles from my LinkedIn Newsletter: Learn Modelica & FMI. These are short articles that you can read during your break. So the articles are rather short and sequentially growing in complexity.\nWhy having them also as a separate website? For a couple of reasons: 1. For convenience: it might simpler for some to read them in such a format than on LinkedIn. 2. For readability: these are here written in markdown and this allows for additional capability - especially when it comes to code. 3. For contributions: as all the website is hosted on GitHub, expert can contribute to improve the content. Sometimes a few added words can clarify a sentence or some small additions can lead to great insights. I am open to your suggestions!\nUnless you want to read a few lines about me, this is where (and when) it all began -&gt;",
-    "crumbs": [
-      "About"
-    ]
-  },
-  {
-    "objectID": "about.html#about-me",
-    "href": "about.html#about-me",
-    "title": "Dr. Clément Coïc",
-    "section": "About me?",
-    "text": "About me?\nI am a happy husband and father of two amazing boys - who are making my life even more exciting than my work 😉.\nI have a pationating job: I am leading the Technology Cluster for Digital Mechatronics at Siemens Healthineers. Taking shorcuts, I am responsible for building up a team of experts in digitalization, and trigger and lead technological projects to enhance the development of our mechatronic products.\nPrior to that, I was Team Lead and Model-based Development expert at Modelon and at other industry leaders such as Airbus Helicopters and Dassault Systèmes.\nI do have quite too many engineering degrees 😅: two MSc - in France and Spain - in System Engineering and Mechanical Engineering, and a PhD on model-based hydraulic actuation system design for helicopters. Why? I could tell you when we meet 😉",
-    "crumbs": [
-      "About"
-    ]
-  },
-  {
     "objectID": "005-ModelRefactoring.html",
     "href": "005-ModelRefactoring.html",
     "title": "Good models are not a one time thing",
@@ -239,102 +209,110 @@
     ]
   },
   {
-    "objectID": "007-AcausalityEquation.html",
-    "href": "007-AcausalityEquation.html",
-    "title": "Acausality, the secret service of Modelica",
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Dr. Clément Coïc",
     "section": "",
-    "text": "Acausality explained\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nToday, we are at the 007 article of this series - the James Bond article… We need some kind of Secret Agent story! So we are covering one of the key capabilities of the Modelica language: acausality. You’ll see, it is like a super agent with lots of gadgets, solving a lot of our problems!\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "text": "Hey there! I am Clément - Clem for you!\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
     "crumbs": [
-      "Modelica",
-      "Acausality, the secret service of Modelica"
+      "Home"
     ]
   },
   {
-    "objectID": "007-AcausalityEquation.html#acausa-what",
-    "href": "007-AcausalityEquation.html#acausa-what",
-    "title": "Acausality, the secret service of Modelica",
-    "section": "Acausa… what?",
-    "text": "Acausa… what?\nYep, that’s exactly what most of the people think. And to be fair, you have to search quite a bit on the internet to be sure that I did not make up this word.\nIn a nutshell, acausality is the lack of causality. 🙄 Feel free to thank me in the comment for this one… And for my defense, it is true! We just need to discuss causality first. Causality is in its general definition the “relation from cause to effect”. But what does it mean for us, in the modeling and simulation world? It means more specifically the definition of inputs and outputs - the inputs causes the effects on the outputs. A causal model shall receive its input(s) in order to compute its output(s).\n\n\n\nFor a causal model with parameters, inputs are given and outputs are computed by the model\n\n\nSo an acausal model is a model for which inputs and outputs are not defined at first. Based on the variables that you provide, the model is “turned around” to solved for the remaining variables. Acausality is the property - here of a model or a language - to be acausal.\nNote: this image is NOT representing a block diagram. Block diagrams are NOT causal by default. Some are (e.g. Simulink) and some aren’t (e.g. Modelica.Blocks). This is just a schematic here.",
+    "objectID": "about.html#about-the-site",
+    "href": "about.html#about-the-site",
+    "title": "Dr. Clément Coïc",
+    "section": "About the site",
+    "text": "About the site\nBut you are not here for me, you are here for the reading about modeling and simulation! With this series of articles, I try to bring you all the knowledge you need to understand the topic progressively. These are all articles from my LinkedIn Newsletter: Learn Modelica & FMI. These are short articles that you can read during your break. So the articles are rather short and sequentially growing in complexity.\nWhy having them also as a separate website? For a couple of reasons: 1. For convenience: it might simpler for some to read them in such a format than on LinkedIn. 2. For readability: these are here written in markdown and this allows for additional capability - especially when it comes to code. 3. For contributions: as all the website is hosted on GitHub, expert can contribute to improve the content. Sometimes a few added words can clarify a sentence or some small additions can lead to great insights. I am open to your suggestions!\nUnless you want to read a few lines about me, this is where (and when) it all began -&gt;",
     "crumbs": [
-      "Modelica",
-      "Acausality, the secret service of Modelica"
+      "Home"
     ]
   },
   {
-    "objectID": "007-AcausalityEquation.html#why-is-that-useful",
-    "href": "007-AcausalityEquation.html#why-is-that-useful",
-    "title": "Acausality, the secret service of Modelica",
-    "section": "Why is that useful?",
-    "text": "Why is that useful?\nLet’s step back and look at a single equation:\n1. F = (1/2 * rho * c_d * A) * v^2\nThis is the typical friction F (units [N] ) of a body of surface A [m^2] evolving at a given speed v [m/s] in a fluid of density rho [kg/m^3]. (c_d is the unitless drag coefficient and is function of how aerodynamic the body is.)\nNote that I put all parameters in brackets so that we can easily see that the two variables F and v are related by a set of parameters. We can just create a new parameter K = (1/2 * rho * c_d * A) (with units [N/(m/s)^2]) and we end up with F = K * v^2.\nFor our example, let’s consider that we are healthy engineers and we like to go for a run from time to time. If you don’t, you should. If you don’t want to… please bear with me as this is today’s example. Oh, and the speed is the relative to the wind speed and here we will just consider the wind to be 0 - because our focus is on the (a)causality only.",
+    "objectID": "about.html#about-me",
+    "href": "about.html#about-me",
+    "title": "Dr. Clément Coïc",
+    "section": "About me?",
+    "text": "About me?\nI am a happy husband and father of two amazing boys - who are making my life even more exciting than my work 😉.\nI have a pationating job: I am leading the Technology Cluster for Digital Mechatronics at Siemens Healthineers. Taking shorcuts, I am responsible for building up a team of experts in digitalization, and trigger and lead technological projects to enhance the development of our mechatronic products.\nPrior to that, I was Team Lead and Model-based Development expert at Modelon and at other industry leaders such as Airbus Helicopters and Dassault Systèmes.\nI do have quite too many engineering degrees 😅: two MSc - in France and Spain - in System Engineering and Mechanical Engineering, and a PhD on model-based hydraulic actuation system design for helicopters. Why? I could tell you when we meet 😉",
     "crumbs": [
-      "Modelica",
-      "Acausality, the secret service of Modelica"
+      "Home"
     ]
   },
   {
-    "objectID": "007-AcausalityEquation.html#speed-control",
-    "href": "007-AcausalityEquation.html#speed-control",
-    "title": "Acausality, the secret service of Modelica",
-    "section": "Speed control",
-    "text": "Speed control\nLet’s say you have a watch tracking your speed and you start slowly increasing your speed until 10km/h. That’s a convenient speed because you’ll unlikely get a speed ticket at this pace. So you know the speed and can compute the force you’ll have to face when running at this speed. (We should not forget to convert the units!)\nBelow is a simple Modelica model, written in code (we are slowly introducing parts of the Modelica language here) and the simulation result.\n\n\n\nSimple Modelica code of the runner’s drag friction\n\n\nWe see that the Modelica code is quite readable: - The model starts with model ModelName (here the ModelName is Runner) and ends with end ModelName; - Then we have different types of variables: 1. The variables which value will not change during the time simulation are called parameters and are identified by a keyword parameter. Here I need to stop for a second and expand on this. Modelica makes a difference between constant and parameter. A constant has the value specified once before compilation and the value cannot change. The parameter can get its value changed until the simulation starts. (This last sentence is still partly incorrect as there are differences between structural and non-structural parameters, but let’s keep that for later.) 2. The variables which value can change during the simulation. These are time variable and do not have such a keyword that precedes them. - Here we specified the “type” of the parameters and variables with their units, that are available in the Modelica Standard Library (we often refer to it as MSL). But behind, these are all Real with specific units. - Note that we could define a final parameter, which basically freezes how the parameter is computed from the others. You cannot overwrite its definition later on when using this model. - Finally, we have an equation section where we write the time relationships of our variables - (And the small a on line 14 hides a lot of graphical and dependency annotations that I could have removed but I wanted to keep them so you know they exist. No need to dig into these now)\nThere is something to highlight here: we have two (2) variables and thus have two (2) equations 🤔 This is trivial and yet, needs to be noted. Variables are unknowns. They need to get values from the model. So here, we specify the speed of our runner and then we specify the relationship between force and speed. Naturally, we expect the simulation to compute first the speed and then the force, from the speed and all parameters. This happens and gives us this nice parabolic curve:\n\n\n\nForce / speed dependency on the drag friction model\n\n\nNow, this looks like a causal model that takes the speed as “input” and “outputs” the force. You could say I am cheating and put the equations in the right order and form. Let me show you something else.\n\n\n\nA second runner model, perfectly equivalent to the first one, from a Modelica perspective\n\n\nI have now reshuffled the equations: the order is different and the force/speed relationship is also turned around. The model simulates perfectly fine and behaves identically. This is no problem. Modelica can change the order of the equations and turned them around as needed, as the language is acausal.",
+    "objectID": "010-WhatDynamicSimulationDoes.html",
+    "href": "010-WhatDynamicSimulationDoes.html",
+    "title": "What Dynamic Simulation Does?",
+    "section": "",
+    "text": "What Dynamic Simulation Does?\nI hope you’ve got your preferred drink in hand ☕️🫖💧\n📬 📰 Saturday editions - for having more time to read during the weekend! Let’s experiment for a few weeks. Let me know if this is not a convenient day (❓).\nLast week, we solved a puzzling question: which tank empties first? And while at the beginning one could think they would empty in the same amount of time, we reflected on how things would look like “a small amount of time later”… and it became clear that one would definitely empty faster than the other.\nAt this point, we touched about the need for Dynamic Simulation.\nToday, let’s dig into what dynamic simulation is.\nUseless note: One could argue that this should have been one of the first posts, and as it is the number 10, it is indeed just the second somehow… (“There are 10 types of people: those who know how to count in binary and those who don’t”)\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
     "crumbs": [
       "Modelica",
-      "Acausality, the secret service of Modelica"
+      "What Dynamic Simulation Does?"
     ]
   },
   {
-    "objectID": "007-AcausalityEquation.html#may-the-force-be-with-you",
-    "href": "007-AcausalityEquation.html#may-the-force-be-with-you",
-    "title": "Acausality, the secret service of Modelica",
-    "section": "May the force be with you!",
-    "text": "May the force be with you!\nNow what happens if the speed is NOT known? You might NOT run with a watch telling you your current speed (or you might have one and not car about it). Or you are facing a uphill part of your track and cannot make it to the 10km/h because you are putting the bulk of your energy into going uphill.\nNote: and this latter example shows that, intuitively, it is NOT enough to just model your friction for measuring your effort, you obviously need the ground inclination, your weight etc. Just saying to bring back in mind the topic of “what’s your modeling goal”. And here, we don’t mind because we focus on (a)causality only. But obviously, running is not just about fighting 2N of front force…\nYou might actually just “feel” how much effort you want to put. And let’s assume that the force you put in fighting the aerodynamic drag oscillates between 1N and 2N. Then the Modelica model changes slightly: only the equation section, the speed is no more specified and the force is.\n\n\n\nThe Modelica compiler is able to use the equation on line 11 to solve the speed from the known force on line 12.\n\n\nNow this should be quite impressive. The compiler understands that the line 12 specifies the force F; there is no dependence on speed, only on time. Therefore it will have to manipulate equation 11 to solve the speed from the computed force from line 12.\nLet me say decompose that again. The compiler is able to 1. turn the equations around to solve for the right variable (causalization) and 2. reorder them (sequencing).\n1. F = 1.5 + sin( time ) / 2\n2. v = sqrt( F / K )\nWe will see this in more detail in a next article. Keep in mind the words 🙂",
+    "objectID": "010-WhatDynamicSimulationDoes.html#the-status-quo",
+    "href": "010-WhatDynamicSimulationDoes.html#the-status-quo",
+    "title": "What Dynamic Simulation Does?",
+    "section": "The status quo",
+    "text": "The status quo\nLet’s take another example. I love bicycles so let’s talk about bikes. 🚲\nSimilar to the runner’s case, we might want to calculate the force we have to push on the pedals to keep a cruise speed of 20km/h on a flat road or going uphill. We can study with or without a headwind. (And if you are in the UK or US or other non-SI unit country 😉, just change km/h for mph and you’ll just have to go about 1.6 times faster. Good luck! 😉)\nSee how we naturally wanted to calculate THE force? For each case, we are looking at an equilibrium: the speed is one value, and so the force is one value too. Sure, there are boundary conditions, namely the slope and the wind. And we can create test cases making these boundary conditions change. For each, we’ll get the value of the force.\nAnd for each case, there is only one force because we are at equilibrium - here constant speed. This is a steady-state analysis. For the tanks, imagine the tap would be closed: the pressure at the bottom would be constant and there would be no flow to change this “status quo”. But what happens if we open the tap?",
     "crumbs": [
       "Modelica",
-      "Acausality, the secret service of Modelica"
+      "What Dynamic Simulation Does?"
     ]
   },
   {
-    "objectID": "007-AcausalityEquation.html#whats-my-body-surface",
-    "href": "007-AcausalityEquation.html#whats-my-body-surface",
-    "title": "Acausality, the secret service of Modelica",
-    "section": "What’s my body surface?",
-    "text": "What’s my body surface?\nAlready, you might understand now the power of acausality. The models are made of the equations that describe the system - the physics you want to model -, and the compiler can manipulate them to solve for your specified problem.\nBut it is not stopping here with Modelica! You can additionally find out parameter values if you specify the values of all variables (at initial time). So for the equation F = K*v^2, if F and v are known at initial time, the compiler will find out that value of K, and if all the parameters composing K are known but one (let’s say the area A), then this one will be found out! 🤯\n\n\n\nComputing the Area parameter value to match the requested speed and force at initial time.\n\n\nFor this to work, we needed to do two things: add an initial equation AND relax the parameter - i.e. saying its value is unknown - by using the construct fixed=false. In practice, below is what the resulting equations look like at initial time.\nAt initial time:\n1. F = 1.5 N\n2. v = 2 m/s\n3. K = F / v^2\n4. A = K / (0.5 * rho * c_d)\nNote: we are touching the idea of a “square system” of equation. Let us just say here at loud that we need for a system to be solvable to have as many unknown as the number of independent equations. We will reinforce this concept in the near future.",
+    "objectID": "010-WhatDynamicSimulationDoes.html#its-about-the-journey",
+    "href": "010-WhatDynamicSimulationDoes.html#its-about-the-journey",
+    "title": "What Dynamic Simulation Does?",
+    "section": "It’s about the journey",
+    "text": "It’s about the journey\nYou know the quotes that go something like:\n\nit is not about the destination, it’s about the journey.\n\n(There are many quotes that sound similar so this one might be slightly different to the one you know, and it is hard to provide the credit to someone specific. Anyway…)\nDynamic simulation is like that: less about the (steady-state) destination, and more about the journey.\nSo you know an initial “state”. (We’ll talk about what a state really is later.) And this state is not at equilibrium - not steady. So the game of dynamic simulation is to “predict” how the system state will evolve over time. Until… the desired time (or a steady-state!).\n\n\n\nDynamic simulation is about computing the trajectory of the states\n\n\nThe time t_0 represents an initial time and we know the value of the state y at this time - hence y_0. We want to find out y_1 at time t_1 and so on. And you notice how the times are not necessarily equally spaced? This is for another day, yet just keep in mind that the steps we take are not necessarily equally spaced.\nBut eh, the dashed line is the solution, let’s just use it, no? Well of course, we don’t know it! I just put it there for you to see that the goal is to predict the points (❌) on the line. And in between the points? We can interpolate, with the right level of smoothing.\nSo how do we make sure that we “predict” the right values? Well, there is not much luck into this: we don’t really predict but compute. And we compute based on our model - as we saw over the last 10 posts!",
     "crumbs": [
       "Modelica",
-      "Acausality, the secret service of Modelica"
+      "What Dynamic Simulation Does?"
     ]
   },
   {
-    "objectID": "007-AcausalityEquation.html#a-philosophical-note",
-    "href": "007-AcausalityEquation.html#a-philosophical-note",
-    "title": "Acausality, the secret service of Modelica",
-    "section": "A philosophical note…",
-    "text": "A philosophical note…\nI want us to wrap things up here with a bit of a philosophical note: causality is not physical. Some even call it “computational causality”. Causality is a step to be able to solve the computational problem. There is no causality in nature.",
+    "objectID": "010-WhatDynamicSimulationDoes.html#from-equations-to-solutions",
+    "href": "010-WhatDynamicSimulationDoes.html#from-equations-to-solutions",
+    "title": "What Dynamic Simulation Does?",
+    "section": "From equations to solutions",
+    "text": "From equations to solutions\nIt is hard to talk about simulation without really showing an equation. Let me try to keep it to the minimal.\nDynamic systems involve dynamics… and dynamics are modeled with differential equations. Basically something like:\ny_dot = f(y,u,t)\nAnd y_dot is the time derivative of y. But what does that mean? The time derivative of a variable is the rate of change of this variable over time. It basically tells you in which direction and at which “pace” it will change its value. u are potential inputs (e.g. the speed of the wind or the ground slope)\nSo if we know the speed v of our runner and we keep in mind that the speed is the derivative of the position x, then we can - knowing the initial position of the runner and its speed - compute its new position after a given amount of time (assuming the speed does not change in this amount of time).\nSo now we have the question: do we know the new speed? Well, actually, if we have the equation v = f(x , u, t) and we know x, (potentially u,) and t then we can compute v!\nSo now we just need to get the new value of x at the next time step. And so it goes.",
     "crumbs": [
       "Modelica",
-      "Acausality, the secret service of Modelica"
+      "What Dynamic Simulation Does?"
     ]
   },
   {
-    "objectID": "007-AcausalityEquation.html#the-end-for-today",
-    "href": "007-AcausalityEquation.html#the-end-for-today",
-    "title": "Acausality, the secret service of Modelica",
+    "objectID": "010-WhatDynamicSimulationDoes.html#you-are-hiding-something",
+    "href": "010-WhatDynamicSimulationDoes.html#you-are-hiding-something",
+    "title": "What Dynamic Simulation Does?",
+    "section": "You are hiding something!",
+    "text": "You are hiding something!\nI kind of hide something here… how do you compute x knowing v? Well that is what a solver does. I don’t want to enter today into that topic because it is already quite a long theoretical article… but the simplest (not the best) solver is Forward Euler and I explain it here if you are impatient. 😊\nAnd the right question to ask next is whether we cannot just solve the differential equation analytically instead of using a solver? Yes, in theory. It however gets really complex really fast because we usually have many variables and the equations are all but simple. So in practice, it is often impossible. Solvers are key to our simulations.",
+    "crumbs": [
+      "Modelica",
+      "What Dynamic Simulation Does?"
+    ]
+  },
+  {
+    "objectID": "010-WhatDynamicSimulationDoes.html#an-example-to-wrap-things-up",
+    "href": "010-WhatDynamicSimulationDoes.html#an-example-to-wrap-things-up",
+    "title": "What Dynamic Simulation Does?",
+    "section": "An example to wrap things up",
+    "text": "An example to wrap things up\nOne of the first example I learned was a “quarter of a vehicle”. It basically means that you take a car, you cut it in 4 and look at a quarter. It is a fair thing to do if you assume the weight distribution to be equally spread over the four wheels. And we just look at the vertical displacement.\nSo you have a very simple model that looks like a typical oscillator: a mass (quarter of the car mass) on which applies gravity (here the constant force), a spring-damper for the suspension and the floor that is slightly moving because it is not perfectly flat.\n\n\n\nQuarter of a vehicle model\n\n\nAssume the car is stopped. The floor won’t be moving with respect to the car… hopefully. We can see by simulating, how much the car will “sink” on its suspension and which steady-state it will reach.\nNow if we start driving, we will have the height of the floor constantly changing and that induces a compression on the spring and some dissipation from the damper. A resulting force will be applied to the mass that will be combined with the gravity… I might have lost you here. If so, go to the next paragraph, it is OK. If not, let’s continue: Newton told us that the sum of forces - over a constant mass (taking shortcuts here) - equals the mass multiplied by the acceleration. Acceleration! We get the new acceleration and that is the derivative of the speed, so we can use the solver to compute it! And from the speed, the position! Tadaaaam! And we can just go to the next step and repeat.\nBasically, the model you build will have the equations behind to express the relations between the states of your system and their derivatives. And so you’ll be able to compute these and let the solver tell you what the next states are.\nAnd hopefully, the mass (on which you might be sitting - the car - but not while reading this!) might not oscillate too much!",
+    "crumbs": [
+      "Modelica",
+      "What Dynamic Simulation Does?"
+    ]
+  },
+  {
+    "objectID": "010-WhatDynamicSimulationDoes.html#the-end-for-today",
+    "href": "010-WhatDynamicSimulationDoes.html#the-end-for-today",
+    "title": "What Dynamic Simulation Does?",
     "section": "The END for today",
-    "text": "The END for today\nEnough for today. Next time, we will see how to use this concept for a larger system and in the graphical user interface.\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
+    "text": "The END for today\nEnough for today. This was an abstract one and I hope it’s OK. I had to cover the process.\nNext time, we will go into something more applied. I initially wanted to cover what solvers do, but unless you say it in comments, I will wait a bit so we get some actual modeling going on first.\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
     "crumbs": [
       "Modelica",
-      "Acausality, the secret service of Modelica"
-    ]
-  },
-  {
-    "objectID": "007-AcausalityEquation.html#bonus-resources-for-fast-learners",
-    "href": "007-AcausalityEquation.html#bonus-resources-for-fast-learners",
-    "title": "Acausality, the secret service of Modelica",
-    "section": "Bonus: resources for fast learners",
-    "text": "Bonus: resources for fast learners\n\nDon’t confuse causal/acausal modeling with block diagram/component-based modeling\nAcausality with Modelica explained\nSolving a real engineering design problem with simulation",
-    "crumbs": [
-      "Modelica",
-      "Acausality, the secret service of Modelica"
+      "What Dynamic Simulation Does?"
     ]
   },
   {
@@ -563,80 +541,123 @@
     ]
   },
   {
-    "objectID": "010-WhatDynamicSimulationDoes.html",
-    "href": "010-WhatDynamicSimulationDoes.html",
-    "title": "What Dynamic Simulation Does?",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Dr. Clément Coïc",
     "section": "",
-    "text": "What Dynamic Simulation Does?\nI hope you’ve got your preferred drink in hand ☕️🫖💧\n📬 📰 Saturday editions - for having more time to read during the weekend! Let’s experiment for a few weeks. Let me know if this is not a convenient day (❓).\nLast week, we solved a puzzling question: which tank empties first? And while at the beginning one could think they would empty in the same amount of time, we reflected on how things would look like “a small amount of time later”… and it became clear that one would definitely empty faster than the other.\nAt this point, we touched about the need for Dynamic Simulation.\nToday, let’s dig into what dynamic simulation is.\nUseless note: One could argue that this should have been one of the first posts, and as it is the number 10, it is indeed just the second somehow… (“There are 10 types of people: those who know how to count in binary and those who don’t”)\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "text": "Hey there! I am Clément - Clem for you!\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only."
+  },
+  {
+    "objectID": "index.html#about-the-site",
+    "href": "index.html#about-the-site",
+    "title": "Dr. Clément Coïc",
+    "section": "About the site",
+    "text": "About the site\nBut you are not here for me, you are here for the reading about modeling and simulation! With this series of articles, I try to bring you all the knowledge you need to understand the topic progressively. These are all articles from my LinkedIn Newsletter: Learn Modelica & FMI. These are short articles that you can read during your break. So the articles are rather short and sequentially growing in complexity.\nWhy having them also as a separate website? For a couple of reasons: 1. For convenience: it might simpler for some to read them in such a format than on LinkedIn. 2. For readability: these are here written in markdown and this allows for additional capability - especially when it comes to code. 3. For contributions: as all the website is hosted on GitHub, expert can contribute to improve the content. Sometimes a few added words can clarify a sentence or some small additions can lead to great insights. I am open to your suggestions!\nUnless you want to read a few lines about me, this is where (and when) it all began -&gt;"
+  },
+  {
+    "objectID": "index.html#about-me",
+    "href": "index.html#about-me",
+    "title": "Dr. Clément Coïc",
+    "section": "About me?",
+    "text": "About me?\nI am a happy husband and father of two amazing boys - who are making my life even more exciting than my work 😉.\nI have a pationating job: I am leading the Technology Cluster for Digital Mechatronics at Siemens Healthineers. Taking shorcuts, I am responsible for building up a team of experts in digitalization, and trigger and lead technological projects to enhance the development of our mechatronic products.\nPrior to that, I was Team Lead and Model-based Development expert at Modelon and at other industry leaders such as Airbus Helicopters and Dassault Systèmes.\nI do have quite too many engineering degrees 😅: two MSc - in France and Spain - in System Engineering and Mechanical Engineering, and a PhD on model-based hydraulic actuation system design for helicopters. Why? I could tell you when we meet 😉"
+  },
+  {
+    "objectID": "007-AcausalityEquation.html",
+    "href": "007-AcausalityEquation.html",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "",
+    "text": "Acausality explained\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nToday, we are at the 007 article of this series - the James Bond article… We need some kind of Secret Agent story! So we are covering one of the key capabilities of the Modelica language: acausality. You’ll see, it is like a super agent with lots of gadgets, solving a lot of our problems!\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
     "crumbs": [
       "Modelica",
-      "What Dynamic Simulation Does?"
+      "Acausality, the secret service of Modelica"
     ]
   },
   {
-    "objectID": "010-WhatDynamicSimulationDoes.html#the-status-quo",
-    "href": "010-WhatDynamicSimulationDoes.html#the-status-quo",
-    "title": "What Dynamic Simulation Does?",
-    "section": "The status quo",
-    "text": "The status quo\nLet’s take another example. I love bicycles so let’s talk about bikes. 🚲\nSimilar to the runner’s case, we might want to calculate the force we have to push on the pedals to keep a cruise speed of 20km/h on a flat road or going uphill. We can study with or without a headwind. (And if you are in the UK or US or other non-SI unit country 😉, just change km/h for mph and you’ll just have to go about 1.6 times faster. Good luck! 😉)\nSee how we naturally wanted to calculate THE force? For each case, we are looking at an equilibrium: the speed is one value, and so the force is one value too. Sure, there are boundary conditions, namely the slope and the wind. And we can create test cases making these boundary conditions change. For each, we’ll get the value of the force.\nAnd for each case, there is only one force because we are at equilibrium - here constant speed. This is a steady-state analysis. For the tanks, imagine the tap would be closed: the pressure at the bottom would be constant and there would be no flow to change this “status quo”. But what happens if we open the tap?",
+    "objectID": "007-AcausalityEquation.html#acausa-what",
+    "href": "007-AcausalityEquation.html#acausa-what",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "Acausa… what?",
+    "text": "Acausa… what?\nYep, that’s exactly what most of the people think. And to be fair, you have to search quite a bit on the internet to be sure that I did not make up this word.\nIn a nutshell, acausality is the lack of causality. 🙄 Feel free to thank me in the comment for this one… And for my defense, it is true! We just need to discuss causality first. Causality is in its general definition the “relation from cause to effect”. But what does it mean for us, in the modeling and simulation world? It means more specifically the definition of inputs and outputs - the inputs causes the effects on the outputs. A causal model shall receive its input(s) in order to compute its output(s).\n\n\n\nFor a causal model with parameters, inputs are given and outputs are computed by the model\n\n\nSo an acausal model is a model for which inputs and outputs are not defined at first. Based on the variables that you provide, the model is “turned around” to solved for the remaining variables. Acausality is the property - here of a model or a language - to be acausal.\nNote: this image is NOT representing a block diagram. Block diagrams are NOT causal by default. Some are (e.g. Simulink) and some aren’t (e.g. Modelica.Blocks). This is just a schematic here.",
     "crumbs": [
       "Modelica",
-      "What Dynamic Simulation Does?"
+      "Acausality, the secret service of Modelica"
     ]
   },
   {
-    "objectID": "010-WhatDynamicSimulationDoes.html#its-about-the-journey",
-    "href": "010-WhatDynamicSimulationDoes.html#its-about-the-journey",
-    "title": "What Dynamic Simulation Does?",
-    "section": "It’s about the journey",
-    "text": "It’s about the journey\nYou know the quotes that go something like:\n\nit is not about the destination, it’s about the journey.\n\n(There are many quotes that sound similar so this one might be slightly different to the one you know, and it is hard to provide the credit to someone specific. Anyway…)\nDynamic simulation is like that: less about the (steady-state) destination, and more about the journey.\nSo you know an initial “state”. (We’ll talk about what a state really is later.) And this state is not at equilibrium - not steady. So the game of dynamic simulation is to “predict” how the system state will evolve over time. Until… the desired time (or a steady-state!).\n\n\n\nDynamic simulation is about computing the trajectory of the states\n\n\nThe time t_0 represents an initial time and we know the value of the state y at this time - hence y_0. We want to find out y_1 at time t_1 and so on. And you notice how the times are not necessarily equally spaced? This is for another day, yet just keep in mind that the steps we take are not necessarily equally spaced.\nBut eh, the dashed line is the solution, let’s just use it, no? Well of course, we don’t know it! I just put it there for you to see that the goal is to predict the points (❌) on the line. And in between the points? We can interpolate, with the right level of smoothing.\nSo how do we make sure that we “predict” the right values? Well, there is not much luck into this: we don’t really predict but compute. And we compute based on our model - as we saw over the last 10 posts!",
+    "objectID": "007-AcausalityEquation.html#why-is-that-useful",
+    "href": "007-AcausalityEquation.html#why-is-that-useful",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "Why is that useful?",
+    "text": "Why is that useful?\nLet’s step back and look at a single equation:\n1. F = (1/2 * rho * c_d * A) * v^2\nThis is the typical friction F (units [N] ) of a body of surface A [m^2] evolving at a given speed v [m/s] in a fluid of density rho [kg/m^3]. (c_d is the unitless drag coefficient and is function of how aerodynamic the body is.)\nNote that I put all parameters in brackets so that we can easily see that the two variables F and v are related by a set of parameters. We can just create a new parameter K = (1/2 * rho * c_d * A) (with units [N/(m/s)^2]) and we end up with F = K * v^2.\nFor our example, let’s consider that we are healthy engineers and we like to go for a run from time to time. If you don’t, you should. If you don’t want to… please bear with me as this is today’s example. Oh, and the speed is the relative to the wind speed and here we will just consider the wind to be 0 - because our focus is on the (a)causality only.",
     "crumbs": [
       "Modelica",
-      "What Dynamic Simulation Does?"
+      "Acausality, the secret service of Modelica"
     ]
   },
   {
-    "objectID": "010-WhatDynamicSimulationDoes.html#from-equations-to-solutions",
-    "href": "010-WhatDynamicSimulationDoes.html#from-equations-to-solutions",
-    "title": "What Dynamic Simulation Does?",
-    "section": "From equations to solutions",
-    "text": "From equations to solutions\nIt is hard to talk about simulation without really showing an equation. Let me try to keep it to the minimal.\nDynamic systems involve dynamics… and dynamics are modeled with differential equations. Basically something like:\ny_dot = f(y,u,t)\nAnd y_dot is the time derivative of y. But what does that mean? The time derivative of a variable is the rate of change of this variable over time. It basically tells you in which direction and at which “pace” it will change its value. u are potential inputs (e.g. the speed of the wind or the ground slope)\nSo if we know the speed v of our runner and we keep in mind that the speed is the derivative of the position x, then we can - knowing the initial position of the runner and its speed - compute its new position after a given amount of time (assuming the speed does not change in this amount of time).\nSo now we have the question: do we know the new speed? Well, actually, if we have the equation v = f(x , u, t) and we know x, (potentially u,) and t then we can compute v!\nSo now we just need to get the new value of x at the next time step. And so it goes.",
+    "objectID": "007-AcausalityEquation.html#speed-control",
+    "href": "007-AcausalityEquation.html#speed-control",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "Speed control",
+    "text": "Speed control\nLet’s say you have a watch tracking your speed and you start slowly increasing your speed until 10km/h. That’s a convenient speed because you’ll unlikely get a speed ticket at this pace. So you know the speed and can compute the force you’ll have to face when running at this speed. (We should not forget to convert the units!)\nBelow is a simple Modelica model, written in code (we are slowly introducing parts of the Modelica language here) and the simulation result.\n\n\n\nSimple Modelica code of the runner’s drag friction\n\n\nWe see that the Modelica code is quite readable: - The model starts with model ModelName (here the ModelName is Runner) and ends with end ModelName; - Then we have different types of variables: 1. The variables which value will not change during the time simulation are called parameters and are identified by a keyword parameter. Here I need to stop for a second and expand on this. Modelica makes a difference between constant and parameter. A constant has the value specified once before compilation and the value cannot change. The parameter can get its value changed until the simulation starts. (This last sentence is still partly incorrect as there are differences between structural and non-structural parameters, but let’s keep that for later.) 2. The variables which value can change during the simulation. These are time variable and do not have such a keyword that precedes them. - Here we specified the “type” of the parameters and variables with their units, that are available in the Modelica Standard Library (we often refer to it as MSL). But behind, these are all Real with specific units. - Note that we could define a final parameter, which basically freezes how the parameter is computed from the others. You cannot overwrite its definition later on when using this model. - Finally, we have an equation section where we write the time relationships of our variables - (And the small a on line 14 hides a lot of graphical and dependency annotations that I could have removed but I wanted to keep them so you know they exist. No need to dig into these now)\nThere is something to highlight here: we have two (2) variables and thus have two (2) equations 🤔 This is trivial and yet, needs to be noted. Variables are unknowns. They need to get values from the model. So here, we specify the speed of our runner and then we specify the relationship between force and speed. Naturally, we expect the simulation to compute first the speed and then the force, from the speed and all parameters. This happens and gives us this nice parabolic curve:\n\n\n\nForce / speed dependency on the drag friction model\n\n\nNow, this looks like a causal model that takes the speed as “input” and “outputs” the force. You could say I am cheating and put the equations in the right order and form. Let me show you something else.\n\n\n\nA second runner model, perfectly equivalent to the first one, from a Modelica perspective\n\n\nI have now reshuffled the equations: the order is different and the force/speed relationship is also turned around. The model simulates perfectly fine and behaves identically. This is no problem. Modelica can change the order of the equations and turned them around as needed, as the language is acausal.",
     "crumbs": [
       "Modelica",
-      "What Dynamic Simulation Does?"
+      "Acausality, the secret service of Modelica"
     ]
   },
   {
-    "objectID": "010-WhatDynamicSimulationDoes.html#you-are-hiding-something",
-    "href": "010-WhatDynamicSimulationDoes.html#you-are-hiding-something",
-    "title": "What Dynamic Simulation Does?",
-    "section": "You are hiding something!",
-    "text": "You are hiding something!\nI kind of hide something here… how do you compute x knowing v? Well that is what a solver does. I don’t want to enter today into that topic because it is already quite a long theoretical article… but the simplest (not the best) solver is Forward Euler and I explain it here if you are impatient. 😊\nAnd the right question to ask next is whether we cannot just solve the differential equation analytically instead of using a solver? Yes, in theory. It however gets really complex really fast because we usually have many variables and the equations are all but simple. So in practice, it is often impossible. Solvers are key to our simulations.",
+    "objectID": "007-AcausalityEquation.html#may-the-force-be-with-you",
+    "href": "007-AcausalityEquation.html#may-the-force-be-with-you",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "May the force be with you!",
+    "text": "May the force be with you!\nNow what happens if the speed is NOT known? You might NOT run with a watch telling you your current speed (or you might have one and not car about it). Or you are facing a uphill part of your track and cannot make it to the 10km/h because you are putting the bulk of your energy into going uphill.\nNote: and this latter example shows that, intuitively, it is NOT enough to just model your friction for measuring your effort, you obviously need the ground inclination, your weight etc. Just saying to bring back in mind the topic of “what’s your modeling goal”. And here, we don’t mind because we focus on (a)causality only. But obviously, running is not just about fighting 2N of front force…\nYou might actually just “feel” how much effort you want to put. And let’s assume that the force you put in fighting the aerodynamic drag oscillates between 1N and 2N. Then the Modelica model changes slightly: only the equation section, the speed is no more specified and the force is.\n\n\n\nThe Modelica compiler is able to use the equation on line 11 to solve the speed from the known force on line 12.\n\n\nNow this should be quite impressive. The compiler understands that the line 12 specifies the force F; there is no dependence on speed, only on time. Therefore it will have to manipulate equation 11 to solve the speed from the computed force from line 12.\nLet me say decompose that again. The compiler is able to 1. turn the equations around to solve for the right variable (causalization) and 2. reorder them (sequencing).\n1. F = 1.5 + sin( time ) / 2\n2. v = sqrt( F / K )\nWe will see this in more detail in a next article. Keep in mind the words 🙂",
     "crumbs": [
       "Modelica",
-      "What Dynamic Simulation Does?"
+      "Acausality, the secret service of Modelica"
     ]
   },
   {
-    "objectID": "010-WhatDynamicSimulationDoes.html#an-example-to-wrap-things-up",
-    "href": "010-WhatDynamicSimulationDoes.html#an-example-to-wrap-things-up",
-    "title": "What Dynamic Simulation Does?",
-    "section": "An example to wrap things up",
-    "text": "An example to wrap things up\nOne of the first example I learned was a “quarter of a vehicle”. It basically means that you take a car, you cut it in 4 and look at a quarter. It is a fair thing to do if you assume the weight distribution to be equally spread over the four wheels. And we just look at the vertical displacement.\nSo you have a very simple model that looks like a typical oscillator: a mass (quarter of the car mass) on which applies gravity (here the constant force), a spring-damper for the suspension and the floor that is slightly moving because it is not perfectly flat.\n\n\n\nQuarter of a vehicle model\n\n\nAssume the car is stopped. The floor won’t be moving with respect to the car… hopefully. We can see by simulating, how much the car will “sink” on its suspension and which steady-state it will reach.\nNow if we start driving, we will have the height of the floor constantly changing and that induces a compression on the spring and some dissipation from the damper. A resulting force will be applied to the mass that will be combined with the gravity… I might have lost you here. If so, go to the next paragraph, it is OK. If not, let’s continue: Newton told us that the sum of forces - over a constant mass (taking shortcuts here) - equals the mass multiplied by the acceleration. Acceleration! We get the new acceleration and that is the derivative of the speed, so we can use the solver to compute it! And from the speed, the position! Tadaaaam! And we can just go to the next step and repeat.\nBasically, the model you build will have the equations behind to express the relations between the states of your system and their derivatives. And so you’ll be able to compute these and let the solver tell you what the next states are.\nAnd hopefully, the mass (on which you might be sitting - the car - but not while reading this!) might not oscillate too much!",
+    "objectID": "007-AcausalityEquation.html#whats-my-body-surface",
+    "href": "007-AcausalityEquation.html#whats-my-body-surface",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "What’s my body surface?",
+    "text": "What’s my body surface?\nAlready, you might understand now the power of acausality. The models are made of the equations that describe the system - the physics you want to model -, and the compiler can manipulate them to solve for your specified problem.\nBut it is not stopping here with Modelica! You can additionally find out parameter values if you specify the values of all variables (at initial time). So for the equation F = K*v^2, if F and v are known at initial time, the compiler will find out that value of K, and if all the parameters composing K are known but one (let’s say the area A), then this one will be found out! 🤯\n\n\n\nComputing the Area parameter value to match the requested speed and force at initial time.\n\n\nFor this to work, we needed to do two things: add an initial equation AND relax the parameter - i.e. saying its value is unknown - by using the construct fixed=false. In practice, below is what the resulting equations look like at initial time.\nAt initial time:\n1. F = 1.5 N\n2. v = 2 m/s\n3. K = F / v^2\n4. A = K / (0.5 * rho * c_d)\nNote: we are touching the idea of a “square system” of equation. Let us just say here at loud that we need for a system to be solvable to have as many unknown as the number of independent equations. We will reinforce this concept in the near future.",
     "crumbs": [
       "Modelica",
-      "What Dynamic Simulation Does?"
+      "Acausality, the secret service of Modelica"
     ]
   },
   {
-    "objectID": "010-WhatDynamicSimulationDoes.html#the-end-for-today",
-    "href": "010-WhatDynamicSimulationDoes.html#the-end-for-today",
-    "title": "What Dynamic Simulation Does?",
+    "objectID": "007-AcausalityEquation.html#a-philosophical-note",
+    "href": "007-AcausalityEquation.html#a-philosophical-note",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "A philosophical note…",
+    "text": "A philosophical note…\nI want us to wrap things up here with a bit of a philosophical note: causality is not physical. Some even call it “computational causality”. Causality is a step to be able to solve the computational problem. There is no causality in nature.",
+    "crumbs": [
+      "Modelica",
+      "Acausality, the secret service of Modelica"
+    ]
+  },
+  {
+    "objectID": "007-AcausalityEquation.html#the-end-for-today",
+    "href": "007-AcausalityEquation.html#the-end-for-today",
+    "title": "Acausality, the secret service of Modelica",
     "section": "The END for today",
-    "text": "The END for today\nEnough for today. This was an abstract one and I hope it’s OK. I had to cover the process.\nNext time, we will go into something more applied. I initially wanted to cover what solvers do, but unless you say it in comments, I will wait a bit so we get some actual modeling going on first.\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
+    "text": "The END for today\nEnough for today. Next time, we will see how to use this concept for a larger system and in the graphical user interface.\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
     "crumbs": [
       "Modelica",
-      "What Dynamic Simulation Does?"
+      "Acausality, the secret service of Modelica"
+    ]
+  },
+  {
+    "objectID": "007-AcausalityEquation.html#bonus-resources-for-fast-learners",
+    "href": "007-AcausalityEquation.html#bonus-resources-for-fast-learners",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "Bonus: resources for fast learners",
+    "text": "Bonus: resources for fast learners\n\nDon’t confuse causal/acausal modeling with block diagram/component-based modeling\nAcausality with Modelica explained\nSolving a real engineering design problem with simulation",
+    "crumbs": [
+      "Modelica",
+      "Acausality, the secret service of Modelica"
     ]
   },
   {

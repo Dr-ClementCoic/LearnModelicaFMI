@@ -10,6 +10,8 @@ website:
     style: "docked"
     search: true
     contents:
+      - text: "Home"
+        href: about.qmd
       - text: "A bit of context"
         href: 001-Commitment.qmd
       - section: "Modelica"
