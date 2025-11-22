@@ -1,0 +1,843 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Dr. Clément Coïc",
+    "section": "",
+    "text": "Hey there! I am Clément - Clem for you!\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "About"
+    ]
+  },
+  {
+    "objectID": "about.html#about-the-site",
+    "href": "about.html#about-the-site",
+    "title": "Dr. Clément Coïc",
+    "section": "About the site",
+    "text": "About the site\nBut you are not here for me, you are here for the reading about modeling and simulation! With this series of articles, I try to bring you all the knowledge you need to understand the topic progressively. These are all articles from my LinkedIn Newsletter: Learn Modelica & FMI. These are short articles that you can read during your break. So the articles are rather short and sequentially growing in complexity.\nWhy having them also as a separate website? For a couple of reasons: 1. For convenience: it might simpler for some to read them in such a format than on LinkedIn. 2. For readability: these are here written in markdown and this allows for additional capability - especially when it comes to code. 3. For contributions: as all the website is hosted on GitHub, expert can contribute to improve the content. Sometimes a few added words can clarify a sentence or some small additions can lead to great insights. I am open to your suggestions!\nUnless you want to read a few lines about me, this is where (and when) it all began -&gt;",
+    "crumbs": [
+      "About"
+    ]
+  },
+  {
+    "objectID": "about.html#about-me",
+    "href": "about.html#about-me",
+    "title": "Dr. Clément Coïc",
+    "section": "About me?",
+    "text": "About me?\nI am a happy husband and father of two amazing boys - who are making my life even more exciting than my work 😉.\nI have a pationating job: I am leading the Technology Cluster for Digital Mechatronics at Siemens Healthineers. Taking shorcuts, I am responsible for building up a team of experts in digitalization, and trigger and lead technological projects to enhance the development of our mechatronic products.\nPrior to that, I was Team Lead and Model-based Development expert at Modelon and at other industry leaders such as Airbus Helicopters and Dassault Systèmes.\nI do have quite too many engineering degrees 😅: two MSc - in France and Spain - in System Engineering and Mechanical Engineering, and a PhD on model-based hydraulic actuation system design for helicopters. Why? I could tell you when we meet 😉",
+    "crumbs": [
+      "About"
+    ]
+  },
+  {
+    "objectID": "005-ModelRefactoring.html",
+    "href": "005-ModelRefactoring.html",
+    "title": "Good models are not a one time thing",
+    "section": "",
+    "text": "Let’s refactor our hot beverage model!\n(3/4) This is the third of a series of four connected articles. (Read the first and second article, if you missed them.)\nI hope you’ve got your preferred drink in hand ☕️🫖💧 The promise is that you should be done with this article before the end of your drink.\nLast time, we simulated for the first time. We looked at how the hot beverage would evacuate its heat throughout the air and the mug. And we played a bit with the material of the mug and the size of the beverage. But there was a limit to our model!\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model refactoring"
+    ]
+  },
+  {
+    "objectID": "005-ModelRefactoring.html#limitation-or-opportunity",
+    "href": "005-ModelRefactoring.html#limitation-or-opportunity",
+    "title": "Good models are not a one time thing",
+    "section": "Limitation or opportunity?",
+    "text": "Limitation or opportunity?\nYes, there was a limit to our model! The mug was staying on the desk and no one could benefit from the heat to warm their hands… And it starts to be quite convenient at this time of the year. For this scenario to be modeled, we need to change the type of heat exchange from the mug to the ambient.\nI hear you saying “just delete this stuff on the right and put some other stuff that model the hands”. And you are right. It’s the famous “quick and dirty” way to solve this. (Sometimes it is useful.) And there is a much more elegant way to do this! We can define our own assembly of components as subsystem and easily change these instead. In some sense, we will give some depth to our model - like another layer of components.\nIt’s an opportunity because it allows for: - A cleaner model and understanding of what each model assembly does. Currently the coffee mug is still a simple model; imagine how a complex system could look like in this “flat” approach (read “all in one layer”). - A better reuse of each subsystem in a future model (or actually in the same model - imagine we need two cups). - Defining template where we can easily exchange matching models (e.g. switching between having hands around the mug or none, directly in contact with the air). - It is much easier to exchange model across tools this way. (Hey Christian Bertsch, don’t tell anyone but I am preparing the ground to talk about FMI in the next article!)\nLet’s not accumulate too much technical debt - it’s always harder to make changes to the model when it is more complex - and update our model now.",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model refactoring"
+    ]
+  },
+  {
+    "objectID": "005-ModelRefactoring.html#lets-get-physical-interfaces",
+    "href": "005-ModelRefactoring.html#lets-get-physical-interfaces",
+    "title": "Good models are not a one time thing",
+    "section": "Let’s get physical (interfaces)",
+    "text": "Let’s get physical (interfaces)\nWe could “cut” our model anywhere and make subsystems. It might not make sense but we could. Let’s not do that. We should rather stop and look at what make sense to have as physical subsystems and make these as models. And it is here quite straightforward: - A mug full of hot beverage. There are interfaces from the mug wall and from the beverage. - An environment to the mug. It could be the air or it could be our hands we want to keep warm. - An environment to the beverage. It could be the air also or a teaspoon - as Robin Leuering suggested in his comment. 😉\nGetting off-script for a second: did you notice how I focused on the interfaces? In the first article of this series, I insisted on the need to perform “purpose-driven” modeling (term brought to you by Edo Drenth 🙌 I’ll get back to it in its full form (purpose-driven fidelity) in another article). We need to answer several questions when doing a model and interfaces are one of these, a very important one. And submodels are models! Back on track now 👉\nThere is no unique decomposition, as you can expect. You might have stopped a second at the first point and wondered why the mug is not one model and the beverage a second model. The mug would have an inner and outer wall (interfaces again) and the beverage might keep its single interface or have several (depending on whether we want to model conductance within the beverage - at the moment, it is just an energy storage). I just chose simplicity for now. Feel free to do chose something else.\nAnd even if there is no unique decomposition, I would recommend you keep it always physical. (Hence the heading of this section!)\n (Not that much of a) Pro-tip: Now, we have not change anything from our previous model. We have only restructured it and made its components available for reuse. That means that the first thing to do is to re-simulate and make sure that the results are unchanged!",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model refactoring"
+    ]
+  },
+  {
+    "objectID": "005-ModelRefactoring.html#getting-hands-on",
+    "href": "005-ModelRefactoring.html#getting-hands-on",
+    "title": "Good models are not a one time thing",
+    "section": "Getting hands-on",
+    "text": "Getting hands-on\nI like to warm my hands with my mug. That also keeps the coffee warmer for a longer period of time… at least I believe… Is it true? Let’s model, simulate and get the answer!\n So I wasn’t all wrong! The hands “keep the espresso warm”. The hand temperature being much warmer than the air, the heat transfer (despite a higher conduction than the air convection and radiation) leads to a lower heat transfer, resulting in a warmer coffee, for a longer period of time!\nNote for clarity: getting your hands on the coffee might actually in some cases lead to a faster cooling at the beginning and yet the hand temperature would at the end make the coffee stay warmer after a given period (the hand temperature being warmer than the air).",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model refactoring"
+    ]
+  },
+  {
+    "objectID": "005-ModelRefactoring.html#the-teaspoon-effect",
+    "href": "005-ModelRefactoring.html#the-teaspoon-effect",
+    "title": "Good models are not a one time thing",
+    "section": "The teaspoon effect",
+    "text": "The teaspoon effect\nBack to Robin question: what is the effect of adding a teaspoon in the coffee? I decided here to model the spoon as a heat capacitance that has a thermal conductance to the coffee and a radiation and convection to the environment.\nA great thing with our restructuring is that we can now nicely connect the spoon to the coffee port, et voilà ! The heat transfer will happen to the spoon!\n\n\n\nSystem model including the spoon and the hands warming up the coffee\n\n\nWhat’s you guess? Mine? Ah yes, it is kind of a monologue here… true! Well, I guess the teaspoon will absorb some heat from the coffee and dissipate it partly to the environment. And guess what?!\n\n\n\nDouble espresso temperature (hands-on) with and without teaspoon, and spoon temperature\n\n\nThe spoon temperature - initially at room temperature - rises very quickly! Absorbing a lot of heat from the coffee, which consequently cools down a bit faster. After some minutes (around 4min), the teaspoon reached a maximum of 67°C and starts cooling down synchronously with the coffee. Clearly, the effect of the spoon leads to a cooler coffee than without. 😉",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model refactoring"
+    ]
+  },
+  {
+    "objectID": "005-ModelRefactoring.html#an-important-note-on-the-tools",
+    "href": "005-ModelRefactoring.html#an-important-note-on-the-tools",
+    "title": "Good models are not a one time thing",
+    "section": "An important note on the tools!",
+    "text": "An important note on the tools!\nHave you noticed that the diagrams and curves on this article and the previous one are looking different? The reason for that is that I used different tools! But the models are the same! This is one of the great power of Modelica!\nThe models I developed are only using pure Modelica language syntax so they are not tool specific. In the previous article, I used Modelon Impact for the modeling and simulation, while for this article I have used Wolfram System Modeler. Both Modelon and Wolfram provided me with a free license for the purpose of writing these articles.\nIt is important to mention this because we need to keep in mind that Modelica is not a tool. It is a language that is leveraged in many tools. And this newsletter teaches you the language, not a tool. Feel free to chose your preferred tool.\nAs for myself, I will stay as neutral as possible here and hopefully get free licenses from other tool vendors to offer you images and curves from any possible Modelica tool!",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model refactoring"
+    ]
+  },
+  {
+    "objectID": "005-ModelRefactoring.html#the-end-for-today",
+    "href": "005-ModelRefactoring.html#the-end-for-today",
+    "title": "Good models are not a one time thing",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. Next time, we will finally get to discuss the FMI standard!\nBreak is over, go back to what you were doing.\nClément\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model refactoring"
+    ]
+  },
+  {
+    "objectID": "009-NeedForDynamicSimulation.html",
+    "href": "009-NeedForDynamicSimulation.html",
+    "title": "The need for dynamic simulation",
+    "section": "",
+    "text": "Which tanks empty first?\nI hope you’ve got your preferred drink in hand ☕️🫖💧\n📬 📰 Saturday editions - for having more time to read during the weekend! Let’s experiment for a few weeks. Let me know if this is not a convenient day (❓).\nI guess you might have seen this image with the two tanks below. You might know the answer. Bear with me, I hope to bring a different twist to this problem.\nLinkedIn has been on fire this week with this problem to solve. I am usually not putting too much attention on these, and this time is a bit different.\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "The need for dynamic simulation"
+    ]
+  },
+  {
+    "objectID": "009-NeedForDynamicSimulation.html#a-first-wrong-solution",
+    "href": "009-NeedForDynamicSimulation.html#a-first-wrong-solution",
+    "title": "The need for dynamic simulation",
+    "section": "A first (wrong) solution",
+    "text": "A first (wrong) solution\nThere were so many posts stating that both tanks would empty at the same time, because the height of both tanks is the same.\nBut first, not everyone knows hydraulics (or remember it) so let me explain quickly this statement: the pressure under water is due to the “column of water” (basically the height of water) above the point at which you want to know the pressure. So if you swim above water, you just get the atmospheric pressure and, as soon as you dive, you start getting more pressure induced by the water above you. The deeper you dive, the more pressure applies on your body.\nSo, the (wrong) argumentation goes:\n\nthe same height of the tank, the same pressure at the bottom!\nAnd the same pressure at the bottom, the same amount of water flows through the valve.\nSo they empty in the same amount of time? 🧐\n\nWell, no. The first two points are correct, and the conclusion in 3. is wrong.\nWhy?\nBecause this only considers the initial conditions of the problem. What about the dynamics of the system?",
+    "crumbs": [
+      "Modelica",
+      "The need for dynamic simulation"
+    ]
+  },
+  {
+    "objectID": "009-NeedForDynamicSimulation.html#a-second-correct-solution",
+    "href": "009-NeedForDynamicSimulation.html#a-second-correct-solution",
+    "title": "The need for dynamic simulation",
+    "section": "A second (correct) solution",
+    "text": "A second (correct) solution\nNote: this entire article uses volume flow rate and not mass flow rate. These are in this case equivalent because the temperature is considered constant and the pressure at the ports is the same. It is just more intuitive to discuss volumes and volume flow rate than masses of fluid and mass flow rates.\n\nAn intuitive next step\nSo 1. and 2. above are correct. After a short amount of time, the same amount of flow would have gone through both valves, right? Let’s remind ourselves that the flow is actually here a volume flow rate V_flow, and is expressed in unit [m^3/s]. And when we consider a volume flow rate over time [s], this means that we are looking at the volume of water [m^3] that left the tank.\nV_flow * Δt = V\n# which is consistent with the unit check\n# [m^3/s] * [s] = [m^3]\nOk, so the same volume of water exits both tanks in the first short amount of time. So the same volume remains on both tanks. Now you see me coming:\n\nthe same volume remains on both tanks,\nthe two tanks have different shapes,\nIn Tank X (with smaller base and larger top), the remaining volume of fluid will lead to a higher remaining column of fluid than in Tank Y. And this is because the larger top will mean less change of height is needed for covering a given volume.\nAnd so after the first “small amount of time”, the height in both tanks will differ.\nAnd if the heights differ, so do the pressures at the bottom.\nAnd if the pressures at the bottom of the tanks differ, so do the flow through the valves.\nAnd thus already on the next “small amount of time”, the volume in both tanks will differ.\n\nOh, so after two “small amounts of time” later, we already see a difference in behavior. And if one applies the logic of the “first (wrong) solution” at this point, then one would already have a different answer. So the real solution will appear once we continue with “small amount of time” later until we empty the tanks!\n\n\nA “small amount of time” later\nIntuitively, we discussed that: 1. At a point in time, the behavior of a system can be studied. 2. A small amount of time later, we can assess a new “point in time”. 3. and we loop over 1. and 2. over and over again.\nWell that, Ladies and Gentlemen, is exactly what dynamic simulation does! 😉 Let’s make the analogy clearer:\n\nWe can decompose a bit 1. by highlighting that a subset of the variables of our system can define fully the state of our system - these are the state variables (called often states) -, and the other variables can be computed from the states.\nThe simulation solver does compute the states after a small time step - which is the “small amount of time” later.\nand when we simulate, we define a final time of simulation or conditions to stop the simulation.\n\nSo we can model and simulate this problem!\n\n\nUntil the last drop\nObviously, it is not enough to just trust this intuitive reasoning and one could easily wonder whether there is a later point where “things go south”. Spoiler: the trend continues because the shapes - volume versus height - are linearly evolving. Said differently, the pressure will be higher for a larger fraction of the volume. So let’s simulate this problem until the last drop is out of one tank!\nFirst, we need the right components:\n\na Reservoir that is parametrized based on the truncated conical shape,\nan Orifice which models the faucet, and\nthe Environment which basically is the constant atmospheric pressure and can receive as much flow as needed.\n\nThe reservoir is obviously the most specific to this problem. Let’s look at the main equations and jump into the simulation part:\n1. port.p = p_atm + p_hyd;\n2. p_hyd = rho*g_n*h \"Pressure head\";\n3. der(V) = port.V_flow;\n4. V = pi * h / 3 * (R_base^2 + R_base * R_surface + R_surface^2);\n5. R_surface = R_base + k_geom * h;\n6. k_geom = (R_top - R_base)/H_tank ;\nNot to fill too much the equation block, I pull the explanation of each line out of the block:\n\nThe port being at the bottom its pressure is the sum of the air and fluid pressure.\nHead induced pressure, i.e. induced by the mass of the fluid above the port.\nThe reduction of volume is the flow that leaves the tank.\nThe volume of the truncated conical shape is based on the height (in R_surface), and base and top radii.\nThe radius at the surface of water is function of the height, and the shape.\nThe shape of the cone can be modeled by one base radius and the slope in change of radii.\n\nSo what is important to see here is that the physics modeled takes into account the head as a function of the height of fluid, which itself is function of the volume of fluid remaining and the shape of the tank.\nLet’s simulate this! We build two configurations as per the image.\n\n\n\nThe Modelica model of the two tanks emptying\n\n\nOk, the icons are ugly… but that’s not the point! I have other priorities in life 😅 As you see, the dimension of tankX are set to the flipped dimensions of tankY.\nSo now we can look at the behavior and the answer you want to see is “which one empties first?”, let’s plot the level of fluid against time:\n\n\n\nLooking at the fluid levels: tankX empties before tankY!\n\n\nThis is exactly what we expected: tankX level stays higher longer than tankY and therefore has more head over time (head is linear with height remember), so empties faster overall.\nBut why is it counter intuitive when seeing this curve? Well, it seems that tankY was ahead of tankX but that was only an illusion! We are looking at the height, and instead we can look at the remaining volume of fluid. Let’s change perspective:\n\n\n\nLooking at the remaining fluid volumes - it becomes clearer!\n\n\nIt is clear that, from just after the start, the remaining volume of water in tankX is lower than tankY. So tankX was ahead all the time!\nA good analogy just came to mind: you know how when you look at an athletic runner race on a track 🏃‍♀️🏃🏃‍♂️, it always seems that the one more inside the track is behind - they start behind actually - but catch up during the curve because their remaining path along the curvature is shorter. Same thing here: there is less volume to outflow for a given height of tankX.\nFinally, a nice summary plot is to look at the head pressure at the bottom of each tank as a function of the remaining volume of fluid.\n\n\n\nTankX has, for a given volume, always more head than TankY",
+    "crumbs": [
+      "Modelica",
+      "The need for dynamic simulation"
+    ]
+  },
+  {
+    "objectID": "009-NeedForDynamicSimulation.html#what-about-different-dimensions-of-the-cone",
+    "href": "009-NeedForDynamicSimulation.html#what-about-different-dimensions-of-the-cone",
+    "title": "The need for dynamic simulation",
+    "section": "What about different dimensions of the cone",
+    "text": "What about different dimensions of the cone\nThe reflection in all the above was done without dimensions so the reasoning stands. Nevertheless, all the simulations were done for one set of conditions: a volume of 1000L, a height of 1m and the base diameter of tankY being 1.5m (respectively the top diameter of tankX).\nBecause it is easy to simulate, we can close this article by playing around with the based diameter of tankY. A quick solving shows that if the diameter D_base is around ~1.15m then we have a cylinder and not a cone. And if we have a D_base above ~1.95m then even a D_top of 0 would lead to more than 1000L of water. Hence, we can explore a design of D_base between 1.2 and 1.9m.\n\n\n\nVarying the base diameter from 1.2 to 1.9m with 0.1m increments\n\n\nWe see clearly that, from two nearly cylindrical cones (hence nearly identical responses), to the more complete cone (when D_base gets larger, D_top reduces to host the same volume of 1000L), then the trend is unchanged: tankX always empties faster - for the same reason as explained above.",
+    "crumbs": [
+      "Modelica",
+      "The need for dynamic simulation"
+    ]
+  },
+  {
+    "objectID": "009-NeedForDynamicSimulation.html#the-end-for-today",
+    "href": "009-NeedForDynamicSimulation.html#the-end-for-today",
+    "title": "The need for dynamic simulation",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today.\nI hope you enjoyed digging into this puzzle and seeing that the reasoning steps where basically our brains doing dynamic simulation 😉!\nBreak is over, go back to what you were doing.\nClément\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "The need for dynamic simulation"
+    ]
+  },
+  {
+    "objectID": "006-SpreadingWithFMI.html",
+    "href": "006-SpreadingWithFMI.html",
+    "title": "Spreading the word with FMI",
+    "section": "",
+    "text": "Let’s share part of our model with FMI!\n(4/4) This is the last of a series of four connected articles. (Read the first and second and third article, if you missed them.)\nI hope you’ve got your preferred drink in hand ☕️🫖💧 The promise is that you should be done with this article before the end of your drink.\nLet’s look backward for a minute. So far, we did a couple of things: - We modeled our system, taking into account our goal (what we want to achieve with the model) and we took a special care at matching physical interfaces with our model. - Then we simulated our model and did some experiments (like changing the material or volume of the cup). - Finally, we restructured our model to make each component its own model and so we could easily, with the proper interfaces, exchange boundary conditions (hands instead of air or adding a teaspoon in our beverage).\nWe did not stay in one single tool. We used both Modelon Impact and Wolfram System Modeler. This was to highlight one of the value of Modelica: you are not locked in a single software.\nHowever, one could argue that we are still locked within the Modelica ecosystem. Fair enough! FMI solves this issue. Let’s discuss that today.\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "FMI",
+      "Spreading the word with FMI"
+    ]
+  },
+  {
+    "objectID": "006-SpreadingWithFMI.html#liberating-your-model",
+    "href": "006-SpreadingWithFMI.html#liberating-your-model",
+    "title": "Spreading the word with FMI",
+    "section": "Liberating your model",
+    "text": "Liberating your model\nIf you haven’t already, you’ll hear (or read) me say it a lot:\n\nYou can do everything with any tool, it is just a question of time, effort and money.\n\nI actually believe that! And that’s because I have used many different tools in the last 15years. They all have their pros and cons, and I understand when someone is a fan of their tool.\nI actually keep developing similar models or workflows in different tools, searching for better performances, a specific additional capability or just because some colleagues are using this tool and not the other. I don’t have to do this, yet it also keeps me up to date and critical on each tool or language.\nWhy we don’t have to redevelop models, e.g. when colleagues use a different software? Because there is a much better way. You can export your model using the FMI standard and import it in the other tool!\nWill your tool support FMI? Very likely! Check it out by yourself here. At the moment, more than 250 tools support the FMI standard!\nSo my summary-promise of the FMI is simple: develop your model in your favorite tool and use it “anywhere” (well within the &gt;250 tools).",
+    "crumbs": [
+      "FMI",
+      "Spreading the word with FMI"
+    ]
+  },
+  {
+    "objectID": "006-SpreadingWithFMI.html#an-overview-of-fmi",
+    "href": "006-SpreadingWithFMI.html#an-overview-of-fmi",
+    "title": "Spreading the word with FMI",
+    "section": "An overview of FMI",
+    "text": "An overview of FMI\nThe Functional Mock-up Interface (FMI) is a standard that defines how to package a model and how to define its interfaces so that the model can be reused in a different tool or environment. A model exported based on the FMI standard is called an FMU (Functional Mock-up Unit).\nFMI does not care about the level of fidelity of your model or the technology behind it. So you can export a Computational Fluid Dynamics model or Finite Element or a behavioral (0D/1D) model, like we do here with Modelica. And independently from that your tool, if it supports the FMI standard, can leverage this FMU!\n“Wait! But it takes different numerical technologies to solve a Modelica or CFD model?” - I hear you and you are correct. FMI allows for exporting your model in three different manners: 1. Model Exchange: the model is exposed in such a way that the tool that imports the FMU would solve it, within the rest of the model, potentially developed within the tool. 2. Co-simulation: the model includes its solver so that the tool that imports the FMU only has to communicate with it the inputs and outputs. 3. Scheduled execution: taking a shortcut here, it is similar to a model exchange format and additionally allows the importer tool to control the model scheduler.\nSo typically, if you have a CFD model that you want to interface with a Modelica model, it might be very appropriate to use a co-simulation FMU, so that the specific solver would be embedded in the FMU.\nOn the other side, if you want to interface two similar models, e.g. two Modelica models with similar dynamics, Model Exchange might be the way to go!\nCheck here to know more about FMI, my thoughts and some lessons learned. And the comments are also insightful!",
+    "crumbs": [
+      "FMI",
+      "Spreading the word with FMI"
+    ]
+  },
+  {
+    "objectID": "006-SpreadingWithFMI.html#your-custom-beverage-and-custom-mug",
+    "href": "006-SpreadingWithFMI.html#your-custom-beverage-and-custom-mug",
+    "title": "Spreading the word with FMI",
+    "section": "Your custom beverage and custom mug…",
+    "text": "Your custom beverage and custom mug…\nThe other day, I got the following comment: “This is my mug. Does your model still apply?”\n\n\n\nTHE Mug! 🙄\n\n\n🤯🫣… my answer was: “Yes, if you can compute the area of exchange and the inner volume and… Wait, if you have a CFD model of it, as your screen shows, just share it with me as an FMU and I’ll simulate the rest!”\nWell well, I lied… this cup does not exist. Anyone knows that an engineer desk NEVER looks that clean… Doh! But HYPOTHETICALLY, this could have happened and we could have had done that. (And yes, the CFD model is wrong, but not everyone would know that 😉.)\nFor the sake of this article, I will just prepare the hand model for FMI export. 🙂",
+    "crumbs": [
+      "FMI",
+      "Spreading the word with FMI"
+    ]
+  },
+  {
+    "objectID": "006-SpreadingWithFMI.html#sharing-a-hand",
+    "href": "006-SpreadingWithFMI.html#sharing-a-hand",
+    "title": "Spreading the word with FMI",
+    "section": "Sharing a hand",
+    "text": "Sharing a hand\nI need to speed up here. So you’ll have some homework reading the Bonus section and we will get more in a further article, in the near future. No coffee cup, I promise!\nSo now we want to share a hand, or rather the hands model. FMI uses causal interfaces.\nYou might remember that Modelica is acausal and thus wonder why FMI is causal. Well, the point it to have a standard compatible with most tools and most current tools or languages are causal. So we need to define causal interfaces to a Modelica model to export it.\nThe thermal connector we used for the hand model includes two variables: a temperature (in Kelvin - always SI units!) and a heat flow rate (in Watt). We now need to decide what will be the input and the output of our model. This should be done carefully because we can get issues if wrongly done. Our hand model was simply a conduction and a temperature source, remember? Let’s pause here for a second.\nImagine we would had neglected the conduction and just have the temperature source. Then this temperature shall be the output of the model. If it would be the input and then the hand model would not be able to tell you what the flow is. The hand model would only tell you the temperature. And on top of that, the input temperature might be different than the one of the hand, which would be again wrong. So, double wrong. Don’t do that.\nBack on track: we have a conduction and a temperature source. This gives us a bit of freedom. If we chose to have the temperature as input, then the heat flow would be computed from the temperature difference. And if we chose to have the heat flow as an input, then the output temperature could be easily computed based on the increment that the flow induces through the conduction.\nNow, we have to think about the interfaces on the other side too and, I will shorten the talk here (because your drink is almost over most likely) and just say that we add a thermal capacity on the mug wall, so that the temperature is the preferred output of the capacity, hence the preferred input to the hand model.\n\n\n\nPreparing the model for FMI export\n\n\nExporting the model as an FMU is as easy as a right click in most tools. Below it is shown for both Wolfram System Modeler and Modelon Impact. Then usually you have to select the type of export and here we chose Model Exchange because we know the dynamics are similar and we want to leverage a single solver for the entire model with the FMU.\n Once the FMU is created, it can be easily imported and interfaced with causal sources and sensors to the rest of the model, as shown below. The simulation runs fine 😊\n\n\n\nUsing an FMU in a Modelica model.",
+    "crumbs": [
+      "FMI",
+      "Spreading the word with FMI"
+    ]
+  },
+  {
+    "objectID": "006-SpreadingWithFMI.html#the-end-for-today",
+    "href": "006-SpreadingWithFMI.html#the-end-for-today",
+    "title": "Spreading the word with FMI",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today!\nWe have shown that a model can be exported as an FMU and shared (with a different tool that potentially deals with very different model type). This exemple was however a bit underwhelming as we simply reimported it in our Modelica tool. Yet it showed the work that needs to be done to prepare the model export and later import. We will cover more complex use cases in the future.\nNext time - I promise - no more coffee mug! I won’t give a spoiler though.\nBreak is over, go back to what you were doing.\nClément\nNext -&gt;",
+    "crumbs": [
+      "FMI",
+      "Spreading the word with FMI"
+    ]
+  },
+  {
+    "objectID": "006-SpreadingWithFMI.html#bonus-for-fast-learners",
+    "href": "006-SpreadingWithFMI.html#bonus-for-fast-learners",
+    "title": "Spreading the word with FMI",
+    "section": "Bonus for fast learners",
+    "text": "Bonus for fast learners\n\nFMI website\nFMI - my summary and thoughts\nFMI - Christian’s post on pros and cons\nAcausal/Causal vs Component-based/Block Diagram\nAcausality with Modelica",
+    "crumbs": [
+      "FMI",
+      "Spreading the word with FMI"
+    ]
+  },
+  {
+    "objectID": "007-AcausalityEquation.html",
+    "href": "007-AcausalityEquation.html",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "",
+    "text": "Acausality explained\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nToday, we are at the 007 article of this series - the James Bond article… We need some kind of Secret Agent story! So we are covering one of the key capabilities of the Modelica language: acausality. You’ll see, it is like a super agent with lots of gadgets, solving a lot of our problems!\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "Acausality, the secret service of Modelica"
+    ]
+  },
+  {
+    "objectID": "007-AcausalityEquation.html#acausa-what",
+    "href": "007-AcausalityEquation.html#acausa-what",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "Acausa… what?",
+    "text": "Acausa… what?\nYep, that’s exactly what most of the people think. And to be fair, you have to search quite a bit on the internet to be sure that I did not make up this word.\nIn a nutshell, acausality is the lack of causality. 🙄 Feel free to thank me in the comment for this one… And for my defense, it is true! We just need to discuss causality first. Causality is in its general definition the “relation from cause to effect”. But what does it mean for us, in the modeling and simulation world? It means more specifically the definition of inputs and outputs - the inputs causes the effects on the outputs. A causal model shall receive its input(s) in order to compute its output(s).\n\n\n\nFor a causal model with parameters, inputs are given and outputs are computed by the model\n\n\nSo an acausal model is a model for which inputs and outputs are not defined at first. Based on the variables that you provide, the model is “turned around” to solved for the remaining variables. Acausality is the property - here of a model or a language - to be acausal.\nNote: this image is NOT representing a block diagram. Block diagrams are NOT causal by default. Some are (e.g. Simulink) and some aren’t (e.g. Modelica.Blocks). This is just a schematic here.",
+    "crumbs": [
+      "Modelica",
+      "Acausality, the secret service of Modelica"
+    ]
+  },
+  {
+    "objectID": "007-AcausalityEquation.html#why-is-that-useful",
+    "href": "007-AcausalityEquation.html#why-is-that-useful",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "Why is that useful?",
+    "text": "Why is that useful?\nLet’s step back and look at a single equation:\n1. F = (1/2 * rho * c_d * A) * v^2\nThis is the typical friction F (units [N] ) of a body of surface A [m^2] evolving at a given speed v [m/s] in a fluid of density rho [kg/m^3]. (c_d is the unitless drag coefficient and is function of how aerodynamic the body is.)\nNote that I put all parameters in brackets so that we can easily see that the two variables F and v are related by a set of parameters. We can just create a new parameter K = (1/2 * rho * c_d * A) (with units [N/(m/s)^2]) and we end up with F = K * v^2.\nFor our example, let’s consider that we are healthy engineers and we like to go for a run from time to time. If you don’t, you should. If you don’t want to… please bear with me as this is today’s example. Oh, and the speed is the relative to the wind speed and here we will just consider the wind to be 0 - because our focus is on the (a)causality only.",
+    "crumbs": [
+      "Modelica",
+      "Acausality, the secret service of Modelica"
+    ]
+  },
+  {
+    "objectID": "007-AcausalityEquation.html#speed-control",
+    "href": "007-AcausalityEquation.html#speed-control",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "Speed control",
+    "text": "Speed control\nLet’s say you have a watch tracking your speed and you start slowly increasing your speed until 10km/h. That’s a convenient speed because you’ll unlikely get a speed ticket at this pace. So you know the speed and can compute the force you’ll have to face when running at this speed. (We should not forget to convert the units!)\nBelow is a simple Modelica model, written in code (we are slowly introducing parts of the Modelica language here) and the simulation result.\n\n\n\nSimple Modelica code of the runner’s drag friction\n\n\nWe see that the Modelica code is quite readable: - The model starts with model ModelName (here the ModelName is Runner) and ends with end ModelName; - Then we have different types of variables: 1. The variables which value will not change during the time simulation are called parameters and are identified by a keyword parameter. Here I need to stop for a second and expand on this. Modelica makes a difference between constant and parameter. A constant has the value specified once before compilation and the value cannot change. The parameter can get its value changed until the simulation starts. (This last sentence is still partly incorrect as there are differences between structural and non-structural parameters, but let’s keep that for later.) 2. The variables which value can change during the simulation. These are time variable and do not have such a keyword that precedes them. - Here we specified the “type” of the parameters and variables with their units, that are available in the Modelica Standard Library (we often refer to it as MSL). But behind, these are all Real with specific units. - Note that we could define a final parameter, which basically freezes how the parameter is computed from the others. You cannot overwrite its definition later on when using this model. - Finally, we have an equation section where we write the time relationships of our variables - (And the small a on line 14 hides a lot of graphical and dependency annotations that I could have removed but I wanted to keep them so you know they exist. No need to dig into these now)\nThere is something to highlight here: we have two (2) variables and thus have two (2) equations 🤔 This is trivial and yet, needs to be noted. Variables are unknowns. They need to get values from the model. So here, we specify the speed of our runner and then we specify the relationship between force and speed. Naturally, we expect the simulation to compute first the speed and then the force, from the speed and all parameters. This happens and gives us this nice parabolic curve:\n\n\n\nForce / speed dependency on the drag friction model\n\n\nNow, this looks like a causal model that takes the speed as “input” and “outputs” the force. You could say I am cheating and put the equations in the right order and form. Let me show you something else.\n\n\n\nA second runner model, perfectly equivalent to the first one, from a Modelica perspective\n\n\nI have now reshuffled the equations: the order is different and the force/speed relationship is also turned around. The model simulates perfectly fine and behaves identically. This is no problem. Modelica can change the order of the equations and turned them around as needed, as the language is acausal.",
+    "crumbs": [
+      "Modelica",
+      "Acausality, the secret service of Modelica"
+    ]
+  },
+  {
+    "objectID": "007-AcausalityEquation.html#may-the-force-be-with-you",
+    "href": "007-AcausalityEquation.html#may-the-force-be-with-you",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "May the force be with you!",
+    "text": "May the force be with you!\nNow what happens if the speed is NOT known? You might NOT run with a watch telling you your current speed (or you might have one and not car about it). Or you are facing a uphill part of your track and cannot make it to the 10km/h because you are putting the bulk of your energy into going uphill.\nNote: and this latter example shows that, intuitively, it is NOT enough to just model your friction for measuring your effort, you obviously need the ground inclination, your weight etc. Just saying to bring back in mind the topic of “what’s your modeling goal”. And here, we don’t mind because we focus on (a)causality only. But obviously, running is not just about fighting 2N of front force…\nYou might actually just “feel” how much effort you want to put. And let’s assume that the force you put in fighting the aerodynamic drag oscillates between 1N and 2N. Then the Modelica model changes slightly: only the equation section, the speed is no more specified and the force is.\n\n\n\nThe Modelica compiler is able to use the equation on line 11 to solve the speed from the known force on line 12.\n\n\nNow this should be quite impressive. The compiler understands that the line 12 specifies the force F; there is no dependence on speed, only on time. Therefore it will have to manipulate equation 11 to solve the speed from the computed force from line 12.\nLet me say decompose that again. The compiler is able to 1. turn the equations around to solve for the right variable (causalization) and 2. reorder them (sequencing).\n1. F = 1.5 + sin( time ) / 2\n2. v = sqrt( F / K )\nWe will see this in more detail in a next article. Keep in mind the words 🙂",
+    "crumbs": [
+      "Modelica",
+      "Acausality, the secret service of Modelica"
+    ]
+  },
+  {
+    "objectID": "007-AcausalityEquation.html#whats-my-body-surface",
+    "href": "007-AcausalityEquation.html#whats-my-body-surface",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "What’s my body surface?",
+    "text": "What’s my body surface?\nAlready, you might understand now the power of acausality. The models are made of the equations that describe the system - the physics you want to model -, and the compiler can manipulate them to solve for your specified problem.\nBut it is not stopping here with Modelica! You can additionally find out parameter values if you specify the values of all variables (at initial time). So for the equation F = K*v^2, if F and v are known at initial time, the compiler will find out that value of K, and if all the parameters composing K are known but one (let’s say the area A), then this one will be found out! 🤯\n\n\n\nComputing the Area parameter value to match the requested speed and force at initial time.\n\n\nFor this to work, we needed to do two things: add an initial equation AND relax the parameter - i.e. saying its value is unknown - by using the construct fixed=false. In practice, below is what the resulting equations look like at initial time.\nAt initial time:\n1. F = 1.5 N\n2. v = 2 m/s\n3. K = F / v^2\n4. A = K / (0.5 * rho * c_d)\nNote: we are touching the idea of a “square system” of equation. Let us just say here at loud that we need for a system to be solvable to have as many unknown as the number of independent equations. We will reinforce this concept in the near future.",
+    "crumbs": [
+      "Modelica",
+      "Acausality, the secret service of Modelica"
+    ]
+  },
+  {
+    "objectID": "007-AcausalityEquation.html#a-philosophical-note",
+    "href": "007-AcausalityEquation.html#a-philosophical-note",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "A philosophical note…",
+    "text": "A philosophical note…\nI want us to wrap things up here with a bit of a philosophical note: causality is not physical. Some even call it “computational causality”. Causality is a step to be able to solve the computational problem. There is no causality in nature.",
+    "crumbs": [
+      "Modelica",
+      "Acausality, the secret service of Modelica"
+    ]
+  },
+  {
+    "objectID": "007-AcausalityEquation.html#the-end-for-today",
+    "href": "007-AcausalityEquation.html#the-end-for-today",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. Next time, we will see how to use this concept for a larger system and in the graphical user interface.\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "Acausality, the secret service of Modelica"
+    ]
+  },
+  {
+    "objectID": "007-AcausalityEquation.html#bonus-resources-for-fast-learners",
+    "href": "007-AcausalityEquation.html#bonus-resources-for-fast-learners",
+    "title": "Acausality, the secret service of Modelica",
+    "section": "Bonus: resources for fast learners",
+    "text": "Bonus: resources for fast learners\n\nDon’t confuse causal/acausal modeling with block diagram/component-based modeling\nAcausality with Modelica explained\nSolving a real engineering design problem with simulation",
+    "crumbs": [
+      "Modelica",
+      "Acausality, the secret service of Modelica"
+    ]
+  },
+  {
+    "objectID": "001-Commitment.html",
+    "href": "001-Commitment.html",
+    "title": "A commitment to teach Modelica and FMI",
+    "section": "",
+    "text": "The 16th Modelica and FMI conference kick-off, by Ulf Christian Müller and Dirk Zimmer\n(Thanks Ulf Christian Mueller, Ivo Steiner, Dirk Zimmer, Christian Bertsch and many more for the great conference!)\nAs I was on the train just returning from the Modelica & FMI conference in Lucerne , I convinced myself that I should start this “newsletter”. This might be a silly idea…\nYet, I truly believe that educational content should be made accessible: simple and available to the many.\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "A bit of context"
+    ]
+  },
+  {
+    "objectID": "001-Commitment.html#a-chain-of-thoughts",
+    "href": "001-Commitment.html#a-chain-of-thoughts",
+    "title": "A commitment to teach Modelica and FMI",
+    "section": "A chain of thoughts",
+    "text": "A chain of thoughts\nThe idea is simple: we all have busy lives so, if one wants to learn new skills, it should be through some short, gradual, understandable and regular notes or videos that can be consumed during a daily break - like when drinking your morning cup of tea 🫖 or coffee ☕️. Water 💧 works too… (and I could continue listing many drinks… but eh, no sugary drinks! 😉 we should stay health[y engin]eers)\nLet me decompose this idea. - Short: no lengthy lectures and yet, longer than a few words to be able to actually teach some concepts. Many of my posts are just aimed at pointing at something cool or show what is feasible. However, these are too short to clearly explain a concept and are less connected than several articles from a newsletter. (I hear you saying: “””but hey, you mentioned “or videos”, what about that?”””… First, if you are saying that, please note that you are talking to your screen… Second, I might be cooking something [for your breakfast?]…)\n\nGradual: the complexity will go increasing over the weeks. These articles start with very simple content and readers with knowledge in Modelica and FMI might get bored. Yet the newcomers to these topics need this information. And there will be a time for anyone to catch the train and learn something, hopefully. (And if not, please contribute in comments with your expertise!)\nUnderstandable: the notes should be simpler enough for most of us to understand them. There are no complex concepts that cannot be explained with simple words. And yes, I don’t want to write boring technical notes; I would like you to think you had a good time going through these. Maybe this one is an exception…\nRegular: I will try to keep these “new letters” coming on a weekly basis. On one hand, twice per week would be ideal… on the other hand, the day only has 42 hours (pun intended)…\n\nAlso, without exaggerating at all 😉, I get A LOT of frustrated people reaching out saying my posts did not appear on their feed. Here, if you subscribe, you should get notified every time I publish a new letter.",
+    "crumbs": [
+      "A bit of context"
+    ]
+  },
+  {
+    "objectID": "001-Commitment.html#why-modelica-and-fmi",
+    "href": "001-Commitment.html#why-modelica-and-fmi",
+    "title": "A commitment to teach Modelica and FMI",
+    "section": "Why Modelica and FMI?",
+    "text": "Why Modelica and FMI?\nClearly, this is a great community of experts in modeling and simulation. I think there were about 350 of us in Lucerne and I know many others that could not join. We were showing such a variety of systems being modeled (more about that at the end of this writing).\nWe also discussed about how hard it can be for newcomers to start using Modelica or FMI. And there is no real reason for this. (Well… it can get complex for sure, yet beginning should not.)\nA disclaimer: I recurrently say that “we are able to do everything with any tool (or language), it is just a question of time, money and effort”. So this newsletter is focusing on Modelica and FMI, yet I am not advocating that you could not do the same with other solutions. And I will continue posting about all tools, languages, standards, etc. that I find relevant.\nI care about this transparency because I have asked many of you what you wanted to read about and the answer was pretty spread between the different options. Modelica was leading and, yet I will keep my word and try to satisfy you all.\n\n\n\nYour votes about topics I should post about.\n\n\nModelica and FMI are very complementary technologies. Modelica allows you to model the behavior of your system, while FMI enables you to share this model or to build your engineering workflows around a model independently from the language the model is written in or from the tool it comes from.",
+    "crumbs": [
+      "A bit of context"
+    ]
+  },
+  {
+    "objectID": "001-Commitment.html#experts-will-support-this-initiative",
+    "href": "001-Commitment.html#experts-will-support-this-initiative",
+    "title": "A commitment to teach Modelica and FMI",
+    "section": "Experts will support this initiative",
+    "text": "Experts will support this initiative\nI didn’t feel like writing this with a “should” or “could”. There are many Modelica experts and they are always keen on spreading their expertise.\nMy wish is that they join this effort and will contribute with great comments, or even articles that I would relate in their names. No Ego. It is about anyone to learn, not about anyone to shine here :)\nLook at these great people from the conference:\n\n\n\nSo many experts and I expect most to support your learning journey :)\n\n\n(Almost) No pointing finger 👉 Lars Mikelsons, Stefan Wischhusen, Julius Aka, and many more 🙂",
+    "crumbs": [
+      "A bit of context"
+    ]
+  },
+  {
+    "objectID": "001-Commitment.html#today-is-all-about-launching",
+    "href": "001-Commitment.html#today-is-all-about-launching",
+    "title": "A commitment to teach Modelica and FMI",
+    "section": "Today is all about launching",
+    "text": "Today is all about launching\nI will get into more details in the next letter. For now, I just wanted to share with you this new “project” and I have taken enough of your time.\nBreak is over, go back to what you were doing.\nXO XO gossip (ah no…)\nClément\nNext -&gt;",
+    "crumbs": [
+      "A bit of context"
+    ]
+  },
+  {
+    "objectID": "001-Commitment.html#bonus",
+    "href": "001-Commitment.html#bonus",
+    "title": "A commitment to teach Modelica and FMI",
+    "section": "Bonus",
+    "text": "Bonus\nSee a subset of the variety of presentations that we had the chance to attend at the Modelica conference organized by the Modelica Association:\n\nMy path planning optimization\nTrain FMUs with Reinforcement Learning from Konstantin Wrede and Christoph Steinmann\nPhysics Informed Machine Learning keynote from Siddhartha Mishra\nPeN-ODE from Andreas Hofmann\nGreat talk and vendor stand from Wolfram MathCore and especially Jan Brugård\nTHE keynote from Johan Åkesson at Carrier\nThe great ShipSim Library from Basilio Puente Varela\nMaster class from Dirk Zimmer on how a subset of DAE can improve engineers life\nMichele Bolognese from Fondazione Bruno Kessler - FBK presenting the use of Amonia as power vector\nMartin Otter presenting a compiler change that allow for changing the size of the arrays after compilation\nHilding Elmqvist and Martin Otter introducing Modelicalc and Modiator\nFull program (with papers)",
+    "crumbs": [
+      "A bit of context"
+    ]
+  },
+  {
+    "objectID": "008-AcausalityModels.html",
+    "href": "008-AcausalityModels.html",
+    "title": "One model serves several purposes",
+    "section": "",
+    "text": "Solving On-Design problems\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nLast week, we covered the basics of acausality:\nA quote from… me… Not the best practice, I know…\nToday, I want to show you in practice how this applies when you use a library of models. I mean, not when you code equations yourself, rather when you build model by composition (drag&drop). And this scales well! Let’s dive in.\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "One model serves several purposes"
+    ]
+  },
+  {
+    "objectID": "008-AcausalityModels.html#starting-easy",
+    "href": "008-AcausalityModels.html#starting-easy",
+    "title": "One model serves several purposes",
+    "section": "Starting easy",
+    "text": "Starting easy\nAt school, when I was about 11years old, I had to “play” a lot with resistor. (I didn’t enjoy it much to be honest but…) Ohm’s law - V = R*i - got anchored in my brain… I guess I am not the only one. So let’s take that as an example. It is easy and still illustrates our point quite well.",
+    "crumbs": [
+      "Modelica",
+      "One model serves several purposes"
+    ]
+  },
+  {
+    "objectID": "008-AcausalityModels.html#our-ideal-resistor-model",
+    "href": "008-AcausalityModels.html#our-ideal-resistor-model",
+    "title": "One model serves several purposes",
+    "section": "Our ideal resistor model",
+    "text": "Our ideal resistor model\nI made an ideal resistor model. It just does Ohm’s law. Almost:\n\n\n\nModel of our ideal resistor, implementing Ohm’s law.\n\n\nWe have not seen much of the Modelica language so far. So let me paraphrase the code: - this IdealResistor has the same interfaces than a OnePort model. The one port model has two electrical pins and defines the voltage difference between the two pins as V and the current entering the component from the blue pin as positive. - I declared a parameter R of type Resistance so that it also gets the unit [Ohm] and assigned a start value of 1 Ohm. Why a start value? You’ll soon see. For now, it is enough to say that: 1. if you give the parameter a value, then this start value is not used, and 2. 2. if you don’t provide a value while it is needed, then most compiler will use the start value as parameter value (and raise a warning). - The very famous Ohm’s law is simply written as equation: V=R*i.\nOf course, there is a resistor model in the Modelica Standard Library (keep in mind, we call it MSL, and I’ll soon just use only MSL because I am lazy) - check it out: Modelica.Electrical.Analog.Basic.Resistor. However, it also does more than just Ohm’s law, as it computes the dissipated power and can also include the resistance dependency on temperature. That is great, but for our example, it will just clutter our scope.",
+    "crumbs": [
+      "Modelica",
+      "One model serves several purposes"
+    ]
+  },
+  {
+    "objectID": "008-AcausalityModels.html#acausality-in-practice",
+    "href": "008-AcausalityModels.html#acausality-in-practice",
+    "title": "One model serves several purposes",
+    "section": "Acausality in practice",
+    "text": "Acausality in practice\nI claimed in the previous article, and somehow in the above quote, that the compiler will turn around Ohm’s law based on the known variable to solve for the other. Let’s prove it!\n\n\n\nSame resistor model used in resistance and conductance causalities.\n\n\nWe set up two examples, both with a resistance value of 21 Ohm. This is a silly value but I don’t mind, I know the universal answer is 42, and this model gets to it… Where was I, ah yes: two examples. - On the left side, we specify that the current that enters the resistor is 2A. Ohm’s law tells us that the voltage V should be equal to R*i=21*2=42V! The universal answer! And that is what our simulation says! - On the right side, we specify that the voltage is 42. We want to prove that the model will be turned around and give us the same current i as on the left side: i=V/R=42/21=2A. Done!\nOne model, two purposes! And it is not over!",
+    "crumbs": [
+      "Modelica",
+      "One model serves several purposes"
+    ]
+  },
+  {
+    "objectID": "008-AcausalityModels.html#bicausality-or-the-sizing-on-design-simulation",
+    "href": "008-AcausalityModels.html#bicausality-or-the-sizing-on-design-simulation",
+    "title": "One model serves several purposes",
+    "section": "Bicausality or the sizing / on-design simulation",
+    "text": "Bicausality or the sizing / on-design simulation\nRemember how last week we could use our same equation to calculate the parameter value (the area of the runner)? Here we can also use the model to define the value of the ideal resistor. We just need to take one of the two examples and specify the value of the missing variable at initial time. So let’s take the right example and say that the initial current is 4A. We call that bicausality - because both causality are specified - or sizing - because we size the resistor’s resistance - or on-design simulation - because we solve a design problem. (Just in case you face these words in the future.)\n\n\n\nFinding the resistance value based on initial conditions and running the simulation maintaining this value.\n\n\nBefore claiming “Hooray!”, I need to pause for a few of explanations: - Why did I change the constant voltage source to a signal voltage source? I could have kept the constant source, but then we would not have observed the fact that the resistance is only computed once (at initial time) and then used as a fixed value for the rest of the simulation. See how the two lines on the right keep the same ratio? So I just chose to specify the voltage to be 42*(1+time) so that at the beginning of the simulation (I set the initial time to be 0), the voltage is 42V and after that it increases by 42V every second (crazy! but again, we don’t mind here). - Where do we specify the initial current? In the code, we just added resistor.i = 4; as initial equation and that does exactly that. It adds an initial equation to our system, saying that the current through the resistor is 4A - only at that initial time. - Are we really computing the value of the resistance? Yes! See how the icon of the resistor says R =, nothing. Blank. No value. We do not specify the resistance value. It is solved at initial time. - At initial time? 🤔 When you compile a Modelica model, there are actually TWO models being created. The first one is the initialization problem: it solves the initial conditions of your system - and as in this case the unknown parameters. The second is the time simulation problem: the one everyone thinks about - computing the time trajectories of all time variables.\nHooray! It worked!",
+    "crumbs": [
+      "Modelica",
+      "One model serves several purposes"
+    ]
+  },
+  {
+    "objectID": "008-AcausalityModels.html#are-you-square",
+    "href": "008-AcausalityModels.html#are-you-square",
+    "title": "One model serves several purposes",
+    "section": "Are you square?",
+    "text": "Are you square?\nNot you. The system of equations. This is something you might remember from school, and it is so important when developing models that I am keen to revisit the topic here.\nStarting small: if you have one (1) equation with several variables - again, let’s take V = R*i - how many unknown variables can there be in this equation? Only one (1) variable, right? All the others need to be known! Changing the viewpoint, if you have three (3) unknown variables, you need three (3) equations.\nYou see how the number of equations shall equal the number of variables, for your system to be solvable. That is what is called a square system, because if you write the equations as rows and the variables as columns, you end up with a square (matrix).\n\n\n\nThe solving of the resistor equations for the three examples above\n\n\nIn the first example (left), we knew i and R and solved Ohm’s law for V. In the second example (middle), we knew V and R and solved Ohm’s law for i. And lastly, we could find the value of R by solving Ohm’s law in the initialization problem, knowing i0 and V0.\nA couple of notes: - It is obviously important that the equations you have are independent! If your equations are i=42, V=R*i and i=V/R, that won’t make it… because the two last ones are equivalent. - Now it might make sense why we had to add an initial equation for i on our on-design example: the value of R is unknown and needs to be solved from Ohm’s law at initialization. The value of V is known because at time = 0, its equation gave V=42. We needed to specify i, and we needed to specify it ONLY at initialization because as soon as the initialization problem is solved, the value of R is known (R is still a parameter, its value do not change during simulation!), V is known and so the third equation (Ohm’s law) needs to be solved for the current i.\nThat was a lot! Let’s show a nice example and wrap up for today!",
+    "crumbs": [
+      "Modelica",
+      "One model serves several purposes"
+    ]
+  },
+  {
+    "objectID": "008-AcausalityModels.html#this-scales",
+    "href": "008-AcausalityModels.html#this-scales",
+    "title": "One model serves several purposes",
+    "section": "This scales!",
+    "text": "This scales!\nImagine you are an aircraft designer. Imagine you want to electrify an aircraft. So you decide to add an electrical generator to the gas turbine, to generate electricity, store it in batteries and then reuse it when needed to provide propulsion through electrical propellers. Good idea! Actually not your idea, but a good one. 😉\nWhat happens however is that the electrical component generate heat and this heat needs to be evacuated. So you have to design a cooling system that goes and “collect” the heat from the electrical components for them to operate at reasonable temperatures.\n\nA flow balancing problem consists of sizing restrictions on flow branches of a fluid system to match desired flow rates on each branch. The problem is rarely trivial as parallel branches routinely contain many components with nonlinear pressure loss characteristics each.\n\nAgain, self-quoting… but I was not alone this time! Check the paper if interested! And shout out to Daniel Andersson, Nirmala, and Michael Sielemann for co-authoring this one 🙂\nWe used the same trick as for sizing the resistor. But we did it three times and on a larger system! It could have been more times and a larger system… this one was just meaningfully representing our system under study.\n\n\n\nThe orifice sizing is very similar to the resistor sizing problem\n\n\nIn the case of the orifice, we expect the pressures to be known at both sides and thus we additionally allow for specifying the initial mass flow rate in sizing mode.\nOn the overall system (below), we have three of such orifices (on the upper part of each branch) and they are meant to be sized to evacuate the right amount of heat coming from the “fire / exploding / red crown” components that represent heat sources.\n\n\n\nSolving a flow balancing problem: sizing the orifices to evacuate the specified amount of heat\n\n\nNow if you remember, we should have a square system. I let you write the equations and verify whether that is true, “as an exercise”. Yeah, no, thanks! You might just want to trust me on this one 😅 But just for the feeling, you can think of it as: you specify some values for the orifices, the simulation runs, that means that the system is square. Now you convert three (-3) parameters (the orifices’ diameter) into unknowns for the initialization problem, that means that you need to add three (+3) initial equations for this to be square, and these are the initial mass flow rate specified at the orifice level. So we should stay square. 🙂",
+    "crumbs": [
+      "Modelica",
+      "One model serves several purposes"
+    ]
+  },
+  {
+    "objectID": "008-AcausalityModels.html#the-end-for-today",
+    "href": "008-AcausalityModels.html#the-end-for-today",
+    "title": "One model serves several purposes",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. I hope you enjoyed this other perspective on acausality. Next time, we will see a different topic. (Suspense!)\nBreak is over, go back to what you were doing.\nClément\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "One model serves several purposes"
+    ]
+  },
+  {
+    "objectID": "008-AcausalityModels.html#bonus-resources-for-fast-learners",
+    "href": "008-AcausalityModels.html#bonus-resources-for-fast-learners",
+    "title": "One model serves several purposes",
+    "section": "Bonus: resources for fast learners",
+    "text": "Bonus: resources for fast learners\n\nDon’t confuse causal/acausal modeling with block diagram/component-based modeling\nAcausality with Modelica explained\nSolving a real engineering design problem with simulation\nThe On-Design paper for Thermal Management System",
+    "crumbs": [
+      "Modelica",
+      "One model serves several purposes"
+    ]
+  },
+  {
+    "objectID": "004-FirstSimulation.html",
+    "href": "004-FirstSimulation.html",
+    "title": "You won’t forget your first time… simulating",
+    "section": "",
+    "text": "Let’s simulate our hot beverage!\n(2/4) This is the second of a series of four connected articles. (Read the first article here.)\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nLast time we built our first model. Today is about simulating it and getting insights on our problem to solve: how much time does it take for our hot beverage to cool down. Keep in mind that we defined the problem to solve first and built our model accordingly.\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica simulation"
+    ]
+  },
+  {
+    "objectID": "004-FirstSimulation.html#are-we-really-done-with-the-modeling-task",
+    "href": "004-FirstSimulation.html#are-we-really-done-with-the-modeling-task",
+    "title": "You won’t forget your first time… simulating",
+    "section": "Are we really done with the modeling task?",
+    "text": "Are we really done with the modeling task?\nFrom the last article, we could think that the modeling work was almost over. Only the parametrization was missing. However, we cannot really be sure about that until we simulate and observe the expected behavior.\nWhy? There can always be some unexpected behavior or missing effects in our model. This is true whatever simulation framework you are using, not only Modelica. Sometimes, the available models do not have the equations you expect inside (maybe another correlation, maybe more effects than expected). Sometimes, your modeling assumptions were not correct enough (a typical example could be the meshing of your Computational Fluid Dynamics model that is not refined enough in some edges). For now however, this is a comment to have in mind and we will almost take it as granted that this model is well done and represents what we expect. In a future article, we will look deeper into the models.\nWhy I diverged a bit to cover this important topic is because we need to have a first good idea of what to expect as simulation results - BEFORE the simulation - in order to be able to criticize our simulation results afterwards. One of the biggest dangers when doing modeling and simulation is to “fall in love with your model” (sentence coined by François E. Cellier), which basically means that you trust blindly the results and do not think about whether your model is valid for the scenario you are simulating.",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica simulation"
+    ]
+  },
+  {
+    "objectID": "004-FirstSimulation.html#what-do-we-expect-here",
+    "href": "004-FirstSimulation.html#what-do-we-expect-here",
+    "title": "You won’t forget your first time… simulating",
+    "section": "What do we expect here?",
+    "text": "What do we expect here?\nWell, I don’t think it is a big spoiler to tell you that your hot beverage will eventually cool down, by evacuating heat towards its environment, until it reaches an equilibrium (or until you drink it!).\nSo you should expect the temperature of the beverage to decrease. The temperature of the environment should remain constant (we modeled it as a fixed temperature source!).\nWhat about the temperature of the mug? That’s a nice one! It allows us to discuss about “initial conditions”. We can set the initial temperature of the mug at the desire temperature and accordingly, we would see the heat transfers in the relevant direction. Let’s diverge a bit on that: - Forget about a hot beverage. You could imagine your mug going out of the dishwasher and being very warm (let’s say 50°C), and you pour water out of the tap (at 15°C). The heat from the mug would actually flow into the water and warm it up a bit, as well as going to the environment. - Back to our hot beverage, we could have a mug at the room temperature (around 20°C) and the hot beverage being warmer, the heat would still flow from the beverage to the mug and from the mug to the environment. The temperature of the mug would however most likely warm at first (until enough heat is dissipated). You obviously noticed that when at some point the mug might have been too hot, or at least warm enough, to leave your hands on it.\nIn her comment, Hagar Elarga suggested that we could add a heat capacitor (energy storage) for the mug. This is a nice way to easily control the initial temperature of the mug, as the heat capacitor expects you to specify an initial temperature (or uses its default value).\nSo getting back to the “Are we really done with the modeling task?”, well, you see already that based on whether we want to control the initial temperature of the mug or not, we might or might not want to add a heat capacitor. Let’s stick to without for now and go simulate!",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica simulation"
+    ]
+  },
+  {
+    "objectID": "004-FirstSimulation.html#finally-some-nice-curves",
+    "href": "004-FirstSimulation.html#finally-some-nice-curves",
+    "title": "You won’t forget your first time… simulating",
+    "section": "Finally some nice curves!",
+    "text": "Finally some nice curves!\nI drink a double espresso most mornings. Dr. Alexander Horn knows that well. “Same procedure as every” day. So I set up the cup size and beverage volume to a double espresso. Let’s look at how much time it takes for it to cool down:\n\n\n\nDouble espresso in a ceramic cup cooling down\n\n\nIf the temperature when exiting the coffee machine is 90°C, then in less than 7 minutes its temperature drops down to 70°C, which is a typical drinking temperature. After an additional 10 minutes the double espresso is lukewarm (~50°C).\nInterestingly, the heat transfer repartition shows that more than two thirds of the heat is evacuated via the mug and only less than a third via the espresso surface in contact with the air.\n\n\n\nRepartition of the heat flows of the double espresso cup\n\n\nAre these reasonable values? Yes, they are… under the assumptions of the model: in a ceramic cup, not touched, with only the heat exchanged model.\nWhat if the cup is made of steel? I have seen these cups in campers, and I always thought they could become hot and the espresso would could down faster. Would they?\n\n\n\nComparison between mugs made of ceramic and steel\n\n\nThey do… but not that much. And why? Because the amount of hot beverage is so low that there is not that much of an effect (though still visible). So what if we had a larger drink? The heat capacity would be higher and we could expect it to take longer to cool down. Let’s see!\n\n\n\nComparison between mugs made of ceramic and steel for 240mL of filter coffee\n\n\nNow we see that the coffee gets lukewarm after 30 to 35 minutes, depending on the mug material. It definitely cools down slower (about twice the time), despite the larger surface of exchange.\nAnd what if I put my hands around the cup? Well, you have to wait for this one! Because our model might need a refactoring to make this convenient to change.",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica simulation"
+    ]
+  },
+  {
+    "objectID": "004-FirstSimulation.html#the-end-for-today",
+    "href": "004-FirstSimulation.html#the-end-for-today",
+    "title": "You won’t forget your first time… simulating",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. Next time, we will modify this model into reusable subsystems (read components) so that, for example, the mug is one component that we can reuse in another model later.\nBreak is over, go back to what you were doing.\nClément\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica simulation"
+    ]
+  },
+  {
+    "objectID": "004-FirstSimulation.html#bonus-resources-for-fast-learners",
+    "href": "004-FirstSimulation.html#bonus-resources-for-fast-learners",
+    "title": "You won’t forget your first time… simulating",
+    "section": "Bonus: resources for fast learners",
+    "text": "Bonus: resources for fast learners\n\nYou might have seen in this post that there is an espresso machine model in the ThermofluidStream library. (See ThermofluidStream.Examples.EspressoMachine.) Have a look at it, simulate it and see whether the coffee temperature is right 😉",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica simulation"
+    ]
+  },
+  {
+    "objectID": "010-WhatDynamicSimulationDoes.html",
+    "href": "010-WhatDynamicSimulationDoes.html",
+    "title": "What Dynamic Simulation Does?",
+    "section": "",
+    "text": "What Dynamic Simulation Does?\nI hope you’ve got your preferred drink in hand ☕️🫖💧\n📬 📰 Saturday editions - for having more time to read during the weekend! Let’s experiment for a few weeks. Let me know if this is not a convenient day (❓).\nLast week, we solved a puzzling question: which tank empties first? And while at the beginning one could think they would empty in the same amount of time, we reflected on how things would look like “a small amount of time later”… and it became clear that one would definitely empty faster than the other.\nAt this point, we touched about the need for Dynamic Simulation.\nToday, let’s dig into what dynamic simulation is.\nUseless note: One could argue that this should have been one of the first posts, and as it is the number 10, it is indeed just the second somehow… (“There are 10 types of people: those who know how to count in binary and those who don’t”)\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "What Dynamic Simulation Does?"
+    ]
+  },
+  {
+    "objectID": "010-WhatDynamicSimulationDoes.html#the-status-quo",
+    "href": "010-WhatDynamicSimulationDoes.html#the-status-quo",
+    "title": "What Dynamic Simulation Does?",
+    "section": "The status quo",
+    "text": "The status quo\nLet’s take another example. I love bicycles so let’s talk about bikes. 🚲\nSimilar to the runner’s case, we might want to calculate the force we have to push on the pedals to keep a cruise speed of 20km/h on a flat road or going uphill. We can study with or without a headwind. (And if you are in the UK or US or other non-SI unit country 😉, just change km/h for mph and you’ll just have to go about 1.6 times faster. Good luck! 😉)\nSee how we naturally wanted to calculate THE force? For each case, we are looking at an equilibrium: the speed is one value, and so the force is one value too. Sure, there are boundary conditions, namely the slope and the wind. And we can create test cases making these boundary conditions change. For each, we’ll get the value of the force.\nAnd for each case, there is only one force because we are at equilibrium - here constant speed. This is a steady-state analysis. For the tanks, imagine the tap would be closed: the pressure at the bottom would be constant and there would be no flow to change this “status quo”. But what happens if we open the tap?",
+    "crumbs": [
+      "Modelica",
+      "What Dynamic Simulation Does?"
+    ]
+  },
+  {
+    "objectID": "010-WhatDynamicSimulationDoes.html#its-about-the-journey",
+    "href": "010-WhatDynamicSimulationDoes.html#its-about-the-journey",
+    "title": "What Dynamic Simulation Does?",
+    "section": "It’s about the journey",
+    "text": "It’s about the journey\nYou know the quotes that go something like:\n\nit is not about the destination, it’s about the journey.\n\n(There are many quotes that sound similar so this one might be slightly different to the one you know, and it is hard to provide the credit to someone specific. Anyway…)\nDynamic simulation is like that: less about the (steady-state) destination, and more about the journey.\nSo you know an initial “state”. (We’ll talk about what a state really is later.) And this state is not at equilibrium - not steady. So the game of dynamic simulation is to “predict” how the system state will evolve over time. Until… the desired time (or a steady-state!).\n\n\n\nDynamic simulation is about computing the trajectory of the states\n\n\nThe time t_0 represents an initial time and we know the value of the state y at this time - hence y_0. We want to find out y_1 at time t_1 and so on. And you notice how the times are not necessarily equally spaced? This is for another day, yet just keep in mind that the steps we take are not necessarily equally spaced.\nBut eh, the dashed line is the solution, let’s just use it, no? Well of course, we don’t know it! I just put it there for you to see that the goal is to predict the points (❌) on the line. And in between the points? We can interpolate, with the right level of smoothing.\nSo how do we make sure that we “predict” the right values? Well, there is not much luck into this: we don’t really predict but compute. And we compute based on our model - as we saw over the last 10 posts!",
+    "crumbs": [
+      "Modelica",
+      "What Dynamic Simulation Does?"
+    ]
+  },
+  {
+    "objectID": "010-WhatDynamicSimulationDoes.html#from-equations-to-solutions",
+    "href": "010-WhatDynamicSimulationDoes.html#from-equations-to-solutions",
+    "title": "What Dynamic Simulation Does?",
+    "section": "From equations to solutions",
+    "text": "From equations to solutions\nIt is hard to talk about simulation without really showing an equation. Let me try to keep it to the minimal.\nDynamic systems involve dynamics… and dynamics are modeled with differential equations. Basically something like:\ny_dot = f(y,u,t)\nAnd y_dot is the time derivative of y. But what does that mean? The time derivative of a variable is the rate of change of this variable over time. It basically tells you in which direction and at which “pace” it will change its value. u are potential inputs (e.g. the speed of the wind or the ground slope)\nSo if we know the speed v of our runner and we keep in mind that the speed is the derivative of the position x, then we can - knowing the initial position of the runner and its speed - compute its new position after a given amount of time (assuming the speed does not change in this amount of time).\nSo now we have the question: do we know the new speed? Well, actually, if we have the equation v = f(x , u, t) and we know x, (potentially u,) and t then we can compute v!\nSo now we just need to get the new value of x at the next time step. And so it goes.",
+    "crumbs": [
+      "Modelica",
+      "What Dynamic Simulation Does?"
+    ]
+  },
+  {
+    "objectID": "010-WhatDynamicSimulationDoes.html#you-are-hiding-something",
+    "href": "010-WhatDynamicSimulationDoes.html#you-are-hiding-something",
+    "title": "What Dynamic Simulation Does?",
+    "section": "You are hiding something!",
+    "text": "You are hiding something!\nI kind of hide something here… how do you compute x knowing v? Well that is what a solver does. I don’t want to enter today into that topic because it is already quite a long theoretical article… but the simplest (not the best) solver is Forward Euler and I explain it here if you are impatient. 😊\nAnd the right question to ask next is whether we cannot just solve the differential equation analytically instead of using a solver? Yes, in theory. It however gets really complex really fast because we usually have many variables and the equations are all but simple. So in practice, it is often impossible. Solvers are key to our simulations.",
+    "crumbs": [
+      "Modelica",
+      "What Dynamic Simulation Does?"
+    ]
+  },
+  {
+    "objectID": "010-WhatDynamicSimulationDoes.html#an-example-to-wrap-things-up",
+    "href": "010-WhatDynamicSimulationDoes.html#an-example-to-wrap-things-up",
+    "title": "What Dynamic Simulation Does?",
+    "section": "An example to wrap things up",
+    "text": "An example to wrap things up\nOne of the first example I learned was a “quarter of a vehicle”. It basically means that you take a car, you cut it in 4 and look at a quarter. It is a fair thing to do if you assume the weight distribution to be equally spread over the four wheels. And we just look at the vertical displacement.\nSo you have a very simple model that looks like a typical oscillator: a mass (quarter of the car mass) on which applies gravity (here the constant force), a spring-damper for the suspension and the floor that is slightly moving because it is not perfectly flat.\n\n\n\nQuarter of a vehicle model\n\n\nAssume the car is stopped. The floor won’t be moving with respect to the car… hopefully. We can see by simulating, how much the car will “sink” on its suspension and which steady-state it will reach.\nNow if we start driving, we will have the height of the floor constantly changing and that induces a compression on the spring and some dissipation from the damper. A resulting force will be applied to the mass that will be combined with the gravity… I might have lost you here. If so, go to the next paragraph, it is OK. If not, let’s continue: Newton told us that the sum of forces - over a constant mass (taking shortcuts here) - equals the mass multiplied by the acceleration. Acceleration! We get the new acceleration and that is the derivative of the speed, so we can use the solver to compute it! And from the speed, the position! Tadaaaam! And we can just go to the next step and repeat.\nBasically, the model you build will have the equations behind to express the relations between the states of your system and their derivatives. And so you’ll be able to compute these and let the solver tell you what the next states are.\nAnd hopefully, the mass (on which you might be sitting - the car - but not while reading this!) might not oscillate too much!",
+    "crumbs": [
+      "Modelica",
+      "What Dynamic Simulation Does?"
+    ]
+  },
+  {
+    "objectID": "010-WhatDynamicSimulationDoes.html#the-end-for-today",
+    "href": "010-WhatDynamicSimulationDoes.html#the-end-for-today",
+    "title": "What Dynamic Simulation Does?",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. This was an abstract one and I hope it’s OK. I had to cover the process.\nNext time, we will go into something more applied. I initially wanted to cover what solvers do, but unless you say it in comments, I will wait a bit so we get some actual modeling going on first.\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "What Dynamic Simulation Does?"
+    ]
+  },
+  {
+    "objectID": "002-Modelica101.html",
+    "href": "002-Modelica101.html",
+    "title": "Modelica 101",
+    "section": "",
+    "text": "Animation from Luigi Vanfretti (see resources at the end)\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nLast week I committed to teach Modelica and FMI and barely explained what these are. I also said I would like to do it with short, gradual, understandable and regular notes.\nSo bear with me on this one. I need to cover the basics: what Modelica is (not), when (not) to use it, what software support Modelica and what are good resources to learn faster than this newsletter… (because some of you might have more time than patience and you can fast-track your learning.)\nAnd I also selected some nice examples to whet your appetite for what’s possible to do with Modelica…\n… all in under 10 minutes, I promise!\nAnd if you are an expert, jump to the last section to see how you can contribute. 💪\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "Modelica 101"
+    ]
+  },
+  {
+    "objectID": "002-Modelica101.html#so-what-is-modelica",
+    "href": "002-Modelica101.html#so-what-is-modelica",
+    "title": "Modelica 101",
+    "section": "So, what is Modelica?",
+    "text": "So, what is Modelica?\nModelica is an open, object-oriented, acausal and equation-based language used for modeling complex physical systems. Think of it as a super-powered toolbox for simulating everything from electric vehicles and heating systems to industrial robots and even coffee machines (yes, really! see the image in my post).\nOpen: the language specification is accessible to all (html or pdf) and, if you are a beginner, don’t read it! It will appear much more complex than what it is… You can join the Modelica Association as a person or a company to contribute to the evolution of its standards. Anyone is allowed to develop a tool that relies on these open standards!\nObject-oriented: taking shortcuts here, this is basically what allows you to combine models (or model parts) in certain manner so that you can build up models from other models. This is very simplified and, for now, that’s enough. We will dig 🪏 deeper into this in the future!\nAcausal and equation-based: Unlike many programming languages, Modelica isn’t about telling the computer step-by-step how to solve a problem. Instead, you describe the what—the equations, the relationships, the physical laws—and Modelica works out the how. For example, if you want to model a car’s suspension, you’ll write down the equations describing the springs and dampers, connect the components together and the Modelica compiler will figure out how turn the equations around so that you can see how the system behaves over time.\nYou want to know more about acausality and equation-based modeling? In this post, I clarified the differences between causal/acausal and block diagram/component-based modeling. Read this second post to see how acausality is magic and can even allow you to size components!\n\nDuality code / diagram\nModelica is a textual language. Behind all is code. However, it also allows for having visuals (icons) to the models and the syntax allows for building models graphically.\nThe two images below are exactly the same model. On the left you see the diagram view of the model, and on the right its textual representation. At the end of the day, the text/code is what is saved and the diagram is regenerated from it.\n\n\n\nTwo views (diagram and code) of the same model\n\n\nOh, and by the way, this model models the charging of a battery with a constant current constant voltage charger. (Yes, I know… “model models” 🙄 but I could not come up with a better sentence right now.) And this model belongs to the Modelica Standard Library (you’ll know very soon how to find it when I write: Modelica.Electrical.Batteries.Examples.CCCVcharging). Note that several components appear on the screen (e.g. a ground, a battery and a charger) and are connected together via connection lines. In a few weeks from now, you’ll be able to “read” that from the text too - actually you could already even if I have not explained it yet. And we will also see what each connection line means. It is going to be fun, you’ll see!\nFor now, we need to move on. Your break is already well started. I’ll speed up, no worries…\n\n\nYou don’t necessarily have to code yourself\nThere is a Modelica Standard Library that includes the base model for most physical domain and many other open-source or vendor libraries for industry applications. Often, you can just make models by dragging and dropping models on the canvas and connecting / parametrizing your system. Go here for a list of all registered libraries.",
+    "crumbs": [
+      "Modelica",
+      "Modelica 101"
+    ]
+  },
+  {
+    "objectID": "002-Modelica101.html#what-modelica-is-not",
+    "href": "002-Modelica101.html#what-modelica-is-not",
+    "title": "Modelica 101",
+    "section": "What Modelica is NOT",
+    "text": "What Modelica is NOT\n\nModelica is not a tool (I am repeating myself here). There are software that allow you to work with Modelica, like Dassault Systèmes Dymola, Modelon Impact, OpenModelica, orthogonal ODE+, Wolfram MathCore System Modeler, etc. Have a look at the full list of tools.\nIt’s not a “black box” tool. You can look inside, see the equations, and understand the what the model does. Transparency is the name of the game.\nIt’s not tied to a specific physical domain or industry. You’ll find people modeling electrical, hydraulics, mechanical… systems in automotive, energy, aerospace, buildings… industries.\nAnd if you have followed so far, Modelica is not a programming language for apps or websites. You won’t write Modelica to build to-do lists or social networks… just saying!",
+    "crumbs": [
+      "Modelica",
+      "Modelica 101"
+    ]
+  },
+  {
+    "objectID": "002-Modelica101.html#when-to-use-modelica",
+    "href": "002-Modelica101.html#when-to-use-modelica",
+    "title": "Modelica 101",
+    "section": "When to use Modelica",
+    "text": "When to use Modelica\n\nKey to an MbSE development\nI have a Model-based System Engineering (MbSE) background, so it won’t be the last time that I refer to the (double-)Vee. If you don’t know these, I explained the Vee and double-Vee (and RFLP) in the past. Feel free to check these quick resources.\nFor the purpose of this article, I’ll just point a the fact that along a product development, the system is decomposed into subsystems and with this, the level of details of the system description (and model!) are increasing:\n\n\n\nThe “double-Vee” cycle - showing the importance of virtual modeling\n\n\nWhy do I diverge towards MbSE? Because Modelica is very useful for the top 2/3 of the double-Vee. Only when the level of details becomes too high, you start using a different type of modeling (more related to detailed geometry) like Finite Element or Computational Fluid Dynamics.\n\n\nWell suited for Modelica:\n\nYou need to model systems with multiple interacting physical domains\nYou want reusable, modular models—so you can build a library of components and mix and match as needed.\nTransparency and open standards matter to you.\nYou enjoy seeing the actual equations under the hood! And even maybe create your own model variants.\nYou want to observe dynamic behavior, solve steady-state (sizing) problem or even do optimum control!\n\n\n\nRather use another technology:\n\nYour problem is purely data-driven (think: statistics, machine learning, or business analytics).\nYou’re looking for a tool for rapid prototyping of apps or user interfaces.\nYou need ultra-detailed models which are based on the detailed geometry.",
+    "crumbs": [
+      "Modelica",
+      "Modelica 101"
+    ]
+  },
+  {
+    "objectID": "002-Modelica101.html#some-great-examples-of-what-can-be-done",
+    "href": "002-Modelica101.html#some-great-examples-of-what-can-be-done",
+    "title": "Modelica 101",
+    "section": "Some great examples of what can be done",
+    "text": "Some great examples of what can be done\nI love this Flow balancing example, not only because I did it 😅, but because it illustrates very well the capabilities of the acausality of Modelica language: you can use simulation to size parts of your system! In this case the orifices in each branch of the circuit are computed to achieve the right cooling. (Sorry for the crowded image!)\n\n\n\nFlow balancing example - sizing orifices to get the right cooling of your system.\n\n\nCapture vehicle forces when driving. (Shout out to Johan Andreasson, John Griffin, Sidharth Malik, Peter Sundström and Ivar Torstensson - when it comes to Modelon vehicle dynamics, one of them has been behind for sure 😅)\n\n\n\nReaction forces applied on wheels when driving.\n\n\nYou can model bearings, Wolfram MathCore has a library for this!\n\n\n\nModeling bearings in System Modeler\n\n\nAnother interesting use case is the modeling of Fuel Systems in aircraft:\n\n\n\nModelon Fuel System library showing the sloshing of different reservoirs on an aircraft\n\n\nAnd there is more. HumanComfort from XRG Simulation GmbH models the dynamic, thermal behaviour of buildings, vehicles, ship and aircraft cabins.\n\n\n\nModeling HumanComfort in a room - XRG\n\n\nTLK Energy has a strong focus on thermodynamics modeling with their TIL Suite and model a lot of use cases - here a Heat Pump model:\n\n\n\nCO2 cycle modeled with Modelica and TIL Suite - TLK Energy\n\n\nThis is only a handful selection of examples of what can be done in Modelica. There are many more examples and I hope to see many more examples in the comments.",
+    "crumbs": [
+      "Modelica",
+      "Modelica 101"
+    ]
+  },
+  {
+    "objectID": "002-Modelica101.html#call-for-experts",
+    "href": "002-Modelica101.html#call-for-experts",
+    "title": "Modelica 101",
+    "section": "📢 Call for experts!",
+    "text": "📢 Call for experts!\nShare your preferred example of a Modelica model in comment, ideally with images. Show the world what it possible to do 😎",
+    "crumbs": [
+      "Modelica",
+      "Modelica 101"
+    ]
+  },
+  {
+    "objectID": "002-Modelica101.html#the-end-for-today",
+    "href": "002-Modelica101.html#the-end-for-today",
+    "title": "Modelica 101",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. Next time, we will create our very first Modelica model together. Simple but we’ll learn a lot! And FMI? It’s coming!\nLike 👍 , comment ✍️ to spread the word!\nBreak is over, go back to what you were doing.\nClément\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "Modelica 101"
+    ]
+  },
+  {
+    "objectID": "002-Modelica101.html#bonus-resources-for-fast-learners",
+    "href": "002-Modelica101.html#bonus-resources-for-fast-learners",
+    "title": "Modelica 101",
+    "section": "Bonus: resources for fast learners",
+    "text": "Bonus: resources for fast learners\n\nThe multibody pendulum animation from Luigi Vanfretti.\nMichael Tiller explaining the role of Dymola in MBSE in this video. As Dymola is a tool that leverages Modelica, it can all be generalized to Modelica itself. Thanks Dassault Systèmes for this great video!\nMichael Tiller’s (again) book Modelica by Examples.\nMaybe your local university library has my book and you could borrow it for free. (If not, don’t buy it!)\nMany resources listed by the Modelica Association.\nOpenModelica has resources to learn Modelica together with their software.\nMore books.",
+    "crumbs": [
+      "Modelica",
+      "Modelica 101"
+    ]
+  },
+  {
+    "objectID": "003-FirstModel.html",
+    "href": "003-FirstModel.html",
+    "title": "You won’t forget your first time… modeling",
+    "section": "",
+    "text": "Let’s model our hot beverage!\n(1/4) This one is the first of a series of four connected articles.\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nToday it is about building our first model! And we will need your drink… so to say. Because we are going to discuss how long it takes for your cup of hot beverage to cool down.\nYet, I want to keep the promise that you would be able to read this under 10 minutes and there are some fundamentals I want to discuss. So today is about modeling, and next time it is all about simulating. And there are two more steps I keep “secret” for now. Hence the (1/4). Hope this is more suspense than annoyance 😅\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model"
+    ]
+  },
+  {
+    "objectID": "003-FirstModel.html#can-we-start-with-modelica-now",
+    "href": "003-FirstModel.html#can-we-start-with-modelica-now",
+    "title": "You won’t forget your first time… modeling",
+    "section": "🙋 Can we start with Modelica now?",
+    "text": "🙋 Can we start with Modelica now?\nWell, almost! We first have to answer a few questions. And keep note of these questions, they are the base of any model: - What is our system under study? - What answers do we want from this study? - What are its interfaces? - How does it interact with its environment? - What is happening inside our system? (In System Engineering, we would say “what are its synergies?”)\nAs we are describing the system, we are necessarily approximating it in some sense. So writing down what is the scope of our study, hence the associated model capabilities, is key to not misuse the model. There is the very famous quote:\n\nAll models are wrong, but some are useful.\n\nfrom George E. P. Box, that everyone keep mentioning so I thought it makes no sense to repeat it here… 🙄🤦\nAt least I can add that for the models to be useful, they have to be made and thought for a purpose. You got the point: we need to think before acting. It’s going to be brief, and yet it is such a useful practice that I need to enforce the habit here.",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model"
+    ]
+  },
+  {
+    "objectID": "003-FirstModel.html#a-look-at-your-hot-mug",
+    "href": "003-FirstModel.html#a-look-at-your-hot-mug",
+    "title": "You won’t forget your first time… modeling",
+    "section": "A look at your hot mug",
+    "text": "A look at your hot mug\nLet’s answer these famous questions now and the first ones, I gave a spoiler at the very beginning of this article: we are studying your hot beverage and answering the question “how long it takes for your cup of hot beverage to cool down?”.\nFrom our perspective, the system is the hot beverage and its mug. While we care about the temperature of the beverage, the mug is its container and we would not separate them. The interfaces are thus the walls of the mug and the free surface of the beverage, in contact with the air.\nHow does the system interact with the environment? It depends what is the environment 🙂 Is the mug on the table? Are your hands around your mug? Does your mug have a cover? These could be different interfaces which involve different heat transfers. Consider the two first cases, as illustrated below. In the first case, both the mug and the beverage can have convection in and radiation through the air (environment). In the second case, the mug is supposed to be totally covered by the hands and thus we get conduction between the mug and the hands as heat transfer.\n\n\n\nSimplified heat transfer within the mug and towards its environment\n\n\nIn addition, there is convection between the coffee and the inner wall of the mug, and conduction through the mug wall (synergies).\nNote: We could answer different questions and these may or may not influence what is the scope of our model. For example, if you want to know how long you have to wait until your tea cools down to a temperature you like to drink it, it might be the same model as if you wonder the time for it to be at ambient temperature. However, if you want to study the impact of adding cold milk in your drink, the below simplified heat transfer study isn’t enough.",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model"
+    ]
+  },
+  {
+    "objectID": "003-FirstModel.html#finally-some-modelica",
+    "href": "003-FirstModel.html#finally-some-modelica",
+    "title": "You won’t forget your first time… modeling",
+    "section": "Finally some Modelica!",
+    "text": "Finally some Modelica!\nYou have been waiting for it! Now, it’s time to model. And don’t worry, we won’t have to model all the equations and properties needed. We are going to leverage the thermal package from the Modelica Standard Library - MSL from now on.\n\n\n\nOverview of the Modelica Standard Library\n\n\nNote: the image was big, I know. That does not count as much reading time, eh!\nThe MSL is maintained by the Modelica Association - very convenient! - and it contains most base models you need for each physical domain. The MSL is a package (read “folder”) that appears simply as “Modelica”. When we refer to a model or subpackage (read “subfolder”, I guess that one was clear), we just describe its path to it, adding dots between each package/model. For example, Modelica.Constants refers to the subpackage within the MSL that hosts all the constants. Today, we are mostly using Modelica.Thermal.HeatTransfer, and to make the path shorter, I’ll just start the path at HeatTransfer for the rest of the article.\nGreat, we need to speed up - I promised my articles would be about 10minutes to read.\nWe will model as per the left image above (without hands) and we are considering the beverage to be a “heat capacitor” (HeatTransfer.Components.HeatCapacitor), which basically is a storage of thermal energy. The heat transfer elements we need are also available in the MSL: - Conduction: HeatTransfer.Components.ThermalConductor - Convection: HeatTransfer.Components.Convection - Radiation: HeatTransfer.Components.BodyRadiation\nLastly, we also need to model the environment and because I am in a cosy room with harmonized constant temperature, I will use a fixed temperature source to model the environment (HeatTransfer.Sources.FixedTemperature).\nNow the fun begin! We just have to drag and drop the components in the canvas of our preferred tool and connect the models meaningfully. (And if you don’t know which tool to use, let me know!) If you want to see this in action, you can watch Ankit Anurag Naik doing it for a similar model with Wolfram System Modeler.\n📢 Going off script now: at this point, I want to give a shout out to Ankit and Jan Brugård from Wolfram MathCore, who shared this video with me last week. After watching it, I changed this article to model a cup of hot beverage instead of my initial system (I’ll keep it secret for another time 😉) because it is so much aligned with the mindset of this newsletter: Learn Modelica and FMI during your break. Now, back to the modeling!\nHere is how our first model looks like:\n\n\n\nFirst thermal model of the hot beverage heat transfer\n\n\nA couple of useful notes here: - You can see that allTheNames are written likeThat. That is called camelNotation and is the naming convention in Modelica. Basically, you start with a lower case and stack the rest of the name with uppercase on the first letter of each new word. - There are a few more components than expected in the model. You see constant inputs (Modelica.Blocks.Sources.Constant) for example - they just provide a value to the convective thermal conductance of the convection component. And there is the thermometer and to_degC block, which basically help us getting the beverage temperature in degree Celsius - quick and easy access to read the value. - Here I want to emphasize that Modelica work with SI Units.\nAnd there is one more important thing to say: so far, no parameters have been set yet. So we could not simulate the model as is. We are getting there.",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model"
+    ]
+  },
+  {
+    "objectID": "003-FirstModel.html#in-search-for-parameters",
+    "href": "003-FirstModel.html#in-search-for-parameters",
+    "title": "You won’t forget your first time… modeling",
+    "section": "In search for parameters…",
+    "text": "In search for parameters…\nWe have done some of the most important work: understanding what is our system, its interfaces, what physical effects we want to model… and we event started our model!\nFunny enough (well not thaaaat funny), I have to tell you that often, the models are defined based on the parameters you know, not the other way around. So you might choose different model “fidelity” (read “level of detail”) because you are not able to get some parameters. What is the point of using a complex equation modeling friction if you do not know how to parametrize it or if you don’t have the data to calibrate these parameters? Spoiler: there is no point. Better using a simpler model that you have parameter/data for.\nIn our case, these are easy parameters to get from your preferred thermodynamics book, THE internet or you could even ask your favorite AI chatbot. For this article, it would be too long and boring to write all parameters, so let just me detail ONE and I will find a different place to detail ALL of them. And the chosen one is the total heat capacity of the beverage.\nLet’s consider you have a cup of tea in your hand (my image is coffee and I want to be inclusive here 😉). The cup is 25 centiliter (2.5x10-4 m3) full of water, which has a density of 1000kg/m3 and a specific heat capacity of 4180 Joules/K/kg - which means it takes 4180 joules to raise 1 kg of water by 1°C (of 1 Kelvin, as it is a difference, it makes no difference… if that makes sense). So the total heat capacity of the hot beverage is:\nC = (4180 J/K/kg) x (mass of water) = 4180 x (2.5e-4 m3 x 1000 kg/m3) = 4180 x 0.25 = 1045 J/K.\nAnd so we proceed for all parameters. Anyone taking the challenge to post as a comment the value and explanation for all parameters❓😃 The ones that do it will get cited in the next article 🥳",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model"
+    ]
+  },
+  {
+    "objectID": "003-FirstModel.html#it-is-all-code-behind",
+    "href": "003-FirstModel.html#it-is-all-code-behind",
+    "title": "You won’t forget your first time… modeling",
+    "section": "It is all code behind!",
+    "text": "It is all code behind!\nDo you remember that last time we discussed that there is a duality between the graphical view and the Modelica code? Well here you can see the exactly same model in code:\n\n\n\nCode view of our first hot beverage heat transfer model\n\n\nYou are now better equipped to read this code. It is not needed, yet I guess that it should be possible. The blue text is the path to the model that is used and the following black name with camelNotation is the name of the “instance of the model” (mean the one that is on the model canvas). And then you have all connection lines that are “connect()” statements in Modelica between the specified ports of each component of the model. See how we refer to the port in the model using the dot notation (as for the path), it is because of the Object-Orientation aspect of Modelica. We’ll soon dig into that further.\nNote: “Instance” seems quite a technical term. It is not complex though. The cup or mug you might be holding in your hands might be one of many produced from a blueprint. And you might have chosen the blue cup while others might have a brown version. In Modelica, a model is a blueprint that you can “instantiate” - every instance is a reference to the blueprint and can be parametrized differently without affecting the blueprint, like your cup.",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model"
+    ]
+  },
+  {
+    "objectID": "003-FirstModel.html#call-for-experts",
+    "href": "003-FirstModel.html#call-for-experts",
+    "title": "You won’t forget your first time… modeling",
+    "section": "📢 Call for experts!",
+    "text": "📢 Call for experts!\nThis is what is called a “flat model”, all components are at the top level of the canvas. A coming improvement is to make this model more reusable by having each subsystem in a different model. (That’s a spoiler 🤐) Another is to add a model description, comments and documentation. And there are more improvements to do!\nShare your thoughts on how this model should be improved, in comment. Show the world what it possible to do 😎",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model"
+    ]
+  },
+  {
+    "objectID": "003-FirstModel.html#the-end-for-today",
+    "href": "003-FirstModel.html#the-end-for-today",
+    "title": "You won’t forget your first time… modeling",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. Next time, we will simulate this model and find out how long is “too-long-article-to-read” (meaning that your beverage is either cold or drunk already).\nOh, and FMI is coming, be patient!\nBreak is over, go back to what you were doing.\nClément\nPs: if you want to have a spoiler of what’s to come, you’ll have to invite me for a hot beverage 😉\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model"
+    ]
+  },
+  {
+    "objectID": "003-FirstModel.html#bonus-resources-for-fast-learners",
+    "href": "003-FirstModel.html#bonus-resources-for-fast-learners",
+    "title": "You won’t forget your first time… modeling",
+    "section": "Bonus: resources for fast learners",
+    "text": "Bonus: resources for fast learners\n\nRepeating the link from Ankit’s demo\nJust below this video, there are further videos about the Guiding Principles for Systems Modeling and Simulation. Keep these in mind!",
+    "crumbs": [
+      "Modelica",
+      "Your first Modelica model"
+    ]
+  },
+  {
+    "objectID": "xxx-template.html",
+    "href": "xxx-template.html",
+    "title": "Good models are not a one time thing",
+    "section": "",
+    "text": "Let’s refactor our hot beverage model!\nI hope you’ve got your preferred drink in hand ☕️🫖💧\n📬 📰 Saturday editions - for having more time to read during the weekend! Let’s experiment for a few weeks. Let me know if this is not a convenient day (❓).\n© 2025 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only."
+  },
+  {
+    "objectID": "xxx-template.html#the-end-for-today",
+    "href": "xxx-template.html#the-end-for-today",
+    "title": "Good models are not a one time thing",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. 🚫Next time, we will xxxxxx🚫\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;"
+  }
+]

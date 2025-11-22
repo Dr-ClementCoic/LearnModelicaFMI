@@ -1,0 +1,78 @@
+---
+title: "A commitment to teach Modelica and FMI"
+---
+
+![The 16th Modelica and FMI conference kick-off, by Ulf Christian Müller and Dirk Zimmer](./assets/images/001/01_opening.png)
+
+*(Thanks Ulf Christian Mueller, Ivo Steiner, Dirk Zimmer, Christian Bertsch and many more for the great conference!)*
+
+As I was on the train just returning from the Modelica & FMI conference in Lucerne , I convinced myself that I should start this “newsletter”. This might be a silly idea… 
+
+Yet, I truly believe that educational content should be made accessible: simple and available to the many.
+
+## A chain of thoughts
+The idea is simple: we all have busy lives so, if one wants to learn new skills, it should be through some short, gradual, understandable and regular notes or videos that can be consumed during a daily break - like when drinking your morning cup of tea 🫖 or coffee ☕️. Water 💧 works too… (and I could continue listing many drinks… but eh, no sugary drinks! 😉 we should stay health[y engin]eers)
+
+Let me decompose this idea.
+- Short: no lengthy lectures and yet, longer than a few words to be able to actually teach some concepts. Many of my posts are just aimed at pointing at something cool or show what is feasible. However, these are too short to clearly explain a concept and are less connected than several articles from a newsletter. (I hear you saying: “””but hey, you mentioned “or videos”, what about that?”””… First, if you are saying that, please note that you are talking to your screen… Second, I might be cooking something [for your breakfast?]...)
+
+- Gradual: the complexity will go increasing over the weeks. These articles start with very simple content and readers with knowledge in Modelica and FMI might get bored. Yet the newcomers to these topics need this information. And there will be a time for anyone to catch the train and learn something, hopefully. (And if not, please contribute in comments with your expertise!)
+
+- Understandable: the notes should be simpler enough for most of us to understand them. There are no complex concepts that cannot be explained with simple words. And yes, I don’t want to write boring technical notes; I would like you to think you had a good time going through these. Maybe this one is an exception…
+
+- Regular: I will try to keep these "new letters" coming on a weekly basis. On one hand, twice per week would be ideal… on the other hand, the day only has 42 hours (pun intended)...
+
+ Also, without exaggerating at all 😉, I get A LOT of frustrated people reaching out saying my posts did not appear on their feed. Here, if you subscribe, you should get notified every time I publish a new letter.
+
+## Why Modelica and FMI?
+Clearly, this is a great community of experts in modeling and simulation. I think there were about 350 of us in Lucerne and I know many others that could not join. We were showing such a variety of systems being modeled (more about that at the end of this writing).
+
+ We also discussed about how hard it can be for newcomers to start using Modelica or FMI. And there is no real reason for this. (Well… it can get complex for sure, yet beginning should not.)
+
+***A disclaimer**: I recurrently say that “we are able to do everything with any tool (or language), it is just a question of time, money and effort”. So this newsletter is focusing on Modelica and FMI, yet I am not advocating that you could not do the same with other solutions. And I will continue posting about all tools, languages, standards, etc. that I find relevant.*
+
+I care about this transparency because I have asked many of you what you wanted to read about and the answer was pretty spread between the different options. Modelica was leading and, yet I will keep my word and try to satisfy you all.
+
+![Your votes about topics I should post about.](./assets/images/001/02_poll.jpeg)
+
+Modelica and FMI are very complementary technologies. Modelica allows you to model the behavior of your system, while FMI enables you to share this model or to build your engineering workflows around a model independently from the language the model is written in or from the tool it comes from.
+
+## Experts will support this initiative
+I didn't feel like writing this with a "should" or "could". There are many Modelica experts and they are always keen on spreading their expertise.
+
+My wish is that they join this effort and will contribute with great comments, or even articles that I would relate in their names. No Ego. It is about anyone to learn, not about anyone to shine here :)
+
+Look at these great people from the conference:
+
+![So many experts and I expect most to support your learning journey :)](assets/images/001/03_community.png)
+
+(Almost) No pointing finger 👉 Lars Mikelsons, Stefan Wischhusen, Julius Aka, and many more 🙂
+
+## Today is all about launching
+I will get into more details in the next letter. For now, I just wanted to share with you this new “project” and I have taken enough of your time.
+
+Break is over, go back to what you were doing. 
+
+XO XO gossip (ah no…) 
+
+Clément 
+
+
+[Next](./002-Modelica101.qmd) ->
+
+
+## Bonus 
+See a subset of the variety of presentations that we had the chance to attend at the Modelica conference organized by the Modelica Association:
+
+- [My path planning optimization](https://www.linkedin.com/posts/clementcoic_modelica-optimica-impact-activity-7366458418330603521-0ym-)
+- [Train FMUs with Reinforcement Learning from Konstantin Wrede and Christoph Steinmann](https://www.linkedin.com/posts/clementcoic_you-can-train-an-fmu-with-reinforcement-learning-activity-7370792666717990912-duZ4)
+- [Physics Informed Machine Learning keynote from Siddhartha Mishra](https://www.linkedin.com/posts/clementcoic_physics-informed-machine-learning-at-the-activity-7371074753886932993-Kw0F)
+- [PeN-ODE from Andreas Hofmann](https://www.linkedin.com/posts/clementcoic_pen-ode-is-happening-physics-enhanced-neural-activity-7371096546878251009-Jwy4)
+- [Great talk and vendor stand from Wolfram MathCore and especially Jan Brugård](https://www.linkedin.com/posts/clementcoic_great-discussions-with-jan-brug%C3%A5rd-co-founder-activity-7371144570287448064-7OfV)
+- [THE keynote from Johan Åkesson at Carrier](https://www.linkedin.com/posts/clementcoic_johan-%C3%A5kesson-presenting-how-carrier-leverages-activity-7371433833331666944-7hnh)
+- [The great ShipSim Library from Basilio Puente Varela](https://www.linkedin.com/posts/clementcoic_need-to-simulate-a-ship-basilio-puente-varela-activity-7371483238176899072--iJn)
+- [Master class from Dirk Zimmer on how a subset of DAE can improve engineers life](https://www.linkedin.com/posts/clementcoic_there-is-a-way-to-formulate-models-that-makes-activity-7371484516202303488-Zgh6)
+- [Michele Bolognese from Fondazione Bruno Kessler - FBK presenting the use of Amonia as power vector](https://www.linkedin.com/posts/clementcoic_michele-bolognese-from-fondazione-bruno-kessler-activity-7371519841112981504-2aJi)
+- [Martin Otter presenting a compiler change that allow for changing the size of the arrays after compilation](https://www.linkedin.com/posts/clementcoic_can-you-change-the-size-of-an-array-after-activity-7371528690893144064-BCgD)
+- [Hilding Elmqvist and Martin Otter introducing Modelicalc and Modiator](https://www.linkedin.com/posts/clementcoic_everyone-can-now-try-modelicalc-on-their-activity-7371536528902172673-RKiY)
+- [Full program (with papers)](https://pretalx.com/orga/event/16thmodelicafmiconference/)

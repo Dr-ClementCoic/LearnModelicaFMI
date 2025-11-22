@@ -1,0 +1,51 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Modelica & FMI"
+  body-footer: | 
+    © 2025 Clément Coïc — Licensed under [creative commons 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Non-commercial use only.
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - text: "A bit of context"
+        href: 001-Commitment.qmd
+      - section: "Modelica"
+        contents:
+          - text: "Modelica 101"
+            href: 002-Modelica101.qmd
+          - text: "Your first Modelica model"
+            href: 003-FirstModel.qmd
+          - text: "Your first Modelica simulation"
+            href: 004-FirstSimulation.qmd
+          - text: "Your first Modelica model refactoring"
+            href: 005-ModelRefactoring.qmd
+          - text: "Acausality, the secret service of Modelica"
+            href: 007-AcausalityEquation.qmd
+          - text: "One model serves several purposes"
+            href: 008-AcausalityModels.qmd
+          - text: "The need for dynamic simulation"
+            href: 009-NeedForDynamicSimulation.qmd
+          - text: "What Dynamic Simulation Does?"
+            href: 010-WhatDynamicSimulationDoes.qmd
+      - section: "FMI"
+        contents:
+          # - text: "FMI 101"
+          #   href: 006-SpreadingWithFMI.qmd
+          - text: "Spreading the word with FMI"
+            href: 006-SpreadingWithFMI.qmd
+      - text: "About"
+        href: about.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+
+
