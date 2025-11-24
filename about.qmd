@@ -14,20 +14,6 @@ about:
 
 Hey there! I am Clément - Clem for you!
 
-## About the site
-
-But you are not here for me, you are here for the reading about **modeling and simulation**!
-With this series of articles, I try to bring you all the knowledge you need to understand the topic progressively.
-These are all articles from [my LinkedIn Newsletter: Learn Modelica & FMI](https://www.linkedin.com/newsletters/learn-modelica-fmi-7373084674463719424/). These are short articles that you can read during your break. So the articles are rather short and sequentially growing in complexity.
-
-Why having them *also* as a separate website? For a couple of reasons:
-
-1. For convenience: it might be simpler for some to read them in such a format than on LinkedIn.
-2. For readability: these are here written in markdown and this allows for additional capability - especially when it comes to code.
-3. For contributions: as all the website is hosted on GitHub, experts can contribute to improve the content. Sometimes a few added words can clarify a sentence or some small additions can lead to great insights. I am open to your suggestions!
-
-Unless you want to read a few lines about me, [this is where (and when) it all began ->](./001-Commitment.qmd)
-
 ## About me?
 
 I am a happy husband and father of two amazing boys - who are making my life even more exciting than my work 😉.
@@ -37,3 +23,5 @@ I have a passionate job: I am leading the Technology Cluster for Digital Mechatr
 Prior to that, I was Team Lead and Model-based Development expert at Modelon and at other industry leaders such as Airbus Helicopters and Dassault Systèmes. 
 
 I do have quite too many engineering degrees 😅: two MSc - in France and Spain - in System Engineering and Mechanical Engineering, and a PhD on model-based hydraulic actuation system design for helicopters. Why? I could tell you when we meet 😉
+
+But you are not here for me, you are here for the reading about **modeling and simulation**! [Start your learning journey! ->](./001-Commitment.qmd)

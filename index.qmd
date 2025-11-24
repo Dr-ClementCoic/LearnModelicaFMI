@@ -1,26 +1,31 @@
 ---
-title: "Dr. Clément Coïc"
+title: "Welcome to your newsletter to learn Modelica and FMI!"
 about:
   template: trestles
-  image: ./assets/images/000/DrCC.png
+  image: ./assets/images/000/Newsletter_LearnModelica&FMI.jpeg
   links:
     - icon: linkedin
       text: LinkedIn
-      href: https://www.linkedin.com/in/clementcoic/
+      href: https://www.linkedin.com/newsletters/7373084674463719424/
     - icon: github
       text: Github
-      href: https://github.com/Dr-ClementCoic
+      href: https://dr-clementcoic.github.io/LearnModelicaFMI/
 ---
 
-Hey there! I am Clément - Clem for you!
+Welcome! 
 
-## About the site
+You want to learn about Modelica language and FMI standard?
+You are in the right place!
 
-But you are not here for me, you are here for the reading about **modeling and simulation**!
+## What is in there for me?
 With this series of articles, I try to bring you all the knowledge you need to understand the topic progressively.
+
 These are all articles from [my LinkedIn Newsletter: Learn Modelica & FMI](https://www.linkedin.com/newsletters/learn-modelica-fmi-7373084674463719424/). These are short articles that you can read during your break. So the articles are rather short and sequentially growing in complexity.
 
-Why having them *also* as a separate website? For a couple of reasons:
+Hopefully, you'll learn about Modelica and FMI, and also more generally about **modeling and simulation**. Many concepts are generic enough for you to learn them here and apply them independently from the language or tool you are using.
+
+## Why having the articles *also* as a separate website? 
+For a couple of reasons:
 
 1. For convenience: it might be simpler for some to read them in such a format than on LinkedIn.
 2. For readability: these are here written in markdown and this allows for additional capability - especially when it comes to code.
@@ -28,12 +33,13 @@ Why having them *also* as a separate website? For a couple of reasons:
 
 Unless you want to read a few lines about me, [this is where (and when) it all began ->](./001-Commitment.qmd)
 
-## About me?
+## How to go through this website?
 
-I am a happy husband and father of two amazing boys - who are making my life even more exciting than my work 😉.
+There are three main ways to go through the content of this website.
 
-I have a passionate job: I am leading the Technology Cluster for Digital Mechatronics at Siemens Healthineers. Taking shortcuts, I am responsible for building up a team of experts in digitalization, and trigger and lead technological projects to enhance the development of our mechatronic products.
+1. The first way is to read the short articles in the order they were published. Start [here](./001-Commitment.qmd), and at the end of each article, you'll see a [Next ->](./001-Commitment.qmd) link, that will bring you to... the next one!
+2. Another way is to just look at the left navigation bar and check for topic of interest. And just go through these. They are not necessarily ordered by publication date because I separated the Modelica and FMI articles. So, if you only want to learn about FMI, go there directly and check only these articles.
+3. 🚧 The third way is not yet ready. 🚧 I am planning on adding a "cursus" that would take the articles in a slightly different order. I have written (and keep writing) the articles based on what I feel is interesting at the moment and don't want to put all the theory right at the beginning. It could however be convenient - from a learning perspective - to have these in a slightly different order. This will be available in the future.
 
-Prior to that, I was Team Lead and Model-based Development expert at Modelon and at other industry leaders such as Airbus Helicopters and Dassault Systèmes. 
-
-I do have quite too many engineering degrees 😅: two MSc - in France and Spain - in System Engineering and Mechanical Engineering, and a PhD on model-based hydraulic actuation system design for helicopters. Why? I could tell you when we meet 😉
+## Who are you?
+We are not here to talk about me... And in case you are interested, I have put together [a short bio](about.qmd) for you. And of course, you can find me on [LinkedIn](https://www.linkedin.com/in/clementcoic/).
