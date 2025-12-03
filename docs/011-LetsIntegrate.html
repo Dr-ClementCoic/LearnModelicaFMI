@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>What Dynamic Simulation Does? – Modelica &amp; FMI</title>
+<title>Understand your model: let’s integrate! – Modelica &amp; FMI</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,9 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./010-WhatDynamicSimulationDoes.html">What Dynamic Simulation Does?</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
+      Modelica &amp; FMI
+      </li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -171,7 +173,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link active">
+  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">What Dynamic Simulation Does?</span></a>
   </div>
 </li>
@@ -210,11 +212,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-status-quo" id="toc-the-status-quo" class="nav-link active" data-scroll-target="#the-status-quo">The status quo</a></li>
-  <li><a href="#its-about-the-journey" id="toc-its-about-the-journey" class="nav-link" data-scroll-target="#its-about-the-journey">It’s about the journey</a></li>
-  <li><a href="#from-equations-to-solutions" id="toc-from-equations-to-solutions" class="nav-link" data-scroll-target="#from-equations-to-solutions">From equations to solutions</a></li>
-  <li><a href="#you-are-hiding-something" id="toc-you-are-hiding-something" class="nav-link" data-scroll-target="#you-are-hiding-something">You are hiding something!</a></li>
-  <li><a href="#an-example-to-wrap-things-up" id="toc-an-example-to-wrap-things-up" class="nav-link" data-scroll-target="#an-example-to-wrap-things-up">An example to wrap things up</a></li>
+  <li><a href="#theoretically" id="toc-theoretically" class="nav-link active" data-scroll-target="#theoretically">Theoretically</a></li>
+  <li><a href="#its-easier-to-derivate-analytically" id="toc-its-easier-to-derivate-analytically" class="nav-link" data-scroll-target="#its-easier-to-derivate-analytically">It’s easier to <strong>derivate</strong> <em>analytically</em></a></li>
+  <li><a href="#its-easier-to-integrate-numerically" id="toc-its-easier-to-integrate-numerically" class="nav-link" data-scroll-target="#its-easier-to-integrate-numerically">It’s easier to <strong>integrate</strong> <em>numerically</em></a></li>
+  <li><a href="#derivatives-can-introduce-noise" id="toc-derivatives-can-introduce-noise" class="nav-link" data-scroll-target="#derivatives-can-introduce-noise">Derivatives can introduce noise</a></li>
+  <li><a href="#integration-is-more-physical" id="toc-integration-is-more-physical" class="nav-link" data-scroll-target="#integration-is-more-physical">Integration is more physical</a></li>
+  <li><a href="#what-it-means-in-practice" id="toc-what-it-means-in-practice" class="nav-link" data-scroll-target="#what-it-means-in-practice">What it means in practice</a></li>
   <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
   </ul>
 </nav>
@@ -222,9 +225,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./010-WhatDynamicSimulationDoes.html">What Dynamic Simulation Does?</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">What Dynamic Simulation Does?</h1>
+<h1 class="title">Understand your model: let’s integrate!</h1>
 </div>
 
 
@@ -243,79 +246,108 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/010/01_header.png" class="img-fluid figure-img"></p>
-<figcaption>What Dynamic Simulation Does?</figcaption>
+<p><img src="./assets/images/011/01_header.png" class="img-fluid figure-img"></p>
+<figcaption>Be thoughtful when building your model!</figcaption>
 </figure>
 </div>
 <p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
 <p>📬 📰 <strong>Saturday editions</strong> - for having more time to read during the weekend! Let’s experiment for a few weeks. Let me know if this is not a convenient day (❓).</p>
-<p>Last week, we <a href="./009-NeedForDynamicSimulation.html">solved a puzzling question</a>: which tank empties first? And while at the beginning one could think they would empty in the same amount of time, we reflected on how things would look like “a small amount of time later”… and it became clear that one would definitely empty faster than the other.</p>
-<p>At this point, we touched about the need for <strong>Dynamic Simulation</strong>.</p>
-<p>Today, let’s dig into what dynamic simulation is.</p>
-<p><em>Useless note: One could argue that this should have been one of the first posts, and as it is the number 10, it is indeed just the second somehow… (“There are 10 types of people: those who know how to count in binary and those who don’t”)</em></p>
-<section id="the-status-quo" class="level2">
-<h2 class="anchored" data-anchor-id="the-status-quo">The status quo</h2>
-<p>Let’s take another example. I love bicycles so let’s talk about bikes. 🚲</p>
-<p>Similar to <a href="./007-AcausalityEquation.html">the runner’s case</a>, we might want to calculate the force we have to push on the pedals to keep a cruise speed of 20km/h on a flat road or going uphill. We can study with or without a headwind. (And if you are in the UK or US or other non-SI unit country 😉, just change km/h for mph and you’ll just have to go about 1.6 times faster. Good luck! 😉)</p>
-<p>See how we naturally wanted to calculate THE force? For each case, we are looking at an equilibrium: the speed is one value, and so the force is one value too. Sure, there are boundary conditions, namely the slope and the wind. And we can create test cases making these boundary conditions change. For each, we’ll get the value of the force.</p>
-<p>And for each case, there is only one force because we are at equilibrium - here constant speed. This is a steady-state analysis. For the tanks, imagine the tap would be closed: the pressure at the bottom would be constant and there would be no flow to change this “status quo”. But what happens if we open the tap?</p>
-</section>
-<section id="its-about-the-journey" class="level2">
-<h2 class="anchored" data-anchor-id="its-about-the-journey">It’s about the journey</h2>
-<p>You know the quotes that go something like:</p>
-<blockquote class="blockquote">
-<p>it is not about the destination, it’s about the journey.</p>
-</blockquote>
-<p><em>(There are many quotes that sound similar so this one might be slightly different to the one you know, and it is hard to provide the credit to someone specific. Anyway…)</em></p>
-<p>Dynamic simulation is like that: less about the (steady-state) destination, and more about the journey.</p>
-<p>So you know an initial “state”. (We’ll talk about what a <code>state</code> really is later.) And this state is not at equilibrium - not steady. So the game of dynamic simulation is to “predict” how the system state will evolve over time. Until… the desired time (or a steady-state!).</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/010/02_dynamicSimulation.png" class="img-fluid figure-img"></p>
-<figcaption>Dynamic simulation is about computing the trajectory of the states</figcaption>
-</figure>
-</div>
-<p>The time <code>t_0</code> represents an initial time and we know the value of the state <code>y</code> at this time - hence <code>y_0</code>. We want to find out <code>y_1</code> at time <code>t_1</code> and so on. And you notice how the times are not necessarily equally spaced? This is for another day, yet just keep in mind that the steps we take are not necessarily equally spaced.</p>
-<p>But eh, the dashed line is the solution, let’s just use it, no? Well of course, we don’t know it! I just put it there for you to see that the goal is to predict the points (❌) on the line. And in between the points? We can interpolate, with the right level of smoothing.</p>
-<p>So how do we make sure that we “predict” the right values? Well, there is not much luck into this: we don’t really predict but compute. And we compute based on our model - as we saw over the last 10 posts!</p>
-</section>
-<section id="from-equations-to-solutions" class="level2">
-<h2 class="anchored" data-anchor-id="from-equations-to-solutions">From equations to solutions</h2>
-<p>It is hard to talk about simulation without really showing an equation. Let me try to keep it to the minimal.</p>
-<p>Dynamic systems involve dynamics… and dynamics are modeled with differential equations. Basically something like:</p>
+<p>If you have followed the newsletter, you know that <a href="./007-AcausalityEquation.html">Modelica is acausal</a>, that it can be <a href="./008-AcausalityModels.html">powerful also for large systems</a>, and that once the symbolic manipulation is performed, the <a href="./010-WhatDynamicSimulationDoes.html">solver will compute the values of the states</a> based on their derivatives.</p>
+<p>One thing that I did not mention so far, on purpose, is why we <strong>don’t</strong> compute the derivatives based on the states - indeed, we compute the states based on the derivatives. Let’s talk about that and see what it means in practice.</p>
+<section id="theoretically" class="level2">
+<h2 class="anchored" data-anchor-id="theoretically">Theoretically</h2>
+<p>Remember the equation we had last time:</p>
 <pre><code>y_dot = f(y,u,t)</code></pre>
-<p>And <code>y_dot</code> is the time derivative of <code>y</code>. But what does that mean? The time derivative of a variable is the rate of change of this variable over time. It basically tells you in which direction and at which “pace” it will change its value. <code>u</code> are potential inputs (e.g.&nbsp;the speed of the wind or the ground slope)</p>
-<p>So if we know the speed <code>v</code> of our runner and we keep in mind that the speed is the derivative of the position <code>x</code>, then we can - knowing the initial position of the runner and its speed - compute its new position after a given amount of time (assuming the speed does not change in this amount of time).</p>
-<p>So now we have the question: do we know the new speed? Well, actually, if we have the equation <code>v = f(x , u, t)</code> and we know <code>x</code>, (potentially <code>u</code>,) and <code>t</code> then we can compute <code>v</code>!</p>
-<p>So now we just need to get the new value of <code>x</code> at the next time step. And so it goes.</p>
+<p>We could potentially turn it around.</p>
+<pre><code>y = f_2(y_dot,u,t)</code></pre>
+<p>And take the example of a model of mass that implements the second Newton’s Law:</p>
+<pre><code>F_I = m * a = m * v_dot</code></pre>
+<p>where:</p>
+<ul>
+<li><code>F_I</code> [N] is the inertial forces (the sum of forces applied on the mass),</li>
+<li><code>m</code> [kg] is the mass of the mass (yeah, I know),</li>
+<li><code>a</code> [m/s^2] is the acceleration of the mass,</li>
+<li><code>v</code> [m/s] is the velocity of the mass, and</li>
+<li><code>v_dot</code> [m/s^2] is the derivative of the velocity of the mass - hence equal to the acceleration <code>a</code>.</li>
+</ul>
+<p>Imagine we apply a sinusoidal velocity (<code>v</code>) on the mass, we could compute the inertial force (<code>F_I</code>) easily by first differentiating the sinus to get the acceleration (<code>a</code>) and then multiply it by <code>m</code>.</p>
+<p>In theory, yes! And it is actually easier to derivate than integrate analytically…</p>
 </section>
-<section id="you-are-hiding-something" class="level2">
-<h2 class="anchored" data-anchor-id="you-are-hiding-something">You are hiding something!</h2>
-<p>I kind of hide something here… how do you compute <code>x</code> knowing <code>v</code>? Well that is what a solver does. I don’t want to enter today into that topic because it is already quite a long theoretical article… but the simplest (not the best) solver is Forward Euler and <a href="https://www.linkedin.com/posts/clementcoic_%F0%9D%97%A8%F0%9D%97%BB%F0%9D%97%B1%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%80%F0%9D%98%81%F0%9D%97%AE%F0%9D%97%BB%F0%9D%97%B1%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%97%A2%F0%9D%97%97%F0%9D%97%98-%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%B9%F0%9D%98%83%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%80-activity-7317890082101780480-phce">I explain it here</a> if you are impatient. 😊</p>
-<p>And the right question to ask next is whether we cannot just solve the differential equation analytically instead of using a solver? Yes, in theory. It however gets really complex really fast because we usually have many variables and the equations are all but simple. So in practice, it is often impossible. Solvers are key to our simulations.</p>
+<section id="its-easier-to-derivate-analytically" class="level2">
+<h2 class="anchored" data-anchor-id="its-easier-to-derivate-analytically">It’s easier to <strong>derivate</strong> <em>analytically</em></h2>
+<p>I can’t tell how were your mathematics courses. Mine were great! And shout out 📢 to all my maths professors 🧑‍🏫 by the way, they were always very passionate people, making most part of it super interesting. Thanks!</p>
+<p>Well, I diverge…</p>
+<p>One thing I clearly remember from my courses is how easy we could derivate function, over and over again, analytically. And how challenging it could be to integrate functions!</p>
+<p>And you see it even now on computers, automatic differentiation is possible in many language / software, while integration is always numerical.</p>
+<p>So back to our mass example:</p>
+<pre><code>F_I = m * v_dot = m * d(sin(w * t))/dt = m * w * cos(w * t)</code></pre>
+<p>Easy! No need for “integration by parts”. And it might <strong>not</strong> be that easy all the time… keep this ⚠️ warning in mind.</p>
 </section>
-<section id="an-example-to-wrap-things-up" class="level2">
-<h2 class="anchored" data-anchor-id="an-example-to-wrap-things-up">An example to wrap things up</h2>
-<p>One of the first example I learned was a “quarter of a vehicle”. It basically means that you take a car, you cut it in 4 and look at a quarter. It is a fair thing to do if you assume the weight distribution to be equally spread over the four wheels. And we just look at the vertical displacement.</p>
-<p>So you have a very simple model that looks like a typical oscillator: a mass (quarter of the car mass) on which applies gravity (here the constant force), a spring-damper for the suspension and the floor that is slightly moving because it is not perfectly flat.</p>
+<section id="its-easier-to-integrate-numerically" class="level2">
+<h2 class="anchored" data-anchor-id="its-easier-to-integrate-numerically">It’s easier to <strong>integrate</strong> <em>numerically</em></h2>
+<p>Numerically however, it is much simpler to integrate.</p>
+<p>The integral is the area below the curve, right? Then we can just decompose the curve into small rectangles - from the x-axis to the curve -, and make the width of the rectangles as small as needed to approximate our integral. <a href="https://www.linkedin.com/in/farouk-tarib-34a905246/">Farouk</a> did a great animation for this. <a href="https://www.linkedin.com/posts/clementcoic_%F0%9D%97%9B%F0%9D%97%BC%F0%9D%98%84-%F0%9D%98%81%F0%9D%97%BC-%F0%9D%97%B6%F0%9D%97%BA%F0%9D%97%BD%F0%9D%97%BF%F0%9D%97%BC%F0%9D%98%83%F0%9D%97%B2-%F0%9D%98%81%F0%9D%97%B5%F0%9D%97%B2-%F0%9D%98%84%F0%9D%97%AE%F0%9D%98%86-activity-7343241989221449728-YFZT">I posted it here</a> and I recommend you check it: short and nicely done 😊</p>
+<p>So, if it was what we needed to do, we could do it. Now we’ll see in another article what a solver does.</p>
+</section>
+<section id="derivatives-can-introduce-noise" class="level2">
+<h2 class="anchored" data-anchor-id="derivatives-can-introduce-noise">Derivatives can introduce noise</h2>
+<p>Do you still have the above ⚠️ warning in mind?</p>
+<p>Analytical derivatives are all fine as long as everything is smooth and continuous. Unfortunately, a computer is anything but continuous. It is digital and by nature discrete. Discrete in the time steps it takes (on the x-axis) and discrete in the values it is able to take (on the y-axis) to represent variables.</p>
+<p>And the latter is one of the reasons why we cannot compare a <code>Real</code> variable with an <code>Integer</code>. <a href="https://www.linkedin.com/posts/clementcoic_%F0%9D%99%89%F0%9D%99%9A%F0%9D%99%AB%F0%9D%99%9A%F0%9D%99%A7-%F0%9D%99%AC%F0%9D%99%A7%F0%9D%99%9E%F0%9D%99%A9%F0%9D%99%9A-%F0%9D%98%AA%F0%9D%98%A7-%F0%9D%98%B9-0-%F0%9D%99%AC%F0%9D%99%9D%F0%9D%99%9A-activity-7360636698340290561-Wkkt">I explained it here</a>. The value of the <code>Integer</code> might not even “exist” in the <code>Real</code> scale.</p>
+<blockquote class="blockquote">
+<p>To avoid diverging too much, and still making the point: imagine you have a variable that shall represent values between 0 and 4 and can only take 4 values, you’ll most likely end up with {0, 1.33, 2.66 , 4}. Neither 1, 2 nor 3 “exist” in the set of this Real variable. Now the same can happen even if you have much more points than 4 to represent your number.</p>
+</blockquote>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/010/03_springDamper.jpeg" class="img-fluid figure-img"></p>
-<figcaption>Quarter of a vehicle model</figcaption>
+<p><img src="./assets/images/011/02_discretization.png" class="img-fluid figure-img"></p>
+<figcaption>Time discretization and quantization change the computed signal</figcaption>
 </figure>
 </div>
-<p>Assume the car is stopped. The floor won’t be moving with respect to the car… hopefully. We can see by simulating, how much the car will “sink” on its suspension and which steady-state it will reach.</p>
-<p>Now if we start driving, we will have the height of the floor constantly changing and that induces a compression on the spring and some dissipation from the damper. A resulting force will be applied to the mass that will be combined with the gravity… I might have lost you here. If so, go to the next paragraph, it is OK. If not, let’s continue: Newton told us that the sum of forces - over a constant mass (taking shortcuts here) - equals the mass multiplied by the acceleration. Acceleration! We get the new acceleration and that is the derivative of the speed, so we can use the solver to compute it! And from the speed, the position! Tadaaaam! And we can just go to the next step and repeat.</p>
-<p>Basically, the model you build will have the equations behind to express the relations between the states of your system and their derivatives. And so you’ll be able to compute these and let the solver tell you what the next states are.</p>
-<p>And hopefully, the mass (on which you might be sitting - the car - but not while reading this!) might not oscillate too much!</p>
+<p>This “discretization on the y-axis” is called “quantization”. And it also means that in between the values the variables can take, there are small steps. A trajectory is never perfectly smooth. So the derivative is no more trivial!</p>
+<p>Let’s have a look on the effect of the quantization on the derivative:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/011/02_derVsInt.png" class="img-fluid figure-img"></p>
+<figcaption>The Derivative of the sinus introduces much noise</figcaption>
+</figure>
+</div>
+<p>This is quite interesting! We took the value of <code>w</code> to be <code>1</code> so that the integral of the sinus multiplied by <code>-1</code> is <code>cos(t) = der(sin(t))</code>. We plot on the same graph, the analytical solution, the result of the integral (with the <code>-1</code> gain) and the derivative.</p>
+<p>The integral and analytical solution are perfectly overlapping. The derivative however is extremely noisy!</p>
+<p>To be fair, we took a pretty bad quantization while our computers are much better now, but it illustrates the point very well. And with a higher quantization, the effect is less, but we get much more complex model in general and they will clearly suffer from this “cumulatively”.</p>
+<blockquote class="blockquote">
+<p>Tip and trick: if you can define the <code>min</code>, <code>max</code> and <code>nominal</code> values of your variables, this will help the tool defining the range the variable can take and thus better define how to “split its range”. The nominal value will help in case of need for normalization - we won’t cover that anytime soon.</p>
+</blockquote>
+</section>
+<section id="integration-is-more-physical" class="level2">
+<h2 class="anchored" data-anchor-id="integration-is-more-physical">Integration is more physical</h2>
+<p>This one can cause me some troubles… and I take the risk… at least, silently between us:</p>
+<blockquote class="blockquote">
+<p>📢 INTEGRATION IS MORE PHYSICAL!!</p>
+</blockquote>
+<p>Oups, that was a bit louder than desired. (Or not?)</p>
+<p>Let me explain: imagine you specify the speed of the mass to be a step. That means that its acceleration will be infinite (well a Dirac) at the moment of the step, and <code>0</code> before and after. Does that sound physical to you? And note that the speed is the derivative of the position so a ramp on the position would have the same effect. And there are many cases like that that make the derivative “go crazy”, while the integral will tend to “smooth things up”.</p>
+</section>
+<section id="what-it-means-in-practice" class="level2">
+<h2 class="anchored" data-anchor-id="what-it-means-in-practice">What it means in practice</h2>
+<p>I hear you: “Enough about the theory, what does this mean in practice?”</p>
+<p>Well… I don’t know! 🤷‍♂️ Just kiddin’ 😉</p>
+<p>It means that while acausality is great for many things, it does not mean we should not think about what we model, how we model it and understand the consequences. And especially when it comes to sources!</p>
+<p>The tool you use might be able to manipulate the equations in order to integrate where it apparently would have derivated. Yet it will hardly solve the case of the velocity source connected to a mass.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/011/04_badIdeas.jpeg" class="img-fluid figure-img"></p>
+<figcaption>Some examples of bad ideas for connections :)</figcaption>
+</figure>
+</div>
+<p>You can check the model from last week - the quarter of a vehicle: it has a force source applied to the mass and the position source is applied on the spring-damper, not on the mass. This was clearly physical, and yet carefully reflected. One could have said that the wheel has its own mass that is not suspended, so between the position source and the damper. Yes! But the mass is really small compared to the quarter of the vehicle and would have caused us many numerical issues… and I would have added that the tyre itself introduces an additional stiffness and damping effect, so I would have placed it between the wheel’s mass and the ground. 😉</p>
 </section>
 <section id="the-end-for-today" class="level2">
 <h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
-<p>Enough for today. This was an abstract one and I hope it’s OK. I had to cover the process.</p>
-<p>Next time, we will go into something more applied. I initially wanted to cover what solvers do, but unless you say it in comments, I will wait a bit so we get some actual modeling going on first.</p>
+<p>Enough for today. I hope this clarifies a point and that you’ll have that in mind for your next models. Maybe you had some issues with previous models - independently from the language or software -, and this could be the cause?</p>
+<p>In any case, I hope this was useful.</p>
 <p><em>Break is over, go back to what you were doing.</em></p>
 <p>Clem</p>
-<p><a href="./011-LetsIntegrate.html">Next</a> -&gt;</p>
+<p><a href="./about.html">Next</a> -&gt;</p>
 
 
 </section>

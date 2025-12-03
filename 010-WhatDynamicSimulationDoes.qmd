@@ -77,7 +77,7 @@ One of the first example I learned was a "quarter of a vehicle". It basically me
 
 So you have a very simple model that looks like a typical oscillator: a mass (quarter of the car mass) on which applies gravity (here the constant force), a spring-damper for the suspension and the floor that is slightly moving because it is not perfectly flat.
 
-![Quarter of a vehicle model](./assets/images/010/03_springDamper.png)
+![Quarter of a vehicle model](./assets/images/010/03_springDamper.jpeg)
 
 Assume the car is stopped. The floor won't be moving with respect to the car... hopefully. We can see by simulating, how much the car will "sink" on its suspension and which steady-state it will reach.
 
@@ -97,4 +97,4 @@ Next time, we will go into something more applied. I initially wanted to cover w
 Clem
 
 
-[Next](./about.qmd) ->
+[Next](./011-LetsIntegrate.qmd) ->
