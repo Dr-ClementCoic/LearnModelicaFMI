@@ -32,6 +32,8 @@ website:
             href: 009-NeedForDynamicSimulation.qmd
           - text: "What Dynamic Simulation Does?"
             href: 010-WhatDynamicSimulationDoes.qmd
+          - text: "Understand your model: let's integrate!"
+            href: 011-LetsIntegrate.qmd
       - section: "FMI"
         contents:
           # - text: "FMI 101"
