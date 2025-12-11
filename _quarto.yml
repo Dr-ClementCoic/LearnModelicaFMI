@@ -34,6 +34,8 @@ website:
             href: 010-WhatDynamicSimulationDoes.qmd
           - text: "Understand your model: let's integrate!"
             href: 011-LetsIntegrate.qmd
+          - text: "Choosing your Christmas gift!"
+            href: 012-ReplaceableModels.qmd
       - section: "FMI"
         contents:
           # - text: "FMI 101"
