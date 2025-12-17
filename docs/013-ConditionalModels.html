@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Acausality, the secret service of Modelica – Modelica &amp; FMI</title>
+<title>Do you deserve a Christmas present? – Modelica &amp; FMI</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./007-AcausalityEquation.html">Acausality, the secret service of Modelica</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./013-ConditionalModels.html">Do you deserve a Christmas present?</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./007-AcausalityEquation.html" class="sidebar-item-text sidebar-link active">
+  <a href="./007-AcausalityEquation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Acausality, the secret service of Modelica</span></a>
   </div>
 </li>
@@ -189,7 +189,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./013-ConditionalModels.html" class="sidebar-item-text sidebar-link">
+  <a href="./013-ConditionalModels.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Do you deserve a Christmas present?</span></a>
   </div>
 </li>
@@ -228,23 +228,23 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#acausa-what" id="toc-acausa-what" class="nav-link active" data-scroll-target="#acausa-what">Acausa… what?</a></li>
-  <li><a href="#why-is-that-useful" id="toc-why-is-that-useful" class="nav-link" data-scroll-target="#why-is-that-useful">Why is that useful?</a></li>
-  <li><a href="#speed-control" id="toc-speed-control" class="nav-link" data-scroll-target="#speed-control">Speed control</a></li>
-  <li><a href="#may-the-force-be-with-you" id="toc-may-the-force-be-with-you" class="nav-link" data-scroll-target="#may-the-force-be-with-you">May the force be with you!</a></li>
-  <li><a href="#whats-my-body-surface" id="toc-whats-my-body-surface" class="nav-link" data-scroll-target="#whats-my-body-surface">What’s my body surface?</a></li>
-  <li><a href="#a-philosophical-note" id="toc-a-philosophical-note" class="nav-link" data-scroll-target="#a-philosophical-note">A philosophical note…</a></li>
+  <li><a href="#the-mean-way" id="toc-the-mean-way" class="nav-link active" data-scroll-target="#the-mean-way">The mean way</a></li>
+  <li><a href="#the-better-way" id="toc-the-better-way" class="nav-link" data-scroll-target="#the-better-way">The better way</a></li>
+  <li><a href="#is-it-useful-in-practice" id="toc-is-it-useful-in-practice" class="nav-link" data-scroll-target="#is-it-useful-in-practice">Is it useful in practice?</a>
+  <ul class="collapse">
+  <li><a href="#conditional-interfaces" id="toc-conditional-interfaces" class="nav-link" data-scroll-target="#conditional-interfaces">Conditional interfaces</a></li>
+  <li><a href="#conditional-models" id="toc-conditional-models" class="nav-link" data-scroll-target="#conditional-models">Conditional models</a></li>
+  </ul></li>
   <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
-  <li><a href="#bonus-resources-for-fast-learners" id="toc-bonus-resources-for-fast-learners" class="nav-link" data-scroll-target="#bonus-resources-for-fast-learners">Bonus: resources for fast learners</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./007-AcausalityEquation.html">Acausality, the secret service of Modelica</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./013-ConditionalModels.html">Do you deserve a Christmas present?</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Acausality, the secret service of Modelica</h1>
+<h1 class="title">Do you deserve a Christmas present?</h1>
 </div>
 
 
@@ -263,113 +263,101 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/007/01_header.png" class="img-fluid figure-img"></p>
-<figcaption>Acausality explained</figcaption>
+<p><img src="./assets/images/013/01_header.png" class="img-fluid figure-img"></p>
+<figcaption>Let’s refactor our hot beverage model!</figcaption>
 </figure>
 </div>
 <p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
-<p>Today, we are at the 007 article of this series - the James Bond article… We need some kind of Secret Agent story! So we are covering one of the key capabilities of the Modelica language: acausality. You’ll see, it is like a super agent with lots of gadgets, solving a lot of our problems!</p>
-<section id="acausa-what" class="level2">
-<h2 class="anchored" data-anchor-id="acausa-what">Acausa… what?</h2>
-<p>Yep, that’s exactly what most of the people think. And to be fair, you have to search quite a bit on the internet to be sure that I did not make up this word.</p>
-<p>In a nutshell, acausality is the lack of causality. 🙄 Feel free to thank me in the comment for this one… And for my defense, it is true! We just need to discuss causality first. Causality is in its general definition the “relation from cause to effect”. But what does it mean for us, in the modeling and simulation world? It means more specifically the definition of inputs and outputs - the inputs causes the effects on the outputs. A causal model shall receive its input(s) in order to compute its output(s).</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/007/02_causalModel.png" class="img-fluid figure-img"></p>
-<figcaption>For a causal model with parameters, inputs are given and outputs are computed by the model</figcaption>
-</figure>
-</div>
-<p>So an acausal model is a model for which inputs and outputs are not defined at first. Based on the variables that you provide, the model is “turned around” to solved for the remaining variables. Acausality is the property - here of a model or a language - to be acausal.</p>
-<p><em>Note: this image is NOT representing a block diagram. Block diagrams are NOT causal by default. Some are (e.g.&nbsp;Simulink) and some aren’t (e.g.&nbsp;<code>Modelica.Blocks</code>). This is just a schematic here.</em></p>
+<p>📬 📰 <strong>Saturday editions</strong> - for having more time to read during the weekend! Let’s experiment for a few weeks. Let me know if this is not a convenient day (❓).</p>
+<p>In the <a href="./012-ReplaceableModels.html">last article</a>, we made sure that everyone could choose their preferred gift - only from a curated selection, tuned for each person.<br>
+Yet, we all know that only well-behaved people get presents…</p>
+<p>We did not consider this, so far! Let’s correct that - and learn something new :)</p>
+<section id="the-mean-way" class="level2">
+<h2 class="anchored" data-anchor-id="the-mean-way">The mean way</h2>
+<p>If you understood the <code>replaceable</code> concept, you might realize that there is an easy - and yet mean way - to solve this issue.</p>
+<p>I let you think about it for a second.</p>
+<p>The second is over! And yes, you could just have an “empty” gift that <code>extends</code> from all receivers and then they could all get it!</p>
+<pre><code>model Empty
+    extends .ModelicaNewsletter.Replaceable.Receivers.Partner;
+    extends .ModelicaNewsletter.Replaceable.Receivers.Kids;
+    extends .ModelicaNewsletter.Replaceable.Receivers.Parents;
+end Empty;</code></pre>
+<p>However, that is really mean… you arrive, see the gift, open it, and find nothing!</p>
+<p>Also, unless you know some tricks that we have not yet discussed, the person could still select another gift other than the “Empty” one - because choosing was the aim of our previous article.</p>
+<p>📢 <em>If you know how to make sure that a person - let’s say the parents - get the “Empty” gift, say how you would do it in a comment!</em> 👇</p>
 </section>
-<section id="why-is-that-useful" class="level2">
-<h2 class="anchored" data-anchor-id="why-is-that-useful">Why is that useful?</h2>
-<p>Let’s step back and look at a single equation:</p>
-<pre><code>1. F = (1/2 * rho * c_d * A) * v^2</code></pre>
-<p>This is the typical friction <code>F</code> (units <code>[N]</code> ) of a body of surface <code>A [m^2]</code> evolving at a given speed <code>v [m/s]</code> in a fluid of density <code>rho [kg/m^3]</code>. (<code>c_d</code> is the unitless drag coefficient and is function of how aerodynamic the body is.)</p>
-<p>Note that I put all parameters in brackets so that we can easily see that the two variables F and v are related by a set of parameters. We can just create a new parameter <code>K = (1/2 * rho * c_d * A)</code> (with units <code>[N/(m/s)^2]</code>) and we end up with <code>F = K * v^2</code>.</p>
-<p>For our example, let’s consider that we are healthy engineers and we like to go for a run from time to time. If you don’t, you should. If you don’t want to… please bear with me as this is today’s example. Oh, and the speed is the relative to the wind speed and here we will just consider the wind to be 0 - because our focus is on the (a)causality only.</p>
+<section id="the-better-way" class="level2">
+<h2 class="anchored" data-anchor-id="the-better-way">The better way</h2>
+<p>What you really want is the possibility to just remove the entire gift from the Christmas tree, if someone was mean. We can do it!</p>
+<p>In Modelica, there is the possibility to do “conditional instance”. You know what an “instance” is. We covered it several times, and especially last week: it’s when we “use a model” (drag&amp;drop). Well, we can make this usage conditional. And based on the condition, the model can <strong>not</strong> be instantiated.</p>
+<p>Let’s see an example:</p>
+<pre><code>  1.  parameter Boolean meanParents = true "true, if mean and won't get a present this year";
+  2.  replaceable .ModelicaNewsletter.Replaceable.Receivers.Parents parents if not meanParents "Your parents can choose their gift from the list" annotation(...);</code></pre>
+<p>I added some line numbers to explain:</p>
+<ol type="1">
+<li>First we introduced a Boolean parameter. This is a toggle between <code>true</code> and <code>false</code>. A Boolean cannot take any other value. So either you consider your parents were mean or not.</li>
+<li>Then we only instantiated the gift “parents” <code>if not meanParents</code> - so basically if they were nice.</li>
+</ol>
+<p>And that’s all. If the parents are not mean, then <code>not meanParents</code> is equal to “not false”, which is <code>true</code>. Therefore, the present is instantiated.<br>
+If the parents are mean, then <code>meanParents = true</code> and <code>(not meanParents) = false</code> and the present will not be instantiated.</p>
+<blockquote class="blockquote">
+<p>Note that we did not have to use the negation in the condition. We could have created the parameter as <code>niceParents</code> and have done the conditional instantiation as <code>... parents if niceParents</code> and we would have reached the same outcome. But we need drama to make a nice story so I keep the “mean Parents” here 😉</p>
+</blockquote>
+<p>And as you can see in this screenshot, when the parents are mean, their gift is faded away, which means that it is not active. <img src="./assets/images/013/02_conditionalGift.png" class="img-fluid" alt="Parents gift is faded away as the condition is false"></p>
 </section>
-<section id="speed-control" class="level2">
-<h2 class="anchored" data-anchor-id="speed-control">Speed control</h2>
-<p>Let’s say you have a watch tracking your speed and you start slowly increasing your speed until 10km/h. That’s a convenient speed because you’ll unlikely get a speed ticket at this pace. So you know the speed and can compute the force you’ll have to face when running at this speed. (We should not forget to convert the units!)</p>
-<p>Below is a simple Modelica model, written in code (we are slowly introducing parts of the Modelica language here) and the simulation result.</p>
+<section id="is-it-useful-in-practice" class="level2">
+<h2 class="anchored" data-anchor-id="is-it-useful-in-practice">Is it useful in practice?</h2>
+<p>Yes! A lot! We all have mean people around us!<br>
+Euhhh sorry, that was not what I wanted to say…</p>
+<p>There are plenty of use cases, where we want this type of conditional instantiation. The more common one is for changing the level of fidelity when modeling physics. For example, consider an electrical resistor: it dissipates electrical power into heat (via the Joule losses). But are you always interested in modeling how this heat is evacuated?</p>
+<section id="conditional-interfaces" class="level3">
+<h3 class="anchored" data-anchor-id="conditional-interfaces">Conditional interfaces</h3>
+<p>No.&nbsp;Often you just want to look at the electrical variables and not the heat dissipation. So the heat port - named… <code>heatPort</code> - is conditionally instantiated so that you are not obliged to connect it to a thermal system.<br>
+This is how part of the code looks like:</p>
+<pre><code>  parameter Boolean useHeatPort = false "= true, if heatPort is enabled" annotation(...);
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heatPort(...) if useHeatPort "Conditional heat port" annotation(...);</code></pre>
+<p>And below are two instances of the same <code>Resistor</code> model. The one on the left has the Boolean <code>useHeatPort</code> set to <code>false</code>, and the one on the right set to <code>true</code>. And we see indeed the heat port in red on the right resistor.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/007/03_runnerDrag.png" class="img-fluid figure-img"></p>
-<figcaption>Simple Modelica code of the runner’s drag friction</figcaption>
+<p><img src="./assets/images/013/03_resistances.png" class="img-fluid figure-img"></p>
+<figcaption>The heat port is active on the right as the Boolean is set to true</figcaption>
 </figure>
 </div>
-<p>We see that the Modelica code is quite readable: - The model starts with <code>model ModelName</code> (here the ModelName is Runner) and ends with <code>end ModelName;</code> - Then we have different types of variables: 1. The variables which value will not change during the time simulation are called parameters and are identified by a keyword <code>parameter</code>. Here I need to stop for a second and expand on this. Modelica makes a difference between <code>constant</code> and <code>parameter</code>. A constant has the value specified once before compilation and the value cannot change. The parameter can get its value changed until the simulation starts. (This last sentence is still partly incorrect as there are differences between structural and non-structural parameters, but let’s keep that for later.) 2. The variables which value can change during the simulation. These are time variable and do not have such a keyword that precedes them. - Here we specified the “type” of the parameters and variables with their units, that are available in the Modelica Standard Library (we often refer to it as MSL). But behind, these are all <code>Real</code> with specific units. - Note that we could define a <code>final parameter</code>, which basically freezes how the parameter is computed from the others. You cannot overwrite its definition later on when using this model. - Finally, we have an <code>equation</code> section where we write the time relationships of our variables - (And the small <code>a</code> on line 14 hides a lot of graphical and dependency annotations that I could have removed but I wanted to keep them so you know they exist. No need to dig into these now)</p>
-<p>There is something to highlight here: we have two (2) variables and thus have two (2) equations 🤔 This is trivial and yet, needs to be noted. Variables are unknowns. They need to get values from the model. So here, we specify the speed of our runner and then we specify the relationship between force and speed. Naturally, we expect the simulation to compute first the speed and then the force, from the speed and all parameters. This happens and gives us this nice parabolic curve:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/007/04_runnerDragCurve.png" class="img-fluid figure-img"></p>
-<figcaption>Force / speed dependency on the drag friction model</figcaption>
-</figure>
-</div>
-<p>Now, this looks like a causal model that takes the speed as “input” and “outputs” the force. You could say I am cheating and put the equations in the right order and form. Let me show you something else.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/007/05_secondRunner.png" class="img-fluid figure-img"></p>
-<figcaption>A second runner model, perfectly equivalent to the first one, from a Modelica perspective</figcaption>
-</figure>
-</div>
-<p>I have now reshuffled the equations: the order is different and the force/speed relationship is also turned around. The model simulates perfectly fine and behaves identically. This is no problem. Modelica can change the order of the equations and turned them around as needed, as the language is acausal.</p>
+<p>There are similar cases all around <code>MSL</code> (the Modelica Standard Library). For example, most mechanical sources (e.g.&nbsp;<code>Modelica.Mechanics.Translational.Sources.Position</code>) have a conditional support connector to allow for having a relative source between components.</p>
 </section>
-<section id="may-the-force-be-with-you" class="level2">
-<h2 class="anchored" data-anchor-id="may-the-force-be-with-you">May the force be with you!</h2>
-<p>Now what happens if the speed is NOT known? You might NOT run with a watch telling you your current speed (or you might have one and not car about it). Or you are facing a uphill part of your track and cannot make it to the 10km/h because you are putting the bulk of your energy into going uphill.</p>
-<p><em>Note: and this latter example shows that, intuitively, it is NOT enough to just model your friction for measuring your effort, you obviously need the ground inclination, your weight etc. Just saying to bring back in mind the topic of “what’s your modeling goal”. And here, we don’t mind because we focus on (a)causality only. But obviously, running is not just about fighting 2N of front force…</em></p>
-<p>You might actually just “feel” how much effort you want to put. And let’s assume that the force you put in fighting the aerodynamic drag oscillates between 1N and 2N. Then the Modelica model changes slightly: only the equation section, the speed is no more specified and the force is.</p>
+<section id="conditional-models" class="level3">
+<h3 class="anchored" data-anchor-id="conditional-models">Conditional models</h3>
+<p>Another use case where conditional instantiation is broadly used, is the creation of “container models”. Let me explain this.</p>
+<p>You are today designing a new healthcare imaging device that will allow detecting cancerous cells faster and with more accuracy. Of course you work at the best healthcare company: Siemens Healthineers 😉 (some free ads haha). Point is, you are designing a new electric drive that will move the imaging device with a given speed and position it with accuracy.<br>
+Based on the step you are in the design, you might have different needs for your model:</p>
+<ul>
+<li>First: a rough model to understand the drive contributions to the overall system dynamics. This model might be technology-agnostic.</li>
+<li>Second: you select a given drive technology, and refine your model accordingly. The level of detail is still not really high.</li>
+<li>Third: you have a detailed design of your drive, and accordingly model detailed physical effects of the drive. This model is very detailed.</li>
+<li>Finally: you select the drive model from a supplier, and receive an FMU (see <a href="./006-SpreadingWithFMI.html">the first article about FMI</a>) that includes the supplier model of the selected drive. For all the above cases, you might want to easily switch between the different model fidelities.</li>
+</ul>
+<p>Now if you followed well all along, you would be wondering: why should I not do that with a <code>replaceable model</code>. And you would be right! You could.<br>
+The small note I will add - and that makes a big difference - is that this drive is not an isolated case: you actually have several components like that, that you want to switch fidelity <strong>simultaneously</strong>.</p>
+<p>However, a <code>replaceable</code> model cannot be redeclared based on a parameter. So we cannot have a system-level parameter that would <code>redeclare</code> all the <code>replaceable</code> models to a given fidelity level.<br>
+And that is when the conditional instantiation can play an important role.</p>
+<p>If that is an interesting topic for you, you could have a look at section 3 of <a href="https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP14096599_JordanSchmitz.pdf">Philip Jordan’s paper</a> - freely accessible.<br>
+He explains this for an aircraft ECS library. (ECS stands for Environment Control System and, taking shortcuts, it’s like an aircraft air conditioning.) He also shows the following compressor case, with four different “Detail Levels”:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/007/06_secondRunnerCurve.png" class="img-fluid figure-img"></p>
-<figcaption>The Modelica compiler is able to use the equation on line 11 to solve the speed from the known force on line 12.</figcaption>
+<p><img src="./assets/images/013/04_containerJordan.png" class="img-fluid figure-img"></p>
+<figcaption>Conditional instantiation of different Detail Levels of a compressor - from Philip Jordan</figcaption>
 </figure>
 </div>
-<p>Now this should be quite impressive. The compiler understands that the line 12 specifies the force F; there is no dependence on speed, only on time. Therefore it will have to manipulate equation 11 to solve the speed from the computed force from line 12.</p>
-<p>Let me say decompose that again. The compiler is able to 1. turn the equations around to solve for the right variable (causalization) and 2. reorder them (sequencing).</p>
-<pre><code>1. F = 1.5 + sin( time ) / 2
-2. v = sqrt( F / K )</code></pre>
-<p>We will see this in more detail in a next article. Keep in mind the words 🙂</p>
+<p>I did work with Philip - very nice guy 😉 -, and got inspired by the same structure to co-develop the Electric Power System library at Dassault Systèmes, together with Markus Andres and Marco Kessler. Just to point that this can be quite a useful model architecture.</p>
 </section>
-<section id="whats-my-body-surface" class="level2">
-<h2 class="anchored" data-anchor-id="whats-my-body-surface">What’s my body surface?</h2>
-<p>Already, you might understand now the power of acausality. The models are made of the equations that describe the system - the physics you want to model -, and the compiler can manipulate them to solve for your specified problem.</p>
-<p>But it is not stopping here with Modelica! You can additionally find out parameter values if you specify the values of all variables (at initial time). So for the equation <code>F = K*v^2</code>, if <code>F</code> and <code>v</code> are known at initial time, the compiler will find out that value of <code>K</code>, and if all the parameters composing <code>K</code> are known but one (let’s say the area <code>A</code>), then this one will be found out! 🤯</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/007/07_runnerSize.png" class="img-fluid figure-img"></p>
-<figcaption>Computing the Area parameter value to match the requested speed and force at initial time.</figcaption>
-</figure>
-</div>
-<p>For this to work, we needed to do two things: add an initial equation AND relax the parameter - i.e.&nbsp;saying its value is unknown - by using the construct <code>fixed=false</code>. In practice, below is what the resulting equations look like at initial time.</p>
-<pre><code>At initial time:
-1. F = 1.5 N
-2. v = 2 m/s
-3. K = F / v^2
-4. A = K / (0.5 * rho * c_d)</code></pre>
-<p><em>Note: we are touching the idea of a “square system” of equation. Let us just say here at loud that we need for a system to be solvable to have as many unknown as the number of independent equations. We will reinforce this concept in the near future.</em></p>
-</section>
-<section id="a-philosophical-note" class="level2">
-<h2 class="anchored" data-anchor-id="a-philosophical-note">A philosophical note…</h2>
-<p>I want us to wrap things up here with a bit of a philosophical note: causality is not physical. Some even call it “computational causality”. Causality is a step to be able to solve the computational problem. There is no causality in nature.</p>
 </section>
 <section id="the-end-for-today" class="level2">
 <h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
-<p>Enough for today. Next time, we will see how to use this concept for a larger system and in the graphical user interface.</p>
+<p>Enough for today. I hope this showed you another way to work with model variants and you understood the main difference between <code>replaceable</code> and <code>conditional</code> models.<br>
+If not, let me know what remains unclear, and I will try to explain this further.</p>
 <p><em>Break is over, go back to what you were doing.</em></p>
 <p>Clem</p>
-<p><a href="./008-AcausalityModels.html">Next</a> -&gt;</p>
-</section>
-<section id="bonus-resources-for-fast-learners" class="level2">
-<h2 class="anchored" data-anchor-id="bonus-resources-for-fast-learners">Bonus: resources for fast learners</h2>
-<ul>
-<li><a href="https://www.linkedin.com/posts/clementcoic_drccdontconfuse-activity-7269254826260115457-Ois8">Don’t confuse causal/acausal modeling with block diagram/component-based modeling</a></li>
-<li><a href="https://www.linkedin.com/posts/clementcoic_drccacausalitymodelica-activity-7273241095151452160-BStr">Acausality with Modelica explained</a></li>
-<li><a href="https://www.linkedin.com/posts/clementcoic_%F0%9D%97%A6%F0%9D%97%BC%F0%9D%97%B9%F0%9D%98%83%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%97%AE-%F0%9D%97%BF%F0%9D%97%B2%F0%9D%97%AE%F0%9D%97%B9-%F0%9D%97%B2%F0%9D%97%BB%F0%9D%97%B4%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B2%F0%9D%97%B2-activity-7284857639807705089-hdZU">Solving a real engineering design problem with simulation</a></li>
-</ul>
+<p><a href="./about.html">Next</a> -&gt;</p>
 
 
 </section>

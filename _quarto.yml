@@ -36,6 +36,8 @@ website:
             href: 011-LetsIntegrate.qmd
           - text: "Choosing your Christmas gift!"
             href: 012-ReplaceableModels.qmd
+          - text: "Do you deserve a Christmas present?"
+            href: 013-ConditionalModels.qmd
       - section: "FMI"
         contents:
           # - text: "FMI 101"

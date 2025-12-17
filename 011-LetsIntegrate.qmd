@@ -84,7 +84,7 @@ This "discretization on the y-axis" is called "quantization". And it also means 
 
 Let's have a look on the effect of the quantization on the derivative:
 
-![The Derivative of the sinus introduces much noise](./assets/images/011/02_derVsInt.png)
+![The Derivative of the sinus introduces much noise](./assets/images/011/03_derVsInt.png)
 
 This is quite interesting! We took the value of `w` to be `1` so that the integral of the sinus multiplied by `-1` is `cos(t) = der(sin(t))`. We plot on the same graph, the analytical solution, the result of the integral (with the `-1` gain) and the derivative.
 
