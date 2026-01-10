@@ -115,4 +115,4 @@ If not, let me know what remains unclear, and I will try to explain this further
 Clem
 
 
-[Next](./about.qmd) ->
+[Next](./014-ModelVariants.qmd) ->

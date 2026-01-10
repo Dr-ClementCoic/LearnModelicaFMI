@@ -38,10 +38,10 @@ website:
             href: 012-ReplaceableModels.qmd
           - text: "Do you deserve a Christmas present?"
             href: 013-ConditionalModels.qmd
+          - text: "A (technical) summary of model variants"
+            href: 014-ModelVariants.qmd
       - section: "FMI"
         contents:
-          # - text: "FMI 101"
-          #   href: 006-SpreadingWithFMI.qmd
           - text: "Spreading the word with FMI"
             href: 006-SpreadingWithFMI.qmd
       - text: "About"

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The need for dynamic simulation – Modelica &amp; FMI</title>
+<title>modelvariants – Modelica &amp; FMI</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./009-NeedForDynamicSimulation.html">The need for dynamic simulation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./014-ModelVariants.html">A (technical) summary of model variants</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -165,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./009-NeedForDynamicSimulation.html" class="sidebar-item-text sidebar-link active">
+  <a href="./009-NeedForDynamicSimulation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">The need for dynamic simulation</span></a>
   </div>
 </li>
@@ -195,7 +195,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./014-ModelVariants.html" class="sidebar-item-text sidebar-link">
+  <a href="./014-ModelVariants.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">A (technical) summary of model variants</span></a>
   </div>
 </li>
@@ -234,186 +234,146 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#a-first-wrong-solution" id="toc-a-first-wrong-solution" class="nav-link active" data-scroll-target="#a-first-wrong-solution">A first (wrong) solution</a></li>
-  <li><a href="#a-second-correct-solution" id="toc-a-second-correct-solution" class="nav-link" data-scroll-target="#a-second-correct-solution">A second (correct) solution</a>
+  <li><a href="#title-a-technical-summary-of-model-variants" id="toc-title-a-technical-summary-of-model-variants" class="nav-link active" data-scroll-target="#title-a-technical-summary-of-model-variants">title: “A (technical) summary of model variants”</a></li>
+  <li><a href="#an-end-user-perspective" id="toc-an-end-user-perspective" class="nav-link" data-scroll-target="#an-end-user-perspective">An end-user perspective</a>
   <ul class="collapse">
-  <li><a href="#an-intuitive-next-step" id="toc-an-intuitive-next-step" class="nav-link" data-scroll-target="#an-intuitive-next-step">An intuitive next step</a></li>
-  <li><a href="#a-small-amount-of-time-later" id="toc-a-small-amount-of-time-later" class="nav-link" data-scroll-target="#a-small-amount-of-time-later">A “small amount of time” later</a></li>
-  <li><a href="#until-the-last-drop" id="toc-until-the-last-drop" class="nav-link" data-scroll-target="#until-the-last-drop">Until the last drop</a></li>
+  <li><a href="#replaceable-models" id="toc-replaceable-models" class="nav-link" data-scroll-target="#replaceable-models">Replaceable models</a></li>
+  <li><a href="#container-models" id="toc-container-models" class="nav-link" data-scroll-target="#container-models">Container models</a></li>
   </ul></li>
-  <li><a href="#what-about-different-dimensions-of-the-cone" id="toc-what-about-different-dimensions-of-the-cone" class="nav-link" data-scroll-target="#what-about-different-dimensions-of-the-cone">What about different dimensions of the cone</a></li>
+  <li><a href="#a-library-developer-perspective" id="toc-a-library-developer-perspective" class="nav-link" data-scroll-target="#a-library-developer-perspective">A library developer perspective</a>
+  <ul class="collapse">
+  <li><a href="#replaceable-models-1" id="toc-replaceable-models-1" class="nav-link" data-scroll-target="#replaceable-models-1">Replaceable models</a></li>
+  <li><a href="#container-conditional-models" id="toc-container-conditional-models" class="nav-link" data-scroll-target="#container-conditional-models">Container conditional models</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./009-NeedForDynamicSimulation.html">The need for dynamic simulation</a></li></ol></nav>
-<div class="quarto-title">
-<h1 class="title">The need for dynamic simulation</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./014-ModelVariants.html">A (technical) summary of model variants</a></li></ol></nav></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
+<section id="title-a-technical-summary-of-model-variants" class="level2">
+<h2 class="anchored" data-anchor-id="title-a-technical-summary-of-model-variants">title: “A (technical) summary of model variants”</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/009/01_header.png" class="img-fluid figure-img"></p>
-<figcaption>Which tanks empty first?</figcaption>
+<p><img src="./assets/images/014/01_header.png" class="img-fluid figure-img"></p>
+<figcaption>Model variants summary</figcaption>
 </figure>
 </div>
 <p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
 <p>📬 📰 <strong>Saturday editions</strong> - for having more time to read during the weekend! Let’s experiment for a few weeks. Let me know if this is not a convenient day (❓).</p>
-<p>I guess you might have seen this image with the two tanks below. You might know the answer. Bear with me, I hope to bring a different twist to this problem.</p>
+<p>We closed the year 2025 with a couple of articles that had a Christmas taste:</p>
+<ol type="1">
+<li><a href="./012-ReplaceableModels.html">Choosing your Christmas gifts!</a>: we looked into the “replaceable models” concept in Modelica, and how it allowed for changing the model based on some constraints.</li>
+<li><a href="./013-ConditionalModels.html">Do you deserve a Christmas present?</a>: we saw that it was possible to make (part of the) models conditional, and that this could be used to build “container models” that allow for selecting a level fidelity consistently throughout several models, with one click.</li>
+</ol>
+<p>What we are missing however is a trade-off between both solutions: when to use what.<br>
+Sometimes, the information can get lost in the story wrapping, so this one might be more straight to the point.</p>
+<p>I hope you had a great time off, by the way! I did 😊.<br>
+Happy to be back with you though!</p>
+</section>
+<section id="an-end-user-perspective" class="level2">
+<h2 class="anchored" data-anchor-id="an-end-user-perspective">An end-user perspective</h2>
+<p>Let’s assume the models are well engineered…<br>
+(And if you need help on how to engineer your models, reach out to me 😊)</p>
+<section id="replaceable-models" class="level3">
+<h3 class="anchored" data-anchor-id="replaceable-models">Replaceable models</h3>
+<p>When a replaceable model is used, the user can easily change the model variant to any matching choices, or a selection of these, usually with a drop-down menu. This means that if you develop a car model and are interested in defining the model for the tyres, you can easily choose between the existing tyre models.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/009/02_tankEmptying.jpeg" class="img-fluid figure-img"></p>
-<figcaption>A problem to solve: which tank empties first?</figcaption>
+<p><img src="./assets/images/014/02_replaceableTyres.png" class="img-fluid figure-img"></p>
+<figcaption>A car template from Modelon, with 4 replaceable tyres</figcaption>
 </figure>
 </div>
-<p>LinkedIn has been on fire this week with this problem to solve. I am usually not putting too much attention on these, and this time is a bit different.</p>
-<section id="a-first-wrong-solution" class="level2">
-<h2 class="anchored" data-anchor-id="a-first-wrong-solution">A first (wrong) solution</h2>
-<p>There were so many posts stating that both tanks would empty at the same time, because the height of both tanks is the same.</p>
-<p>But first, not everyone knows hydraulics (or remember it) so let me explain quickly this statement: the pressure under water is due to the “column of water” (basically the height of water) above the point at which you want to know the pressure. So if you swim above water, you just get the atmospheric pressure and, as soon as you dive, you start getting more pressure induced by the water above you. The deeper you dive, the more pressure applies on your body.</p>
-<p>So, the (wrong) argumentation goes:</p>
-<ol type="1">
-<li>the same height of the tank, the same pressure at the bottom!</li>
-<li>And the same pressure at the bottom, the same amount of water flows through the valve.</li>
-<li>So they empty in the same amount of time? 🧐</li>
-</ol>
-<p>Well, no. The first two points are correct, and the conclusion in 3. is wrong.</p>
-<p>Why?</p>
-<p>Because this only considers the initial conditions of the problem. What about the dynamics of the system?</p>
+<p>From a user perspective, this is great because the end user can trust all options are listed and are potential matches for the subsystem to be modeled. The time to build a model can be greatly reduced. And the results seen after simulation only show the selected model, which is great - no “noise”!</p>
+<p>It is however possible to perform this selection only one component at a time. This means that you would have to redo it for each tyre of your vehicle, which is inconvenient and could be error-prone - you might forget one.</p>
 </section>
-<section id="a-second-correct-solution" class="level2">
-<h2 class="anchored" data-anchor-id="a-second-correct-solution">A second (correct) solution</h2>
-<p><em>Note: this entire article uses volume flow rate and not mass flow rate. These are in this case equivalent because the temperature is considered constant and the pressure at the ports is the same. It is just more intuitive to discuss volumes and volume flow rate than masses of fluid and mass flow rates.</em></p>
-<section id="an-intuitive-next-step" class="level3">
-<h3 class="anchored" data-anchor-id="an-intuitive-next-step">An intuitive next step</h3>
-<p>So 1. and 2. above are correct. After a short amount of time, the same amount of flow would have gone through both valves, right? Let’s remind ourselves that the flow is actually here a volume flow rate <code>V_flow</code>, and is expressed in unit <code>[m^3/s]</code>. And when we consider a volume flow rate over time <code>[s]</code>, this means that we are looking at the volume of water <code>[m^3]</code> that left the tank.</p>
-<pre><code>V_flow * Δt = V
-# which is consistent with the unit check
-# [m^3/s] * [s] = [m^3]</code></pre>
-<p>Ok, so <mark>the same volume of water exits both tanks in the first short amount of time</mark>. So the same volume remains on both tanks. Now you see me coming:</p>
+<section id="container-models" class="level3">
+<h3 class="anchored" data-anchor-id="container-models">Container models</h3>
+<p>Now, if an entire library uses the container model approach, leveraging conditional components, then, with one click - a top-level parameter allowing to select the fidelity level -, the user can switch the fidelity of all components in their system model.</p>
+<p>In our tyre case, this would allow for all tyre models to be switched at once. It could also allow for different fidelity levels to be established for the entire vehicle and all parts (e.g.&nbsp;tyres, suspensions, engine(s), etc.) to be switched to their e.g.&nbsp;“ideal” or “steady” or “detailed” fidelity level at once.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/013/04_containerJordan.png" class="img-fluid figure-img"></p>
+<figcaption>Reminder of a container model from last article - from Philip Jordan</figcaption>
+</figure>
+</div>
+<p>From a user perspective, this is also a great option, especially when the fidelity levels are common practices in the field of work, and it makes sense to study these over the development cycle. Changing only in one place the fidelity level of all components is highly valuable.<br>
+However, this adds an additional level of hierarchy due to the container models. This can be annoying to navigate to the results and seems a bit more “messy/noisy”.</p>
+</section>
+</section>
+<section id="a-library-developer-perspective" class="level2">
+<h2 class="anchored" data-anchor-id="a-library-developer-perspective">A library developer perspective</h2>
+<p>I have been developing libraries for more than 10 years - either in the industry or as software vendor. There is one funny thing to say there: a library that is great for the developer can be pretty horrible for the end user.<br>
+The library developer loves when the library is simple to maintain. It means often: DRY KISS… Don’t Repeat Yourself, Keep It Simple, Stupid.<br>
+And “Simple, Stupid” are quite subjective!</p>
+<p>These mindsets can often lead to poor end user experience. For example, DRY can lead to a lot of inheritance<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> to avoid code repetition, and KISS can be interpreted as keeping the maintenance simple, which can also lead to less overhead for the developer when a change is needed, at the expense of the library usability.</p>
+<p>I got distracted… yet I am saying that because this is the developer perspective. Let me get back to our topic!</p>
+<section id="replaceable-models-1" class="level3">
+<h3 class="anchored" data-anchor-id="replaceable-models-1">Replaceable models</h3>
+<p>For the library developers, replaceable models require their share of model architecting:</p>
 <ul>
-<li>the same volume remains on both tanks,</li>
-<li>the two tanks have different shapes,</li>
-<li>In Tank X (with smaller base and larger top), the remaining volume of fluid will lead to a higher remaining column of fluid than in Tank Y. And this is because the larger top will mean less change of height is needed for covering a given volume.</li>
-<li>And so after the first “small amount of time”, the height in both tanks will differ.</li>
-<li>And if the heights differ, so do the pressures at the bottom.</li>
-<li>And if the pressures at the bottom of the tanks differ, so do the flow through the valves.</li>
-<li>And thus already on the next “small amount of time”, the volume in both tanks will differ.</li>
+<li>the interfaces need to be clearly defined and base classes identified,</li>
+<li>if there are different levels of constraints, these should be identified too, so they can be extended by the right model,</li>
+<li>all models extending the base classes shall be correctly identified,</li>
+<li>it makes sense to build “templates” model of your system, with the replaceable models connected together.</li>
 </ul>
-<p>Oh, so after two “small amounts of time” later, we already see a difference in behavior. And if one applies the logic of the <a href="#a-first-wrong-solution">“first (wrong) solution”</a> at this point, then one would already have a different answer. So the real solution will appear once we continue with “small amount of time” later until we empty the tanks!</p>
+<blockquote class="blockquote">
+<p>Note: these are all best practices so it is not really a constraint. However, if you do not have all this information before starting the development, it might mean that at some point, you’ll need some severe restructuring of your code to make this work fine.</p>
+</blockquote>
+<p>The great thing, however, is that there is no limit of models that can match the constraint. And this number does not need to be known. This means that if you start your library and have 4 model variants to your tyres and develop two new ones, as long as they can extend the same base classes, they will fit in the overall framework and appear as candidates to be redeclared!<br>
+And one nice thing is that only the parameters relevant to a model will appear once the variant is selected.</p>
+<p>This all makes it very convenient for having replaceable correlations (e.g.&nbsp;friction in pipes), where the number of correlations is usually as many as the number of books on the topic… or more! And you do not need the full template architecture.</p>
 </section>
-<section id="a-small-amount-of-time-later" class="level3">
-<h3 class="anchored" data-anchor-id="a-small-amount-of-time-later">A “small amount of time” later</h3>
-<p>Intuitively, we discussed that: 1. At a point in time, the behavior of a system can be studied. 2. A small amount of time later, we can assess a new “point in time”. 3. and we loop over 1. and 2. over and over again.</p>
-<p>Well that, Ladies and Gentlemen, is exactly what <strong><em>dynamic simulation</em></strong> does! 😉 Let’s make the analogy clearer:</p>
-<ol type="1">
-<li>We can decompose a bit 1. by highlighting that a subset of the variables of our system can define fully the <code>state</code> of our system - these are the <code>state variables</code> (called often <code>states</code>) -, and the other variables can be computed from the <code>states</code>.</li>
-<li>The simulation <code>solver</code> does compute the <code>states</code> after a small <code>time step</code> - which is the “small amount of time” later.</li>
-<li>and when we simulate, we define a <code>final time</code> of simulation or conditions to stop the simulation.</li>
-</ol>
-<p>So we can model and simulate this problem!</p>
-</section>
-<section id="until-the-last-drop" class="level3">
-<h3 class="anchored" data-anchor-id="until-the-last-drop">Until the last drop</h3>
-<p>Obviously, it is not enough to just trust this intuitive reasoning and one could easily wonder whether there is a later point where “things go south”. <em>Spoiler: the trend continues because the shapes - volume versus height - are linearly evolving. Said differently, the pressure will be higher for a larger fraction of the volume.</em> So let’s simulate this problem until the last drop is out of one tank!</p>
-<p>First, we need the right components:</p>
+<section id="container-conditional-models" class="level3">
+<h3 class="anchored" data-anchor-id="container-conditional-models">Container conditional models</h3>
+<p>For the library developers again, container conditional models only make sense when:</p>
 <ul>
-<li>a <code>Reservoir</code> that is parametrized based on the truncated conical shape,</li>
-<li>an <code>Orifice</code> which models the faucet, and</li>
-<li>the <code>Environment</code> which basically is the constant atmospheric pressure and can receive as much flow as needed.</li>
+<li>there is a known finite number of cases to cover,</li>
+<li>there is consistency in these cases between most models of the library,</li>
+<li>there is the need to switch the fidelity level at top level - all models at once.</li>
 </ul>
-<p>The reservoir is obviously the most specific to this problem. Let’s look at the main equations and jump into the simulation part:</p>
-<pre><code>1. port.p = p_atm + p_hyd;
-2. p_hyd = rho*g_n*h "Pressure head";
-3. der(V) = port.V_flow;
-4. V = pi * h / 3 * (R_base^2 + R_base * R_surface + R_surface^2);
-5. R_surface = R_base + k_geom * h;
-6. k_geom = (R_top - R_base)/H_tank ;</code></pre>
-<p>Not to fill too much the equation block, I pull the explanation of each line out of the block:</p>
-<ol type="1">
-<li>The port being at the bottom its pressure is the sum of the air and fluid pressure.</li>
-<li>Head induced pressure, i.e.&nbsp;induced by the mass of the fluid above the port.</li>
-<li>The reduction of volume is the flow that leaves the tank.</li>
-<li>The volume of the truncated conical shape is based on the height (in R_surface), and base and top radii.</li>
-<li>The radius at the surface of water is function of the height, and the shape.</li>
-<li>The shape of the cone can be modeled by one base radius and the slope in change of radii.</li>
-</ol>
-<p>So what is important to see here is that the physics modeled takes into account the head as a function of the height of fluid, which itself is function of the volume of fluid remaining and the shape of the tank.</p>
-<p>Let’s simulate this! We build two configurations as per the image.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/009/03_tankModel.jpeg" class="img-fluid figure-img"></p>
-<figcaption>The Modelica model of the two tanks emptying</figcaption>
-</figure>
-</div>
-<p>Ok, the icons are ugly… but that’s not the point! I have other priorities in life 😅 As you see, the dimension of <code>tankX</code> are set to the flipped dimensions of <code>tankY</code>.</p>
-<p>So now we can look at the behavior and the answer you want to see is “which one empties first?”, let’s plot the level of fluid against time:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/009/04_tanksEmptying.png" class="img-fluid figure-img"></p>
-<figcaption>Looking at the fluid levels: tankX empties before tankY!</figcaption>
-</figure>
-</div>
-<p>This is exactly what we expected: <code>tankX</code> level stays higher longer than <code>tankY</code> and therefore has more head over time (head is linear with height remember), so empties faster overall.</p>
-<p>But why is it counter intuitive when seeing this curve? Well, it seems that <code>tankY</code> was ahead of <code>tankX</code> but that was only an illusion! We are looking at the height, and instead we can look at the remaining volume of fluid. Let’s change perspective:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/009/05_tanksEmptyingVolumes.png" class="img-fluid figure-img"></p>
-<figcaption>Looking at the remaining fluid volumes - it becomes clearer!</figcaption>
-</figure>
-</div>
-<p>It is clear that, from just after the start, the remaining volume of water in <code>tankX</code> is lower than <code>tankY</code>. So <code>tankX</code> was ahead all the time!</p>
-<p><em>A good analogy just came to mind: you know how when you look at an athletic runner race on a track 🏃‍♀️🏃🏃‍♂️, it always seems that the one more inside the track is behind - they start behind actually - but catch up during the curve because their remaining path along the curvature is shorter. Same thing here: there is less volume to outflow for a given height of <code>tankX</code>.</em></p>
-<p>Finally, a nice summary plot is to look at the head pressure at the bottom of each tank as a function of the remaining volume of fluid.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/009/06_tanksHeadVolume.png" class="img-fluid figure-img"></p>
-<figcaption>TankX has, for a given volume, always more head than TankY</figcaption>
-</figure>
-</div>
+<p>The developer has to think much less about each model variant “compatibility” - only the interfaces need to match. However, this concept brings a lot of work on the user interface (parameters’ management) because the container will have to display - potentially greyed out - all parameters for all variants. It becomes also very hard to read the container class, as soon as more than ~ 4 or 5 model variants exist in it.</p>
+<p>Conditional models, without the container approach, are much simpler and thus often used, e.g.&nbsp;for the conditional port, like the heat port. They also offer the great advantage that <code>connect</code> statements are automatically removed if a component is conditionally removed. (So you don’t end up with “lost connections”.)</p>
 </section>
 </section>
-<section id="what-about-different-dimensions-of-the-cone" class="level2">
-<h2 class="anchored" data-anchor-id="what-about-different-dimensions-of-the-cone">What about different dimensions of the cone</h2>
-<p>The reflection in all the above was done without dimensions so the reasoning stands. Nevertheless, all the simulations were done for one set of conditions: a volume of 1000L, a height of 1m and the base diameter of <code>tankY</code> being 1.5m (respectively the top diameter of <code>tankX</code>).</p>
-<p>Because it is easy to simulate, we can close this article by playing around with the based diameter of <code>tankY</code>. A quick solving shows that if the diameter <code>D_base</code> is around ~1.15m then we have a cylinder and not a cone. And if we have a <code>D_base</code> above ~1.95m then even a <code>D_top</code> of 0 would lead to more than 1000L of water. Hence, we can explore a design of <code>D_base</code> between 1.2 and 1.9m.</p>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Here is a short summary mind map:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/009/07_DOE.png" class="img-fluid figure-img"></p>
-<figcaption>Varying the base diameter from 1.2 to 1.9m with 0.1m increments</figcaption>
+<p><img src="./assets/images/014/03_modelVariantsSummary.png" class="img-fluid figure-img"></p>
+<figcaption>Model variants summary</figcaption>
 </figure>
 </div>
-<p>We see clearly that, from two nearly cylindrical cones (hence nearly identical responses), to the more complete cone (when <code>D_base</code> gets larger, <code>D_top</code> reduces to host the same volume of 1000L), then the trend is unchanged: <code>tankX</code> always empties faster - for the same reason as explained above.</p>
+<p>I hope it summarizes well all the points covered in this and the two past articles on the topic.</p>
+<p>If you have more thoughts to it, let me know and I will update it.<br>
+All contributions are welcome.</p>
 </section>
 <section id="the-end-for-today" class="level2">
 <h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
-<p>Enough for today.</p>
-<p>I hope you enjoyed digging into this puzzle and seeing that the reasoning steps where basically our brains doing dynamic simulation 😉!</p>
+<p>Enough for today. I hope this closes a topic that was left open during the break. I am sure it did not prevent you from sleeping though…</p>
+<p>Suspense for the next article… a few topics are in the pipeline!<br>
+Yet, don’t hesitate to reach out with ideas.</p>
+<p>Maybe it is time for an FMI article again!</p>
 <p><em>Break is over, go back to what you were doing.</em></p>
-<p>Clément</p>
-<p><a href="./010-WhatDynamicSimulationDoes.html">Next</a> -&gt;</p>
+<p>Clem</p>
+<p><a href="./about.html">Next</a> -&gt;</p>
 
 
 </section>
 
-<p>© 2025 Clément Coïc — Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">creative commons 4.0</a>. Non-commercial use only.</p></main> <!-- /main -->
+
+<p>© 2025 Clément Coïc — Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">creative commons 4.0</a>. Non-commercial use only.</p><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>We covered the meaning of the word “inheritance” in article <a href="./012-ReplaceableModels.html">012</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
