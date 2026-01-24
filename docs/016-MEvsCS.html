@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>What Dynamic Simulation Does? – Modelica &amp; FMI</title>
+<title>Model Exchange vs Co-Simulation FMUs – Modelica &amp; FMI</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./010-WhatDynamicSimulationDoes.html">What Dynamic Simulation Does?</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./006-SpreadingWithFMI.html">FMI</a></li><li class="breadcrumb-item"><a href="./016-MEvsCS.html">Model Exchange vs Co-Simulation FMUs</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -171,7 +171,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link active">
+  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">What Dynamic Simulation Does?</span></a>
   </div>
 </li>
@@ -224,7 +224,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./016-MEvsCS.html" class="sidebar-item-text sidebar-link">
+  <a href="./016-MEvsCS.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Model Exchange vs Co-Simulation FMUs</span></a>
   </div>
 </li>
@@ -246,11 +246,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-status-quo" id="toc-the-status-quo" class="nav-link active" data-scroll-target="#the-status-quo">The status quo</a></li>
-  <li><a href="#its-about-the-journey" id="toc-its-about-the-journey" class="nav-link" data-scroll-target="#its-about-the-journey">It’s about the journey</a></li>
-  <li><a href="#from-equations-to-solutions" id="toc-from-equations-to-solutions" class="nav-link" data-scroll-target="#from-equations-to-solutions">From equations to solutions</a></li>
-  <li><a href="#you-are-hiding-something" id="toc-you-are-hiding-something" class="nav-link" data-scroll-target="#you-are-hiding-something">You are hiding something!</a></li>
-  <li><a href="#an-example-to-wrap-things-up" id="toc-an-example-to-wrap-things-up" class="nav-link" data-scroll-target="#an-example-to-wrap-things-up">An example to wrap things up</a></li>
+  <li><a href="#fmi---what-was-that" id="toc-fmi---what-was-that" class="nav-link active" data-scroll-target="#fmi---what-was-that">FMI - what was that?</a>
+  <ul class="collapse">
+  <li><a href="#a-short-reminder" id="toc-a-short-reminder" class="nav-link" data-scroll-target="#a-short-reminder">A short reminder</a></li>
+  <li><a href="#is-fmi-about-modeling-or-simulation" id="toc-is-fmi-about-modeling-or-simulation" class="nav-link" data-scroll-target="#is-fmi-about-modeling-or-simulation">Is FMI about modeling or simulation?</a></li>
+  </ul></li>
+  <li><a href="#where-does-the-solver-live" id="toc-where-does-the-solver-live" class="nav-link" data-scroll-target="#where-does-the-solver-live">Where does the solver live?</a>
+  <ul class="collapse">
+  <li><a href="#a-dynamic-model-needs-a-solver" id="toc-a-dynamic-model-needs-a-solver" class="nav-link" data-scroll-target="#a-dynamic-model-needs-a-solver">A dynamic model needs a solver</a></li>
+  <li><a href="#the-co-simulation-fmu" id="toc-the-co-simulation-fmu" class="nav-link" data-scroll-target="#the-co-simulation-fmu">The Co-Simulation FMU</a></li>
+  <li><a href="#the-model-exchange-fmu" id="toc-the-model-exchange-fmu" class="nav-link" data-scroll-target="#the-model-exchange-fmu">The Model Exchange FMU</a></li>
+  <li><a href="#a-tiny-subtlety" id="toc-a-tiny-subtlety" class="nav-link" data-scroll-target="#a-tiny-subtlety">A tiny subtlety</a></li>
+  </ul></li>
+  <li><a href="#so-when-do-we-use-what" id="toc-so-when-do-we-use-what" class="nav-link" data-scroll-target="#so-when-do-we-use-what">So when do we use what?</a></li>
   <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
   </ul>
 </nav>
@@ -258,9 +266,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./010-WhatDynamicSimulationDoes.html">What Dynamic Simulation Does?</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./006-SpreadingWithFMI.html">FMI</a></li><li class="breadcrumb-item"><a href="./016-MEvsCS.html">Model Exchange vs Co-Simulation FMUs</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">What Dynamic Simulation Does?</h1>
+<h1 class="title">Model Exchange vs Co-Simulation FMUs</h1>
 </div>
 
 
@@ -279,79 +287,133 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/010/01_header.png" class="img-fluid figure-img"></p>
-<figcaption>What Dynamic Simulation Does?</figcaption>
+<p><img src="./assets/images/016/01_header.png" class="img-fluid figure-img"></p>
+<figcaption>What are the differences between Model Exchange and Co-Simulation FMUs?</figcaption>
 </figure>
 </div>
 <p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
-<p>📬 📰 <strong>Saturday editions</strong> - for having more time to read during the weekend! Let’s experiment for a few weeks. Let me know if this is not a convenient day (❓).</p>
-<p>Last week, we <a href="./009-NeedForDynamicSimulation.html">solved a puzzling question</a>: which tank empties first? And while at the beginning one could think they would empty in the same amount of time, we reflected on how things would look like “a small amount of time later”… and it became clear that one would definitely empty faster than the other.</p>
-<p>At this point, we touched about the need for <strong>Dynamic Simulation</strong>.</p>
-<p>Today, let’s dig into what dynamic simulation is.</p>
-<p><em>Useless note: One could argue that this should have been one of the first posts, and as it is the number 10, it is indeed just the second somehow… (“There are 10 types of people: those who know how to count in binary and those who don’t”)</em></p>
-<section id="the-status-quo" class="level2">
-<h2 class="anchored" data-anchor-id="the-status-quo">The status quo</h2>
-<p>Let’s take another example. I love bicycles so let’s talk about bikes. 🚲</p>
-<p>Similar to <a href="./007-AcausalityEquation.html">the runner’s case</a>, we might want to calculate the force we have to push on the pedals to keep a cruise speed of 20km/h on a flat road or going uphill. We can study with or without a headwind. (And if you are in the UK or US or other non-SI unit country 😉, just change km/h for mph and you’ll just have to go about 1.6 times faster. Good luck! 😉)</p>
-<p>See how we naturally wanted to calculate THE force? For each case, we are looking at an equilibrium: the speed is one value, and so the force is one value too. Sure, there are boundary conditions, namely the slope and the wind. And we can create test cases making these boundary conditions change. For each, we’ll get the value of the force.</p>
-<p>And for each case, there is only one force because we are at equilibrium - here constant speed. This is a steady-state analysis. For the tanks, imagine the tap would be closed: the pressure at the bottom would be constant and there would be no flow to change this “status quo”. But what happens if we open the tap?</p>
+<p>📬 📰 <strong>Saturday editions</strong> - for having more time to read during the weekend! Let me know if this is not a convenient day (❓).</p>
+<p>Before we start, let me just mention that I am starting a <a href="https://www.youtube.com/@ClemsPlayground">YouTube channel: Clem’s Playground</a>, where I am uploading consistently videos about modeling, simulation, Modelica and FMI. For now, there is only a teaser: the presentation of Christian Bertsch - project leader of the FMI standard. The next video of his interview is already planned for next week. So 🔔 subscribe to the channel, not to miss any! 😉</p>
+<p>As you know, this newsletter is about modeling and simulation. Many concepts are generic. It is however called “Learn Modelica &amp; FMI”, so there is some technological focus towards both the Modelica language and the FMI standard.</p>
+<p>And we have not discussed that much FMI, so far. This was intended. We needed to cover the basics to be able to discuss FMI further. Now it is almost time to play with our first FMUs.</p>
+<p>But which FMU? Model Exchange or Co-Simulation? … what does that even mean? Well, that’s today’s topic! And you’ll see why I say we need the basics. There is a lot of concepts that we discussed already that are needed for this one.</p>
+<p>Let’s get started!</p>
+<section id="fmi---what-was-that" class="level2">
+<h2 class="anchored" data-anchor-id="fmi---what-was-that">FMI - what was that?</h2>
+<p>We talked about FMI already. I won’t repeat too much here, that would be unfair for the good “students” that read the article already 😉.</p>
+<section id="a-short-reminder" class="level3">
+<h3 class="anchored" data-anchor-id="a-short-reminder">A short reminder</h3>
+<p>Go back and dig into the coffee cup series: in <a href="./006-SpreadingWithFMI.html">this article</a>, we used the Functional Mock-up Interface (FMI) standard to share part of the model.</p>
+<p>Just keep in mind that FMI is a standard to wrap your model in a standardized way, so that it can be shared and re-used in a different tool. A model exported following the FMI standard is called an FMU (Functional Mock-up Unit).</p>
+<p>And especially important for this article: there are three different types of FMUs - Model Exchange, Co-Simulation and Scheduled Execution. The first two are the most commonly used and therefore we will focus on these today.</p>
 </section>
-<section id="its-about-the-journey" class="level2">
-<h2 class="anchored" data-anchor-id="its-about-the-journey">It’s about the journey</h2>
-<p>You know the quotes that go something like:</p>
+<section id="is-fmi-about-modeling-or-simulation" class="level3">
+<h3 class="anchored" data-anchor-id="is-fmi-about-modeling-or-simulation">Is FMI about modeling or simulation?</h3>
+<p>This is not really a good question to ask. And yet, it came to my mind when writing this… so maybe it comes to yours too! And I don’t want to leave this unanswered.</p>
+<p>The good answer is “kind of neither”. FMI defines how to export a model in a standard way. It does tell you how to package and interact with the model. It does not standardize the way to model, nor to simulate.</p>
+<p>Now that said, the “kind of” in “kind of neither” is not there for nothing. When exporting a model (with FMI or not), you do have to carefully think about your modeling assumptions, your interfaces and so on - the architecting of the model. And you also have to understand your simulation needs to be able to make the right type of FMU selection and, in the end, simulate the model. So there are some modeling and simulation flavors in FMI!</p>
+<p>Another point about the “kind of”: FMI is causal. (What is (a)causality? You should know from my past articles on the topic (<a href="./007-AcausalityEquation.html">here</a> and <a href="./008-AcausalityModels.html">there</a>.) And this, independently of whether your modeling software is causal or acausal. This is to ensure compatibility as acausal software can deal with causal models, but not the other way around. So again, you might model in one tool, and the export as an FMU changes the model a tiny bit (there is a compilation step, unless you have a source code FMU - not discussed here). So see it as modeling or not, what matters is having well-defined model interfaces, architecture and so on. 😊</p>
+</section>
+</section>
+<section id="where-does-the-solver-live" class="level2">
+<h2 class="anchored" data-anchor-id="where-does-the-solver-live">Where does the solver live?</h2>
+<p>Who is solver? Where does they live? The answer is 42… ok, I am out…</p>
+<p>Allow me to restart this section…</p>
+<p>I like a lot the drawing of a suspended mass that Pratibha did. So let’s use it again here.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/016/02_suspendedMass_bckg.png" class="img-fluid figure-img"></p>
+<figcaption>Suspended mass model used as basis in this article</figcaption>
+</figure>
+</div>
+<p>It is also very convenient because writing the equations is quite easy. We end up with the following set of equations:</p>
+<pre><code>a = -c/m * v -k/m * (x-L0) - g
+a = der(v)
+v = der(x)</code></pre>
+<p>Where <code>a</code> is the acceleration, <code>v</code> the speed, <code>x</code> the position and <code>m</code> the mass of the mass. The parameters <code>c</code>, <code>k</code>, <code>L0</code> and <code>g</code> are respectively the viscous coefficient of the damper, the stiffness and initial elongation of the spring, and the acceleration of gravity. As expected :)</p>
+<section id="a-dynamic-model-needs-a-solver" class="level3">
+<h3 class="anchored" data-anchor-id="a-dynamic-model-needs-a-solver">A dynamic model needs a solver</h3>
+<p>Do you remember <a href="./010-WhatDynamicSimulationDoes.html">what dynamic simulation does</a>?</p>
+<p>One part that we left over was the solver. We did not cover it in detail, and we won’t do it today either. We’ll do that soon.</p>
 <blockquote class="blockquote">
-<p>it is not about the destination, it’s about the journey.</p>
+<p>And if you are impatient, you can read <a href="https://www.linkedin.com/posts/clementcoic_drccodesolverpart1-activity-7275053029580566528-Xhr8/">my note about Forward Euler</a> and watch <a href="https://www.linkedin.com/posts/clementcoic_%F0%9D%97%A8%F0%9D%97%BB%F0%9D%97%B1%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%80%F0%9D%98%81%F0%9D%97%AE%F0%9D%97%BB%F0%9D%97%B1%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%97%A2%F0%9D%97%97%F0%9D%97%98-%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%B9%F0%9D%98%83%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%80-activity-7317890082101780480-phce">this animation</a> I did to show how it works in practice. This is still the most basic solver. Yet, it is great to understand how one solver can work.</p>
 </blockquote>
-<p><em>(There are many quotes that sound similar so this one might be slightly different to the one you know, and it is hard to provide the credit to someone specific. Anyway…)</em></p>
-<p>Dynamic simulation is like that: less about the (steady-state) destination, and more about the journey.</p>
-<p>So you know an initial “state”. (We’ll talk about what a <code>state</code> really is later.) And this state is not at equilibrium - not steady. So the game of dynamic simulation is to “predict” how the system state will evolve over time. Until… the desired time (or a steady-state!).</p>
+<p>What we will remind here is that the job of the solver is to integrate the derivatives to compute the value of the state variables “a small amount of time later” (remember the <a href="https://www.linkedin.com/pulse/009-need-dynamic-simulation-dr-cl%C3%A9ment-co%C3%AFc-mzzmf/">solving of the two tanks problem</a>?).</p>
+<blockquote class="blockquote">
+<p>Another note here: saying that the solver computes the states is a special case. The state selection is not unique (and I would even argue there is an infinite number of state candidates for each model). Nevertheless, in most cases, we need one (independent) state per integral in the model, and the output of the integral is a state candidate. As it is just not the point of this article to discuss state selection, I won’t focus on that further.</p>
+</blockquote>
+<p>So if you have: <code>der(x)=f(x)</code><br>
+Then the solver will be able to solve the value of <code>x</code>.</p>
+<p>If we separate with our mind the behavioral model that we implement and the solver, then it would look like the image below:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/010/02_dynamicSimulation.png" class="img-fluid figure-img"></p>
-<figcaption>Dynamic simulation is about computing the trajectory of the states</figcaption>
+<p><img src="./assets/images/016/03_solverInModel.png" class="img-fluid figure-img"></p>
+<figcaption>The equation describes the physics, while the solver computes the states.</figcaption>
 </figure>
 </div>
-<p>The time <code>t_0</code> represents an initial time and we know the value of the state <code>y</code> at this time - hence <code>y_0</code>. We want to find out <code>y_1</code> at time <code>t_1</code> and so on. And you notice how the times are not necessarily equally spaced? This is for another day, yet just keep in mind that the steps we take are not necessarily equally spaced.</p>
-<p>But eh, the dashed line is the solution, let’s just use it, no? Well of course, we don’t know it! I just put it there for you to see that the goal is to predict the points (❌) on the line. And in between the points? We can interpolate, with the right level of smoothing.</p>
-<p>So how do we make sure that we “predict” the right values? Well, there is not much luck into this: we don’t really predict but compute. And we compute based on our model - as we saw over the last 10 posts!</p>
+<p>We see the same equations as previously written, only the derivation relationships are in integral forms. We see that “x dot dot”, which is the double time derivative of the position <code>x</code> - hence the acceleration -, is “sent” to the solver, and it returns “x dot” - the integral of the acceleration, i.e.&nbsp;the speed. Similarly, the speed is sent to the solver that computes the position from it.</p>
+<p>To me, this image shows clearly that, to simulate the behavioral model, a solver is needed! Yet the question remains: where does the solver live?</p>
 </section>
-<section id="from-equations-to-solutions" class="level2">
-<h2 class="anchored" data-anchor-id="from-equations-to-solutions">From equations to solutions</h2>
-<p>It is hard to talk about simulation without really showing an equation. Let me try to keep it to the minimal.</p>
-<p>Dynamic systems involve dynamics… and dynamics are modeled with differential equations. Basically something like:</p>
-<pre><code>y_dot = f(y,u,t)</code></pre>
-<p>And <code>y_dot</code> is the time derivative of <code>y</code>. But what does that mean? The time derivative of a variable is the rate of change of this variable over time. It basically tells you in which direction and at which “pace” it will change its value. <code>u</code> are potential inputs (e.g.&nbsp;the speed of the wind or the ground slope)</p>
-<p>So if we know the speed <code>v</code> of our runner and we keep in mind that the speed is the derivative of the position <code>x</code>, then we can - knowing the initial position of the runner and its speed - compute its new position after a given amount of time (assuming the speed does not change in this amount of time).</p>
-<p>So now we have the question: do we know the new speed? Well, actually, if we have the equation <code>v = f(x , u, t)</code> and we know <code>x</code>, (potentially <code>u</code>,) and <code>t</code> then we can compute <code>v</code>!</p>
-<p>So now we just need to get the new value of <code>x</code> at the next time step. And so it goes.</p>
-</section>
-<section id="you-are-hiding-something" class="level2">
-<h2 class="anchored" data-anchor-id="you-are-hiding-something">You are hiding something!</h2>
-<p>I kind of hide something here… how do you compute <code>x</code> knowing <code>v</code>? Well that is what a solver does. I don’t want to enter today into that topic because it is already quite a long theoretical article… but the simplest (not the best) solver is Forward Euler and <a href="https://www.linkedin.com/posts/clementcoic_%F0%9D%97%A8%F0%9D%97%BB%F0%9D%97%B1%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%80%F0%9D%98%81%F0%9D%97%AE%F0%9D%97%BB%F0%9D%97%B1%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%97%A2%F0%9D%97%97%F0%9D%97%98-%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%B9%F0%9D%98%83%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%80-activity-7317890082101780480-phce">I explain it here</a> if you are impatient. 😊</p>
-<p>And the right question to ask next is whether we cannot just solve the differential equation analytically instead of using a solver? Yes, in theory. It however gets really complex really fast because we usually have many variables and the equations are all but simple. So in practice, it is often impossible. Solvers are key to our simulations.</p>
-</section>
-<section id="an-example-to-wrap-things-up" class="level2">
-<h2 class="anchored" data-anchor-id="an-example-to-wrap-things-up">An example to wrap things up</h2>
-<p>One of the first example I learned was a “quarter of a vehicle”. It basically means that you take a car, you cut it in 4 and look at a quarter. It is a fair thing to do if you assume the weight distribution to be equally spread over the four wheels. And we just look at the vertical displacement.</p>
-<p>So you have a very simple model that looks like a typical oscillator: a mass (quarter of the car mass) on which applies gravity (here the constant force), a spring-damper for the suspension and the floor that is slightly moving because it is not perfectly flat.</p>
+<section id="the-co-simulation-fmu" class="level3">
+<h3 class="anchored" data-anchor-id="the-co-simulation-fmu">The Co-Simulation FMU</h3>
+<p>The solver is clearly needed to simulate the model, so let’s just package it with the model!</p>
+<p>From the last figure, we wrap it all in an FMU and we get a so-called “Co-Simulation” FMU. In a more generic case, we might have inputs, outputs and parameters so it overall looks like that:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/010/03_springDamper.jpeg" class="img-fluid figure-img"></p>
-<figcaption>Quarter of a vehicle model</figcaption>
+<p><img src="./assets/images/016/04_coSimulation.png" class="img-fluid figure-img"></p>
+<figcaption>A co-simulation FMU packages the model with its solver together</figcaption>
 </figure>
 </div>
-<p>Assume the car is stopped. The floor won’t be moving with respect to the car… hopefully. We can see by simulating, how much the car will “sink” on its suspension and which steady-state it will reach.</p>
-<p>Now if we start driving, we will have the height of the floor constantly changing and that induces a compression on the spring and some dissipation from the damper. A resulting force will be applied to the mass that will be combined with the gravity… I might have lost you here. If so, go to the next paragraph, it is OK. If not, let’s continue: Newton told us that the sum of forces - over a constant mass (taking shortcuts here) - equals the mass multiplied by the acceleration. Acceleration! We get the new acceleration and that is the derivative of the speed, so we can use the solver to compute it! And from the speed, the position! Tadaaaam! And we can just go to the next step and repeat.</p>
-<p>Basically, the model you build will have the equations behind to express the relations between the states of your system and their derivatives. And so you’ll be able to compute these and let the solver tell you what the next states are.</p>
-<p>And hopefully, the mass (on which you might be sitting - the car - but not while reading this!) might not oscillate too much!</p>
+<p>This is great because the FMU is kind of “self-contained”. Provided inputs and parameters, you can simulate it directly.</p>
+</section>
+<section id="the-model-exchange-fmu" class="level3">
+<h3 class="anchored" data-anchor-id="the-model-exchange-fmu">The Model Exchange FMU</h3>
+<p>And the solver does not have to live together with the model! The image we defined in our mind showed it well. In fact, if we remove the solver from this image, we expose the additional needed interfaces to package the behavioral model as a “Model Exchange” FMU:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/016/05_modelExchange.png" class="img-fluid figure-img"></p>
+<figcaption>Our “mind image” of the model, without the solver part</figcaption>
+</figure>
+</div>
+<p>And naturally, as for the co-simulation case, we can have a generic view with the inputs, outputs and parameters, and added derivatives outputs and integral inputs (put on the bottom as it is usually represented):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/016/06_modelExchangeGeneric.png" class="img-fluid figure-img"></p>
+<figcaption>A model exchange FMU exposes the derivatives and integrals as additional interfaces</figcaption>
+</figure>
+</div>
+<p>That is very flexible, because we just export the model equations and we can couple any solver that makes sense to it in the future. Or better, share these equations with another part of a model and use a single solver for both!</p>
+</section>
+<section id="a-tiny-subtlety" class="level3">
+<h3 class="anchored" data-anchor-id="a-tiny-subtlety">A tiny subtlety</h3>
+<p>For both types of FMUs, the current simulation time and, for co-simulation, the communication step size are also inputs to the FMUs. The simulation time might be needed by some equations (e.g.&nbsp;time events) and for synchronizing simulations. The communication step size is required when coupling co-simulation FMUs, and allows for complex scenarios like variable communication step size, when an FMU requires it.</p>
+<p>For keeping the diagrams simple here and consistent with the “mind image” of the suspended mass model, we have not represented these in the last images. However, if you have noticed, the header image has them. 🙂</p>
+</section>
+</section>
+<section id="so-when-do-we-use-what" class="level2">
+<h2 class="anchored" data-anchor-id="so-when-do-we-use-what">So when do we use what?</h2>
+<p>In a <a href="https://www.linkedin.com/posts/clementcoic_drccfmioverviewandlessonslearnt-activity-7344259654308302849-IKXy">previous post</a>, I shared my thoughts on the FMI standard, some lessons learned, and the below table:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/016/07_MEvsCS_bckg.png" class="img-fluid figure-img"></p>
+<figcaption>Table summarizing cases when the use of Model Exchange or Co-Simulation is preferred</figcaption>
+</figure>
+</div>
+<p>This table summarized well - in my opinion… well, I wrote it, so I might be biased… - some cases when one should choose Model Exchange or Co-Simulation FMUs. These cases are straightforward for some and more involved for others.</p>
+<p>A typical example of obvious choice is if your <a href="https://fmi-standard.org/tools/">tool supports</a> only one of the two… well, this is the one you need to use! 💡<br>
+Sometimes, you actually want to ensure that the model is coupled with a given solver - because the numerics require it or because it is a very specific solver (e.g.&nbsp;a CFD solver) -, or with its own time step (because dynamics are different from the rest of the system), then you want to use Co-Simulation if possible.<br>
+On the other side, if you want to use the same solver between different shared models, or if you have a direct feedthrough (an output that is algebraically linked with one or more inputs), or if you want flexibility in the future, then Model Exchange is the better choice.</p>
 </section>
 <section id="the-end-for-today" class="level2">
 <h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
-<p>Enough for today. This was an abstract one and I hope it’s OK. I had to cover the process.</p>
-<p>Next time, we will go into something more applied. I initially wanted to cover what solvers do, but unless you say it in comments, I will wait a bit so we get some actual modeling going on first.</p>
+<p>Enough for today. I just want to conclude with a comment from Ben Landgrén, that I find particularly nice about FMI:</p>
+<blockquote class="blockquote">
+<p>“One of my favorite features of FMI is that a simulation engineer can make a complex model simple and safe to use for somebody who is not a simulation engineer.” Ben Landgrén</p>
+</blockquote>
+<p>I think this shows that the use of FMI is even broader than what it was initially made for.</p>
 <p><em>Break is over, go back to what you were doing.</em></p>
 <p>Clem</p>
-<p><a href="./011-LetsIntegrate.html">Next</a> -&gt;</p>
+<p><a href="./about.html">Next</a> -&gt;</p>
 
 
 </section>

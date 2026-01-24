@@ -40,10 +40,14 @@ website:
             href: 013-ConditionalModels.qmd
           - text: "A (technical) summary of model variants"
             href: 014-ModelVariants.qmd
+          - text: "The different use of models"
+            href: 015-ModelUsage.qmd
       - section: "FMI"
         contents:
           - text: "Spreading the word with FMI"
             href: 006-SpreadingWithFMI.qmd
+          - text: "Model Exchange vs Co-Simulation FMUs"
+            href: 016-MEvsCS.qmd
       - text: "About"
         href: about.qmd
 

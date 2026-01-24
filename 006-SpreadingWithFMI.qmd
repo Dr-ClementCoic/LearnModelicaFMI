@@ -38,6 +38,7 @@ The Functional Mock-up Interface (FMI) is a standard that defines how to package
 FMI does not care about the level of fidelity of your model or the technology behind it. So you can export a Computational Fluid Dynamics model or Finite Element or a behavioral (0D/1D) model, like we do here with Modelica. And independently from that your tool, if it supports the FMI standard, can leverage this FMU!
 
 "Wait! But it takes different numerical technologies to solve a Modelica or CFD model?" - I hear you and you are correct. FMI allows for exporting your model in three different manners:
+
 1. Model Exchange: the model is exposed in such a way that the tool that imports the FMU would solve it, within the rest of the model, potentially developed within the tool.
 2. Co-simulation: the model includes its solver so that the tool that imports the FMU only has to communicate with it the inputs and outputs.
 3. Scheduled execution: taking a shortcut here, it is similar to a model exchange format and additionally allows the importer tool to control the model scheduler.

@@ -199,6 +199,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">A (technical) summary of model variants</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./015-ModelUsage.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The different use of models</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -214,6 +220,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="./006-SpreadingWithFMI.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Spreading the word with FMI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./016-MEvsCS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Exchange vs Co-Simulation FMUs</span></a>
   </div>
 </li>
       </ul>
@@ -292,7 +304,12 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="an-overview-of-fmi">An overview of FMI</h2>
 <p>The Functional Mock-up Interface (FMI) is a standard that defines how to package a model and how to define its interfaces so that the model can be reused in a different tool or environment. A model exported based on the FMI standard is called an FMU (Functional Mock-up Unit).</p>
 <p>FMI does not care about the level of fidelity of your model or the technology behind it. So you can export a Computational Fluid Dynamics model or Finite Element or a behavioral (0D/1D) model, like we do here with Modelica. And independently from that your tool, if it supports the FMI standard, can leverage this FMU!</p>
-<p>“Wait! But it takes different numerical technologies to solve a Modelica or CFD model?” - I hear you and you are correct. FMI allows for exporting your model in three different manners: 1. Model Exchange: the model is exposed in such a way that the tool that imports the FMU would solve it, within the rest of the model, potentially developed within the tool. 2. Co-simulation: the model includes its solver so that the tool that imports the FMU only has to communicate with it the inputs and outputs. 3. Scheduled execution: taking a shortcut here, it is similar to a model exchange format and additionally allows the importer tool to control the model scheduler.</p>
+<p>“Wait! But it takes different numerical technologies to solve a Modelica or CFD model?” - I hear you and you are correct. FMI allows for exporting your model in three different manners:</p>
+<ol type="1">
+<li>Model Exchange: the model is exposed in such a way that the tool that imports the FMU would solve it, within the rest of the model, potentially developed within the tool.</li>
+<li>Co-simulation: the model includes its solver so that the tool that imports the FMU only has to communicate with it the inputs and outputs.</li>
+<li>Scheduled execution: taking a shortcut here, it is similar to a model exchange format and additionally allows the importer tool to control the model scheduler.</li>
+</ol>
 <p>So typically, if you have a CFD model that you want to interface with a Modelica model, it might be very appropriate to use a co-simulation FMU, so that the specific solver would be embedded in the FMU.</p>
 <p>On the other side, if you want to interface two similar models, e.g.&nbsp;two Modelica models with similar dynamics, Model Exchange might be the way to go!</p>
 <p>Check <a href="https://www.linkedin.com/posts/clementcoic_drccfmioverviewandlessonslearnt-activity-7344259654308302849-IKXy/">here</a> to know more about FMI, my thoughts and some lessons learned. And the comments are also insightful!</p>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>What Dynamic Simulation Does? – Modelica &amp; FMI</title>
+<title>The different uses of models – Modelica &amp; FMI</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./010-WhatDynamicSimulationDoes.html">What Dynamic Simulation Does?</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./015-ModelUsage.html">The different use of models</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -171,7 +171,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link active">
+  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">What Dynamic Simulation Does?</span></a>
   </div>
 </li>
@@ -201,7 +201,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./015-ModelUsage.html" class="sidebar-item-text sidebar-link">
+  <a href="./015-ModelUsage.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">The different use of models</span></a>
   </div>
 </li>
@@ -246,11 +246,23 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-status-quo" id="toc-the-status-quo" class="nav-link active" data-scroll-target="#the-status-quo">The status quo</a></li>
-  <li><a href="#its-about-the-journey" id="toc-its-about-the-journey" class="nav-link" data-scroll-target="#its-about-the-journey">It’s about the journey</a></li>
-  <li><a href="#from-equations-to-solutions" id="toc-from-equations-to-solutions" class="nav-link" data-scroll-target="#from-equations-to-solutions">From equations to solutions</a></li>
-  <li><a href="#you-are-hiding-something" id="toc-you-are-hiding-something" class="nav-link" data-scroll-target="#you-are-hiding-something">You are hiding something!</a></li>
-  <li><a href="#an-example-to-wrap-things-up" id="toc-an-example-to-wrap-things-up" class="nav-link" data-scroll-target="#an-example-to-wrap-things-up">An example to wrap things up</a></li>
+  <li><a href="#basic-workflows" id="toc-basic-workflows" class="nav-link active" data-scroll-target="#basic-workflows">Basic workflows</a>
+  <ul class="collapse">
+  <li><a href="#the-obvious-model-simulation" id="toc-the-obvious-model-simulation" class="nav-link" data-scroll-target="#the-obvious-model-simulation">The obvious: model simulation</a></li>
+  <li><a href="#more-simulation-model-experimentation" id="toc-more-simulation-model-experimentation" class="nav-link" data-scroll-target="#more-simulation-model-experimentation">More simulation: model experimentation</a></li>
+  <li><a href="#more-more-simulation-model-coupling" id="toc-more-more-simulation-model-coupling" class="nav-link" data-scroll-target="#more-more-simulation-model-coupling">More more simulation: model coupling</a></li>
+  </ul></li>
+  <li><a href="#more-advanced-workflows" id="toc-more-advanced-workflows" class="nav-link" data-scroll-target="#more-advanced-workflows">More advanced workflows</a>
+  <ul class="collapse">
+  <li><a href="#design-exploration" id="toc-design-exploration" class="nav-link" data-scroll-target="#design-exploration">Design exploration</a></li>
+  <li><a href="#model-calibration" id="toc-model-calibration" class="nav-link" data-scroll-target="#model-calibration">Model calibration</a></li>
+  </ul></li>
+  <li><a href="#expert-workflows" id="toc-expert-workflows" class="nav-link" data-scroll-target="#expert-workflows">Expert workflows</a>
+  <ul class="collapse">
+  <li><a href="#design-optimization" id="toc-design-optimization" class="nav-link" data-scroll-target="#design-optimization">Design optimization</a></li>
+  <li><a href="#reduced-order-models" id="toc-reduced-order-models" class="nav-link" data-scroll-target="#reduced-order-models">Reduced order models</a></li>
+  <li><a href="#design-optimization-on-rom" id="toc-design-optimization-on-rom" class="nav-link" data-scroll-target="#design-optimization-on-rom">Design Optimization on ROM</a></li>
+  </ul></li>
   <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
   </ul>
 </nav>
@@ -258,9 +270,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./010-WhatDynamicSimulationDoes.html">What Dynamic Simulation Does?</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./015-ModelUsage.html">The different use of models</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">What Dynamic Simulation Does?</h1>
+<h1 class="title">The different uses of models</h1>
 </div>
 
 
@@ -279,79 +291,138 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/010/01_header.png" class="img-fluid figure-img"></p>
-<figcaption>What Dynamic Simulation Does?</figcaption>
+<p><img src="./assets/images/015/01_header.png" class="img-fluid figure-img"></p>
+<figcaption>An overview of different model usages</figcaption>
 </figure>
 </div>
 <p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
 <p>📬 📰 <strong>Saturday editions</strong> - for having more time to read during the weekend! Let’s experiment for a few weeks. Let me know if this is not a convenient day (❓).</p>
-<p>Last week, we <a href="./009-NeedForDynamicSimulation.html">solved a puzzling question</a>: which tank empties first? And while at the beginning one could think they would empty in the same amount of time, we reflected on how things would look like “a small amount of time later”… and it became clear that one would definitely empty faster than the other.</p>
-<p>At this point, we touched about the need for <strong>Dynamic Simulation</strong>.</p>
-<p>Today, let’s dig into what dynamic simulation is.</p>
-<p><em>Useless note: One could argue that this should have been one of the first posts, and as it is the number 10, it is indeed just the second somehow… (“There are 10 types of people: those who know how to count in binary and those who don’t”)</em></p>
-<section id="the-status-quo" class="level2">
-<h2 class="anchored" data-anchor-id="the-status-quo">The status quo</h2>
-<p>Let’s take another example. I love bicycles so let’s talk about bikes. 🚲</p>
-<p>Similar to <a href="./007-AcausalityEquation.html">the runner’s case</a>, we might want to calculate the force we have to push on the pedals to keep a cruise speed of 20km/h on a flat road or going uphill. We can study with or without a headwind. (And if you are in the UK or US or other non-SI unit country 😉, just change km/h for mph and you’ll just have to go about 1.6 times faster. Good luck! 😉)</p>
-<p>See how we naturally wanted to calculate THE force? For each case, we are looking at an equilibrium: the speed is one value, and so the force is one value too. Sure, there are boundary conditions, namely the slope and the wind. And we can create test cases making these boundary conditions change. For each, we’ll get the value of the force.</p>
-<p>And for each case, there is only one force because we are at equilibrium - here constant speed. This is a steady-state analysis. For the tanks, imagine the tap would be closed: the pressure at the bottom would be constant and there would be no flow to change this “status quo”. But what happens if we open the tap?</p>
-</section>
-<section id="its-about-the-journey" class="level2">
-<h2 class="anchored" data-anchor-id="its-about-the-journey">It’s about the journey</h2>
-<p>You know the quotes that go something like:</p>
-<blockquote class="blockquote">
-<p>it is not about the destination, it’s about the journey.</p>
-</blockquote>
-<p><em>(There are many quotes that sound similar so this one might be slightly different to the one you know, and it is hard to provide the credit to someone specific. Anyway…)</em></p>
-<p>Dynamic simulation is like that: less about the (steady-state) destination, and more about the journey.</p>
-<p>So you know an initial “state”. (We’ll talk about what a <code>state</code> really is later.) And this state is not at equilibrium - not steady. So the game of dynamic simulation is to “predict” how the system state will evolve over time. Until… the desired time (or a steady-state!).</p>
+<p>Today, I want us to set the ground for the series of articles on FMI that are coming. And for that, we will discuss the different uses of models.</p>
+<p>Now, before I explain further, let me say clearly: we won’t cover neither ALL model usages nor all model types. The scope is still behavioral models, and we will discuss the main types of usages. There are more, and if there is one you are using a lot that I don’t list here, please add it in a comment! 👇<br>
+Back to the topic.</p>
+<p>So what do we do with our models? And I am not saying “why” we create the model in the first place - though this is also a very good question we should answer before doing a model, and this was covered in <a href="./003-FirstModel.html">our first model</a> article. Yet to achieve our engineering goal, we might leverage our model in different ways. This is what I want to discuss today.</p>
+<p>Let’s dive in.</p>
+<section id="basic-workflows" class="level2">
+<h2 class="anchored" data-anchor-id="basic-workflows">Basic workflows</h2>
+<p>Let’s see first the most typical workflows before getting into more complex ones.</p>
+<section id="the-obvious-model-simulation" class="level3">
+<h3 class="anchored" data-anchor-id="the-obvious-model-simulation">The obvious: model simulation</h3>
+<p>The most straightforward thing to do with a functioning model is to simulate it. The point of model simulation is to provide the inputs to your model and study the outputs. You basically want to answer the question: how does my system behave under these inputs.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/010/02_dynamicSimulation.png" class="img-fluid figure-img"></p>
-<figcaption>Dynamic simulation is about computing the trajectory of the states</figcaption>
+<p><img src="./assets/images/015/02_modelSimulation.png" class="img-fluid figure-img"></p>
+<figcaption>Model simulation to study the system response to an input</figcaption>
 </figure>
 </div>
-<p>The time <code>t_0</code> represents an initial time and we know the value of the state <code>y</code> at this time - hence <code>y_0</code>. We want to find out <code>y_1</code> at time <code>t_1</code> and so on. And you notice how the times are not necessarily equally spaced? This is for another day, yet just keep in mind that the steps we take are not necessarily equally spaced.</p>
-<p>But eh, the dashed line is the solution, let’s just use it, no? Well of course, we don’t know it! I just put it there for you to see that the goal is to predict the points (❌) on the line. And in between the points? We can interpolate, with the right level of smoothing.</p>
-<p>So how do we make sure that we “predict” the right values? Well, there is not much luck into this: we don’t really predict but compute. And we compute based on our model - as we saw over the last 10 posts!</p>
+<p>This is straightforward. And let’s state the second obvious one.</p>
 </section>
-<section id="from-equations-to-solutions" class="level2">
-<h2 class="anchored" data-anchor-id="from-equations-to-solutions">From equations to solutions</h2>
-<p>It is hard to talk about simulation without really showing an equation. Let me try to keep it to the minimal.</p>
-<p>Dynamic systems involve dynamics… and dynamics are modeled with differential equations. Basically something like:</p>
-<pre><code>y_dot = f(y,u,t)</code></pre>
-<p>And <code>y_dot</code> is the time derivative of <code>y</code>. But what does that mean? The time derivative of a variable is the rate of change of this variable over time. It basically tells you in which direction and at which “pace” it will change its value. <code>u</code> are potential inputs (e.g.&nbsp;the speed of the wind or the ground slope)</p>
-<p>So if we know the speed <code>v</code> of our runner and we keep in mind that the speed is the derivative of the position <code>x</code>, then we can - knowing the initial position of the runner and its speed - compute its new position after a given amount of time (assuming the speed does not change in this amount of time).</p>
-<p>So now we have the question: do we know the new speed? Well, actually, if we have the equation <code>v = f(x , u, t)</code> and we know <code>x</code>, (potentially <code>u</code>,) and <code>t</code> then we can compute <code>v</code>!</p>
-<p>So now we just need to get the new value of <code>x</code> at the next time step. And so it goes.</p>
-</section>
-<section id="you-are-hiding-something" class="level2">
-<h2 class="anchored" data-anchor-id="you-are-hiding-something">You are hiding something!</h2>
-<p>I kind of hide something here… how do you compute <code>x</code> knowing <code>v</code>? Well that is what a solver does. I don’t want to enter today into that topic because it is already quite a long theoretical article… but the simplest (not the best) solver is Forward Euler and <a href="https://www.linkedin.com/posts/clementcoic_%F0%9D%97%A8%F0%9D%97%BB%F0%9D%97%B1%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%80%F0%9D%98%81%F0%9D%97%AE%F0%9D%97%BB%F0%9D%97%B1%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%97%A2%F0%9D%97%97%F0%9D%97%98-%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%B9%F0%9D%98%83%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%80-activity-7317890082101780480-phce">I explain it here</a> if you are impatient. 😊</p>
-<p>And the right question to ask next is whether we cannot just solve the differential equation analytically instead of using a solver? Yes, in theory. It however gets really complex really fast because we usually have many variables and the equations are all but simple. So in practice, it is often impossible. Solvers are key to our simulations.</p>
-</section>
-<section id="an-example-to-wrap-things-up" class="level2">
-<h2 class="anchored" data-anchor-id="an-example-to-wrap-things-up">An example to wrap things up</h2>
-<p>One of the first example I learned was a “quarter of a vehicle”. It basically means that you take a car, you cut it in 4 and look at a quarter. It is a fair thing to do if you assume the weight distribution to be equally spread over the four wheels. And we just look at the vertical displacement.</p>
-<p>So you have a very simple model that looks like a typical oscillator: a mass (quarter of the car mass) on which applies gravity (here the constant force), a spring-damper for the suspension and the floor that is slightly moving because it is not perfectly flat.</p>
+<section id="more-simulation-model-experimentation" class="level3">
+<h3 class="anchored" data-anchor-id="more-simulation-model-experimentation">More simulation: model experimentation</h3>
+<p>Because often inputs are not unique, we can start experimenting on these, and answer “What if…” scenarios.<br>
+<em>What</em> would be the airplane change of attitude <em>if</em> the pilot steers the command in a given manner?<br>
+<em>What</em> is the viscosity of the oil in the hydraulic system of an aircraft at -30°C, and how does that affect the flight control performance?</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./assets/images/010/03_springDamper.jpeg" class="img-fluid figure-img"></p>
-<figcaption>Quarter of a vehicle model</figcaption>
+<p><img src="./assets/images/015/03_modelExperimentation.png" class="img-fluid figure-img"></p>
+<figcaption>Model experimentation to study the surface of response of the system.</figcaption>
 </figure>
 </div>
-<p>Assume the car is stopped. The floor won’t be moving with respect to the car… hopefully. We can see by simulating, how much the car will “sink” on its suspension and which steady-state it will reach.</p>
-<p>Now if we start driving, we will have the height of the floor constantly changing and that induces a compression on the spring and some dissipation from the damper. A resulting force will be applied to the mass that will be combined with the gravity… I might have lost you here. If so, go to the next paragraph, it is OK. If not, let’s continue: Newton told us that the sum of forces - over a constant mass (taking shortcuts here) - equals the mass multiplied by the acceleration. Acceleration! We get the new acceleration and that is the derivative of the speed, so we can use the solver to compute it! And from the speed, the position! Tadaaaam! And we can just go to the next step and repeat.</p>
-<p>Basically, the model you build will have the equations behind to express the relations between the states of your system and their derivatives. And so you’ll be able to compute these and let the solver tell you what the next states are.</p>
-<p>And hopefully, the mass (on which you might be sitting - the car - but not while reading this!) might not oscillate too much!</p>
+<p>⚠️ You can only ask questions the model is made for answering. Again, I want to point at <a href="./003-FirstModel.html">our first model</a> article, where we discussed that one of the first things to do is to know what we want our model to do and develop it accordingly. When using it, we need to stay within this “experimental frame” - I believe the term was coined by B.P. Zeigler around 1976 (maybe I am wrong).</p>
+</section>
+<section id="more-more-simulation-model-coupling" class="level3">
+<h3 class="anchored" data-anchor-id="more-more-simulation-model-coupling">More more simulation: model coupling</h3>
+<p>You might know about the double-Vee model, else read <a href="https://www.linkedin.com/feed/update/urn:li:activity:7267442888853065728/">my post</a> about it 😊. Why I am bringing this topic is that it is a standard engineering workflow to decompose the system into subsystems. And each subsystem, potentially into sub-subsystems, … and finally into components. At the right subsystem levels, the engineering team will develop models, prior to physical prototypes. Very often, there is a need for these models - coming from different teams, most likely different tools - to be coupled.</p>
+<p>Your flight control model, that includes the hydraulic system with actuators, might need to be coupled with the aircraft dynamics model, for example.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/015/04_modelCoupling.png" class="img-fluid figure-img"></p>
+<figcaption>Two models coupled to study their joint behavior</figcaption>
+</figure>
+</div>
+<p>This is just an example. The coupling is obviously not necessarily only between two models. It is often the case that many subsystems are coupled and interact all together (multiple connections).</p>
+<p>And there is a specific case of the coupling that is worth mentioning: the controller-plant coupling. Often the model of the physical system is called “plant model”, and its controller is in a separate model. Coupling both to design the controller and study the closed-loop system performance is key in system dynamics studies.</p>
+</section>
+</section>
+<section id="more-advanced-workflows" class="level2">
+<h2 class="anchored" data-anchor-id="more-advanced-workflows">More advanced workflows</h2>
+<p>We covered some of the usual suspects. There are more. They are also common, and yet require more advanced techniques, often done with scripting in Python or another language or using dedicated software.</p>
+<section id="design-exploration" class="level3">
+<h3 class="anchored" data-anchor-id="design-exploration">Design exploration</h3>
+<p>So far, we assumed the model was complete and correct. You might know the stroke of your actuator is 120mm, for example. However, don’t you remember that every design has tolerances? For sure you do. 😊 It is however simpler to forget about these parameter variations. 😅 Here, we won’t! 😉</p>
+<p>So one very important practice is to test your model response over the range of possible variations of the main parameters. It is kind of the same as “model experimentation” above, but this time we vary the parameter values instead of the inputs. (Well, we might also vary the inputs.)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/015/05_designExploration.png" class="img-fluid figure-img"></p>
+<figcaption>Varying the values of parameters to observe the design responses</figcaption>
+</figure>
+</div>
+<p>This can often lead to a huge amount of simulations, so make sure to focus on the main parameters. Also, one typical mistake is to change the value in a “hard-coded” fashion, and forget to put it back to its default value after the design exploration. When possible, make your design exploration “aside” from your main model (e.g.&nbsp;extending the main model and modifying parameters, or experimenting on an FMU, etc.) - this will save you a lot of debugging later. (Trust me… 😅)</p>
+</section>
+<section id="model-calibration" class="level3">
+<h3 class="anchored" data-anchor-id="model-calibration">Model calibration</h3>
+<p>You might not know all parameters of your model, and yet, you might have some data about your system behavior. You can use the data to calibrate the unknown parameters.</p>
+<p>What is the value of the stiffness of the spring knowing the data from the field tests show this response?</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/015/06_modelCalibration.png" class="img-fluid figure-img"></p>
+<figcaption>Calibrate a parameter value based on system data.</figcaption>
+</figure>
+</div>
+<p>There are many ways to do so, from more manual to more automatic ways. We will cover only a few in the near future.</p>
+<p>There are, however, several things to have in mind when performing model calibration:</p>
+<ul>
+<li>Make sure your data is correct and sufficient.</li>
+<li>Only calibrate unknown parameters and as few as possible.</li>
+<li>Know the boundaries of the parameters to calibrate and verify the resulting calibration.</li>
+<li>Mark down the calibrated parameters so that you know these are not “official” data.</li>
+</ul>
+<p>Actually, most of these recommendations are true for any type of work with data. Also for the following workflows.</p>
+</section>
+</section>
+<section id="expert-workflows" class="level2">
+<h2 class="anchored" data-anchor-id="expert-workflows">Expert workflows</h2>
+<p>These workflows can be more complex, as they might require a better understanding of the numerics of your model. They are of course at your reach, and you should not interpret “Expert” as “not for me”. Make it happen! 😉</p>
+<section id="design-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="design-optimization">Design optimization</h3>
+<p>Design optimization is not far from model calibration. While Model Calibration was about “tweaking the buttons ourselves”, design optimization is about specifying our targeted behavior and constraints, and letting an optimizer find the best design that satisfies these.<br>
+Design optimization requires more work upfront - e.g.&nbsp;on making the model particularly smooth and derivable, or in specifying the problem clearly -, and less overhead in finding the solution, as the optimizer will take care of that.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/015/07_modelOptimization.png" class="img-fluid figure-img"></p>
+<figcaption>Minimize a loss function to find the optimum set of parameters</figcaption>
+</figure>
+</div>
+</section>
+<section id="reduced-order-models" class="level3">
+<h3 class="anchored" data-anchor-id="reduced-order-models">Reduced order models</h3>
+<p>When behavioral models are really detailed, they can get slow to simulate for many numerical reasons. Yet, some use cases require fast models. A solution to tackle that is to build a Reduced Order Model (ROM) of your behavioral model.</p>
+<p>There are many types of ROMs: from simple physical effect removal, or system linearization, to (Physics Informed) Machine Learning models. You should choose the type of ROM based on your needs - e.g., in terms of simulation speed or numerical properties - and behavioral model type (including physical domain).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/015/08_modelOrderReduction.png" class="img-fluid figure-img"></p>
+<figcaption>Make a faster yet accurate model, out of a detailed behavioral model</figcaption>
+</figure>
+</div>
+</section>
+<section id="design-optimization-on-rom" class="level3">
+<h3 class="anchored" data-anchor-id="design-optimization-on-rom">Design Optimization on ROM</h3>
+<p>Since the work of making the model smooth for optimization can be very time-consuming, especially for large non-linear models, one thing I recommend is to train a Reduced Order Model (ROM) from your detailed model, optimize over this ROM - which should be smooth, and verify the behavior of the optimized values on your complex system.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/015/09_romOptimWorkflow.png" class="img-fluid figure-img"></p>
+<figcaption>A nice workflow I recommend to optimize complex models</figcaption>
+</figure>
+</div>
+<p>This way, the model over which you optimize has the nice numerical properties required, and the verification happens on the detailed model. This gives you the “best of both worlds”.</p>
+</section>
 </section>
 <section id="the-end-for-today" class="level2">
 <h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
-<p>Enough for today. This was an abstract one and I hope it’s OK. I had to cover the process.</p>
-<p>Next time, we will go into something more applied. I initially wanted to cover what solvers do, but unless you say it in comments, I will wait a bit so we get some actual modeling going on first.</p>
+<p>Enough for today. We covered a lot of ground today! Keep in mind that we might discuss all these model usages progressively with FMI in future articles.</p>
+<p>Let me know if it was a nice and useful read! I put quite some effort into the diagrams for this one 😅</p>
 <p><em>Break is over, go back to what you were doing.</em></p>
 <p>Clem</p>
-<p><a href="./011-LetsIntegrate.html">Next</a> -&gt;</p>
+<p><a href="./016-MEvsCS.html">Next</a> -&gt;</p>
 
 
 </section>
