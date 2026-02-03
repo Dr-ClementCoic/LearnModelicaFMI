@@ -42,6 +42,8 @@ website:
             href: 014-ModelVariants.qmd
           - text: "The different use of models"
             href: 015-ModelUsage.qmd
+          - text: "The basic structure of Modelica code"
+            href: 017-BasicCode.qmd
       - section: "FMI"
         contents:
           - text: "Spreading the word with FMI"
