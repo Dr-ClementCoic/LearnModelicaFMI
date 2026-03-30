@@ -1,0 +1,254 @@
+---
+title: "Initialization — Getting Your Simulation Off the Ground"
+---
+
+![Initialization: the first step nobody talks about](./assets/images/022/01_header.png)
+
+*I hope you've got your preferred drink in hand* ☕️🫖💧
+
+I'm about to show you four different ways to crash the exact same model at t=0. Ready? 😈
+
+Our [suspended mass from articles 17-18](./017-BasicCode.qmd) has three equations, two states, and perfect physics. Yet depending on how we initialize it, we can make it: (1) produce garbage, (2) refuse to start, (3) give us the wrong answer, or (4) solve but with a hidden trap.
+
+Initialization is the most underrated topic in Modelica. It's the thing no one talks about until it bites you. Today, we talk about it.
+
+## The initialization system
+
+Before we start crashing things (patience!), let's understand what initialization actually *is*.
+
+When you hit "Simulate," the tool doesn't immediately start integrating. First, it needs to figure out the value of **every single variable** at t=0. All of them. Positions, velocities, pressures, temperatures, flows — everything.
+
+> Well... at least the values of the states. The tool can compute algebraic variables from the equations - these are dependent variables, but it needs the states to be defined first. So the initialization system is really about finding consistent values for the states at t=0.
+
+This is a separate math problem from the simulation itself. Think of it as two phases:
+
+1. **Initialization**: Solve a (potentially large) system of equations to find consistent values at t=0
+2. **Simulation**: Integrate forward in time from those initial values
+
+The simulation equations describe how things *change*. The initialization equations describe where things *start*.
+
+Let's bring back our [suspended mass](./017-BasicCode.qmd):
+
+```modelica
+model SuspendedMass
+  parameter Modelica.Units.SI.Mass m = 10;
+  parameter Modelica.Units.SI.TranslationalSpringConstant k = 1000;
+  parameter Modelica.Units.SI.Length L0 = 1;
+  parameter Modelica.Units.SI.TranslationalDampingConstant c = 30;
+
+  Modelica.Units.SI.Position x;
+  Modelica.Units.SI.Velocity v;
+  Modelica.Units.SI.Acceleration a;
+equation
+  a = -c/m * v - k/m * (x - L0) - Modelica.Constants.g_n;
+  a = der(v);
+  v = der(x);
+end SuspendedMass;
+```
+
+This model has **two states**: `x` and `v` (the variables whose derivatives appear in `der()`). At t=0, the solver needs their values. But we haven't told it anything about them!
+
+Here's the key insight: **the initialization problem must be square** — the same number of equations as unknowns. Remember [the square system requirement](./008-AcausalityModels.qmd)? It applies here too.
+
+Our model has 2 states to initialize. So we need exactly **2 initialization constraints**. Not 1 (under-determined). Not 3 (over-determined). Exactly 2.
+
+Without them? The tool will either guess (using default `start` values, often zero), or refuse to proceed. Neither is great.
+
+## The tools in your toolbox
+
+Modelica gives you three ways to specify initialization constraints. Let's see all three on our suspended mass, side by side.
+
+### Tool 1: `start` and `fixed`
+
+Every variable in Modelica has a hidden `start` attribute. It's a hint to the solver: "If you don't know what to do, try starting from this value."
+
+```modelica
+Modelica.Units.SI.Position x(start = 1.0);
+Modelica.Units.SI.Velocity v(start = 0);
+```
+
+But here's the subtle part: **`start` is just a hint by default.** The solver may or may not use it. It's like writing "suggested starting price" on an auction item — the bidding might end up somewhere completely different.
+
+To make it a real constraint, you need `fixed = true`:
+
+```modelica
+Modelica.Units.SI.Position x(start = 1.0, fixed = true);
+Modelica.Units.SI.Velocity v(start = 0, fixed = true);
+```
+
+Now `x` *must* be 1.0 at t=0 and `v` *must* be 0. No negotiation. These are hard constraints, equivalent to writing `initial equation` blocks.
+
+> ⚠️ **The `fixed` trap**: For `parameter` variables, `fixed` defaults to `true` (they're set before simulation). But for continuous state variables like `x` and `v`, `fixed` defaults to `false`. This means just writing `start = 1.0` without `fixed = true` is a *suggestion*, not a *requirement*. Many beginners get bitten by this! And I was too 😅
+> Why is it the case? Because this prevents from having systems that are accidentally over-constrained. If `start` were always fixed, then any variable with a `start` value would be a hard constraint, and it would be easy to accidentally add too many constraints without realizing it.
+
+Two states, two `fixed = true` — that's our two initialization constraints. Square system. ✅
+
+### Tool 2: `initial equation`
+
+This is what we used in [article 17](./017-BasicCode.qmd). Instead of attaching constraints to individual variables, you write equations that are only true at t=0:
+
+```modelica
+initial equation
+  x = L0;    // Start at the spring's rest length
+  v = 0;     // Start at rest
+```
+
+These are full-blown Modelica equations — they can be as complex as you want. And they count as initialization constraints. Two equations for two states. Square. ✅
+
+`initial equation` is more powerful than `start`/`fixed` because you can write *any* equation, not just "variable = value":
+
+```modelica
+initial equation
+  x = L0 - m * Modelica.Constants.g_n / k;  // Start at static equilibrium
+  v = 0;
+```
+
+Or even equations between variables — things that `start`/`fixed` simply can't express.
+
+### Tool 3: Steady-state initialization
+
+This is what we explored in [article 18](./018-CodeEnhancement.qmd): set all derivatives to zero.
+
+```modelica
+initial equation
+  der(x) = 0;  // which means v = 0
+  der(v) = 0;  // which means a = 0
+```
+
+This tells the solver: "Find me the state where nothing changes." The solver then works backwards from the simulation equations to find the position and velocity where the system is at equilibrium.
+
+Remember the result from article 18? A flat line at `x ≈ 0.9019 m`. The solver computed the equilibrium position *for us*, using our own equations. That's [acausality](./007-AcausalityEquation.qmd) at its finest. 😉
+
+> 💡 **When steady-state init fails**: Not every system has a stable steady state. Think of a ball balanced on top of a hill — mathematically it's a steady state, but the solver might struggle to find it because any tiny perturbation sends it rolling. And some systems (like an oscillator without damping) don't have a steady state at all. In those cases, `der(x) = 0` might give you an error or a nonsensical result.
+
+### Side-by-side comparison
+
+| Approach | Syntax | Power | Best for |
+|----------|--------|-------|----------|
+| `start` + `fixed = true` | On the variable declaration | Simple value assignment | Quick & clean: "start at this value" |
+| `initial equation` | Separate block | Any equation | Complex init conditions, relations between variables |
+| Steady-state (`der(x) = 0`) | In `initial equation` | Let the solver compute | Finding equilibrium without manual math |
+
+All three produce exactly the same thing: initialization constraints that make the t=0 system square - unless you overconstrain it 😉. They're just different ways to express them.
+
+> One more thing: **you can mix them!** Use `fixed = true` for variables with known starting values, and `initial equation` for the rest. Just make sure the total count matches your number of states. Too many → over-determined. Too few → under-determined. Which brings us to...
+
+## The error museum 🎨
+
+As promised: four ways to crash our perfectly good suspended mass. Let's walk through the gallery.
+
+### Crash 1: No initialization at all
+
+```modelica
+model SuspendedMass_Crash1
+  parameter Modelica.Units.SI.Mass m = 10;
+  parameter Modelica.Units.SI.TranslationalSpringConstant k = 1000;
+  parameter Modelica.Units.SI.Length L0 = 1;
+  parameter Modelica.Units.SI.TranslationalDampingConstant c = 30;
+
+  Modelica.Units.SI.Position x;
+  Modelica.Units.SI.Velocity v;
+  Modelica.Units.SI.Acceleration a;
+equation
+  a = -c/m * v - k/m * (x - L0) - Modelica.Constants.g_n;
+  a = der(v);
+  v = der(x);
+end SuspendedMass_Crash1;
+```
+
+No `initial equation`, no `fixed = true`. What happens?
+
+The tool falls back to `start` values. Since we didn't set those either, they default to zero: `x = 0`, `v = 0`. The model *will* simulate — but from a physically meaningless starting point. The mass starts at position zero (wherever that is) and begins oscillating.
+
+This was [exactly what happened in article 17](./017-BasicCode.qmd)! We got a result that was "technically correct" but started from the wrong place. Not a crash per se, but silently wrong. **The most dangerous kind of error.** 🤫
+
+**Diagnosis:** Missing initialization constraints. The tool guessed.
+**Fix:** Add `initial equation` or `start`/`fixed` for all states.
+
+### Crash 2: Over-determined (too many constraints)
+
+```modelica
+initial equation
+  x = L0;
+  v = 0;
+  a = 0;  // One too many!
+```
+
+Three constraints for two states. That's over-determined. The tool will (typically) tell you:
+
+```
+Error: The initialization problem is over-determined. 
+There are 3 initial equations and 2 free variables.
+```
+
+Makes sense: you're telling the solver "start at the rest length, with zero velocity, AND zero acceleration." But zero acceleration at `x = L0` is only true if `m*g/k = 0`, which it's not. The constraints are *contradictory*.
+
+**Diagnosis:** More initial equations than states.
+**Fix:** Remove the redundant constraint. Ask yourself: "Which two do I actually need?"
+
+### Crash 3: Conflicting constraints
+
+```modelica
+Modelica.Units.SI.Position x(start = 0.5, fixed = true);
+
+initial equation
+  x = L0;  // L0 = 1.0, but fixed says x = 0.5!
+```
+
+Here we've said two contradictory things: `fixed = true` says `x = 0.5` at t=0, but `initial equation` says `x = 1.0` at t=0. That's `0.5 = 1.0`. 🤯
+
+Some tools catch this and report an over-determined system (because that's what it is — two constraints on the same variable). Others might silently pick one and ignore the other, giving you a "correct" simulation from the wrong starting point.
+
+**Diagnosis:** `start`/`fixed` and `initial equation` both constraining the same variable.
+**Fix:** Use one or the other, never both for the same state.
+
+### Crash 4: Bad guess for nonlinear initialization
+
+This one's sneakier. Imagine a more complex model where the initialization system is *nonlinear* — the solver needs to iterate (Newton's method, typically) to find the initial values. It starts from `start` values and iterates toward a solution.
+
+If the `start` values are way off, the solver might:
+
+- Fail to converge ("could not solve initialization problem")
+- Converge to a *different* solution than the one you wanted (some systems have multiple equilibria)
+
+For our suspended mass, this isn't a big deal — the init system is linear. But for thermal systems with radiation ($T^4$ terms), fluid systems with complex properties, or anything with `if`/`when` clauses... bad `start` values can absolutely ruin your day.
+
+```modelica
+// Even with correct initial equations, bad start values 
+// can prevent the solver from finding them!
+Modelica.Units.SI.Position x(start = 1e6);  // Wildly wrong guess
+Modelica.Units.SI.Velocity v(start = 1e6);   // Also terrible
+
+initial equation
+  der(x) = 0;
+  der(v) = 0;
+```
+
+Another example: remember how you learned that the solution of `x^2 = 4` is `x = 2`? Oh well, and that it can also be `x = -2`! If your `start` value is positive, the solver will most likely find the positive root. If it's negative, it will most likely find the negative root. If you wanted the positive root but accidentally set a negative `start`, you'll get a perfectly valid solution — just not the one you expected! And the most vicious part is that you might not have set up the `initial equation` to explicitly say "x = 2" — you might have just said "der(x) = 0", expecting it to find the stable equilibrium. But if the solver finds the wrong equilibrium, you won't get an error — just a different result.
+
+**Diagnosis:** Convergence failure during initialization. The error message often mentions "Newton iteration" or "singular Jacobian."
+**Fix:** Provide reasonable `start` values, even when using `initial equation`. Think of `start` as the initial guess for the iterative solver — it doesn't need to be exact, but it should be in the right ballpark. 🎯
+
+### The gallery at a glance
+
+| Crash | Problem | Symptom | Fix |
+|-------|---------|---------|-----|
+| 1 | No init constraints | Simulates from wrong starting point | Add `initial equation` or `fixed = true` |
+| 2 | Too many constraints | "Over-determined" error | Remove redundant constraints |
+| 3 | Conflicting constraints | Over-determined or silent wrong result | Use one approach per variable |
+| 4 | Bad initial guesses | "Could not solve" or wrong equilibrium | Set reasonable `start` values |
+
+The good news? Once you understand these four failure modes, you've seen about 90% of initialization problems. The remaining 10% usually involve [events and hybrid systems](https://en.wikipedia.org/wiki/Hybrid_system) — but that's a story for another day. 😉
+
+## The END for today
+
+Enough for today. You now know the initialization system is a separate math problem, you have three tools (`start`/`fixed`, `initial equation`, steady-state), and you've visited the error museum. Next time you get an "initialization failed" message, you'll know exactly which exhibit you're looking at. 🎨
+
+Next time: **packages and libraries**. We've been writing loose models floating in space — it's time to organize them into a proper Modelica library. Think folders, `within` clauses, and a peek inside the MSL structure.
+
+*Break is over, go back to what you were doing.*
+
+Clem
+
+
+<!-- [Next](./023-BuildingYourLibrary.qmd) -> -->

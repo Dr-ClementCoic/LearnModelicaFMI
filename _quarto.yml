@@ -1,11 +1,14 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - "*.qmd"
+    - "!xxx-template.qmd"
 
 website:
   title: "Modelica & FMI"
   body-footer: | 
-    © 2025 Clément Coïc — Licensed under [creative commons 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Non-commercial use only.
+    © 2025-2026 Clément Coïc — Licensed under [creative commons 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Non-commercial use only.
   sidebar:
     style: "docked"
     search: true
@@ -44,20 +47,35 @@ website:
             href: 015-ModelUsage.qmd
           - text: "The basic structure of Modelica code"
             href: 017-BasicCode.qmd
+          - text: "Enhancing our first Modelica code"
+            href: 018-CodeEnhancement.qmd
+          - text: "What's inside a connector?"
+            href: 020-WhatsInsideAConnector.qmd
+          - text: "Stream Connectors"
+            href: 021-StreamConnectors.qmd
+          - text: "Initialization"
+            href: 022-Initialization.qmd
+          - text: "Building Your Library"
+            href: 023-BuildingYourLibrary.qmd
+          - text: "Annotations"
+            href: 024-Annotations.qmd
+          - text: "Events"
+            href: 025-Events.qmd
+
       - section: "FMI"
         contents:
           - text: "Spreading the word with FMI"
             href: 006-SpreadingWithFMI.qmd
           - text: "Model Exchange vs Co-Simulation FMUs"
             href: 016-MEvsCS.qmd
+          - text: "Simulating our FMU with FMPy"
+            href: 019-fmpySimulation.qmd
       - text: "About"
         href: about.qmd
 
 format:
   html:
-    theme:
-      - cosmo
-      - brand
+    theme: cosmo
     css: styles.css
     toc: true
 

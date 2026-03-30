@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Building Your Own Library — From Loose Models to Packages – Modelica &amp; FMI</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7b1b06e26e1e2798ccde3208f86b5bbd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./023-BuildingYourLibrary.html">Building Your Library</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Modelica &amp; FMI</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./001-Commitment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A bit of context</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Modelica</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./002-Modelica101.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Modelica 101</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./003-FirstModel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./004-FirstSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./005-ModelRefactoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model refactoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./007-AcausalityEquation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acausality, the secret service of Modelica</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./008-AcausalityModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">One model serves several purposes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./009-NeedForDynamicSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The need for dynamic simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Dynamic Simulation Does?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./011-LetsIntegrate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Understand your model: let’s integrate!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./012-ReplaceableModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing your Christmas gift!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./013-ConditionalModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Do you deserve a Christmas present?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./014-ModelVariants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A (technical) summary of model variants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./015-ModelUsage.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The different use of models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./017-BasicCode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The basic structure of Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./018-CodeEnhancement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing our first Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./020-WhatsInsideAConnector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What’s inside a connector?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./021-StreamConnectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Stream Connectors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./022-Initialization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initialization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./023-BuildingYourLibrary.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Building Your Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./024-Annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Annotations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./025-Events.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Events</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">FMI</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./006-SpreadingWithFMI.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spreading the word with FMI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./016-MEvsCS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Exchange vs Co-Simulation FMUs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./019-fmpySimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating our FMU with FMPy</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#whats-a-package" id="toc-whats-a-package" class="nav-link active" data-scroll-target="#whats-a-package">What’s a package?</a>
+  <ul class="collapse">
+  <li><a href="#nesting-packages" id="toc-nesting-packages" class="nav-link" data-scroll-target="#nesting-packages">Nesting packages</a></li>
+  <li><a href="#packages-folders-on-disk-or-not" id="toc-packages-folders-on-disk-or-not" class="nav-link" data-scroll-target="#packages-folders-on-disk-or-not">Packages = folders on disk… or not!</a></li>
+  <li><a href="#within-the-address-declaration" id="toc-within-the-address-declaration" class="nav-link" data-scroll-target="#within-the-address-declaration"><code>within</code>: the address declaration</a></li>
+  </ul></li>
+  <li><a href="#three-flavors-of-import" id="toc-three-flavors-of-import" class="nav-link" data-scroll-target="#three-flavors-of-import">Three flavors of <code>import</code></a>
+  <ul class="collapse">
+  <li><a href="#flavor-1-qualified-import-the-rename" id="toc-flavor-1-qualified-import-the-rename" class="nav-link" data-scroll-target="#flavor-1-qualified-import-the-rename">Flavor 1: Qualified import (the rename)</a></li>
+  <li><a href="#flavor-2-single-import-the-grab" id="toc-flavor-2-single-import-the-grab" class="nav-link" data-scroll-target="#flavor-2-single-import-the-grab">Flavor 2: Single import (the grab)</a></li>
+  <li><a href="#flavor-3-wildcard-import-the-everything" id="toc-flavor-3-wildcard-import-the-everything" class="nav-link" data-scroll-target="#flavor-3-wildcard-import-the-everything">Flavor 3: Wildcard import (the everything)</a></li>
+  <li><a href="#which-flavor-should-you-use" id="toc-which-flavor-should-you-use" class="nav-link" data-scroll-target="#which-flavor-should-you-use">Which flavor should you use?</a></li>
+  </ul></li>
+  <li><a href="#building-our-library" id="toc-building-our-library" class="nav-link" data-scroll-target="#building-our-library">Building our library</a>
+  <ul class="collapse">
+  <li><a href="#the-target-structure" id="toc-the-target-structure" class="nav-link" data-scroll-target="#the-target-structure">The target structure</a></li>
+  <li><a href="#the-top-level-package" id="toc-the-top-level-package" class="nav-link" data-scroll-target="#the-top-level-package">The top-level package</a></li>
+  <li><a href="#the-sub-packages" id="toc-the-sub-packages" class="nav-link" data-scroll-target="#the-sub-packages">The sub-packages</a></li>
+  <li><a href="#the-models" id="toc-the-models" class="nav-link" data-scroll-target="#the-models">The models</a></li>
+  <li><a href="#maintaining-the-package-order" id="toc-maintaining-the-package-order" class="nav-link" data-scroll-target="#maintaining-the-package-order">Maintaining the package order</a></li>
+  <li><a href="#using-our-library" id="toc-using-our-library" class="nav-link" data-scroll-target="#using-our-library">Using our library</a></li>
+  </ul></li>
+  <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./023-BuildingYourLibrary.html">Building Your Library</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Building Your Own Library — From Loose Models to Packages</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/023/01_header.png" class="img-fluid figure-img"></p>
+<figcaption>Packages: giving your models a proper home</figcaption>
+</figure>
+</div>
+<p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
+<p>Back in <a href="./003-FirstModel.html">article 3</a>, I introduced the MSL as “a package — read ‘folder.’” And we’ve been using dot notation ever since: <code>Modelica.Units.SI.Temperature</code>, <code>Modelica.Constants.g_n</code>… We never really stopped to think about what those dots mean.</p>
+<p>They’re addresses. <code>Modelica.Thermal.HeatTransfer.Components.ThermalConductor</code> is like <code>Europe.France.Paris.Arrondissement7.EiffelTower</code>. Each dot is a level deeper. And the system that makes this work? Packages.</p>
+<p>You’ve been <em>using</em> packages since day one. Today, you learn to <em>build</em> your own. 📦</p>
+<section id="whats-a-package" class="level2">
+<h2 class="anchored" data-anchor-id="whats-a-package">What’s a package?</h2>
+<p>A package in Modelica is exactly what it sounds like: a container for models, connectors, functions, constants, and… other packages. It’s the organizational unit of Modelica.</p>
+<p>The syntax is straightforward:</p>
+<pre class="modelica"><code>package MyLibrary "My first Modelica library"
+  // Models, sub-packages, constants... go here
+end MyLibrary;</code></pre>
+<p>That’s it. <code>package PackageName</code> … <code>end PackageName;</code>. If you know how to write a <code>model</code>, you know how to write a <code>package</code>. The difference? A package <em>contains</em> things. A model <em>does</em> things.</p>
+<section id="nesting-packages" class="level3">
+<h3 class="anchored" data-anchor-id="nesting-packages">Nesting packages</h3>
+<p>Packages can contain other packages. That’s how you create structure:</p>
+<pre class="modelica"><code>package MyLibrary "My first Modelica library"
+  package Mechanics "Mechanical models"
+    package Translational "Translational mechanics"
+      // Models go here
+    end Translational;
+  end Mechanics;
+end MyLibrary;</code></pre>
+<p>And <em>that</em> is where the dot notation comes from! <code>MyLibrary.Mechanics.Translational</code> is the path through nested packages — just like <code>Europe.France.Paris</code> is a path through nested locations. Each dot = one level deeper.</p>
+<p>Now you understand what <code>Modelica.Thermal.HeatTransfer.Components.ThermalConductor</code> means: the <code>ThermalConductor</code> model, inside the <code>Components</code> package, inside <code>HeatTransfer</code>, inside <code>Thermal</code>, inside the top-level <code>Modelica</code> package (the MSL). 🗺️</p>
+</section>
+<section id="packages-folders-on-disk-or-not" class="level3">
+<h3 class="anchored" data-anchor-id="packages-folders-on-disk-or-not">Packages = folders on disk… or not!</h3>
+<p>Here’s something that confused me at first: there are two conventions for writing Modelica libraries, and they look different on disk. But they both represent the same thing: packages.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/023/02_storingLibraries.png" class="img-fluid figure-img"></p>
+<figcaption>Two conventions for storing Modelica libraries</figcaption>
+</figure>
+</div>
+<p><strong>Convention 1: Single file</strong> — Everything in one <code>.mo</code> file (like our examples above). Simple, but gets unwieldy for large libraries.</p>
+<p><strong>Convention 2: Directory structure</strong> — Each package becomes a folder, with a <code>package.mo</code> file inside. This is what real libraries use:</p>
+<pre><code>MyLibrary/
+├── package.mo              ← "package MyLibrary ... end MyLibrary;"
+└── Mechanics/
+    ├── package.mo           ← "package Mechanics ... end Mechanics;"
+    └── Translational/
+        ├── package.mo       ← "package Translational ... end Translational;"
+        └── SuspendedMass.mo ← our model!</code></pre>
+<p>Each <code>package.mo</code> file contains the package declaration. Each model gets its own <code>.mo</code> file inside the folder. Clean, organized, version-control friendly. Modelica packages map directly to your file system.</p>
+<p>I will be blunt here: forget the single-file convention. It’s fine for tiny examples or for model export/sharing, but real libraries use the directory structure. If you want to build a library that others can use, follow the directory structure convention. It may seem like extra work at first, but it pays off in maintainability and usability, very quickly.</p>
+</section>
+<section id="within-the-address-declaration" class="level3">
+<h3 class="anchored" data-anchor-id="within-the-address-declaration"><code>within</code>: the address declaration</h3>
+<p>When a model lives inside a folder, it needs to declare its address. That’s what <code>within</code> does:</p>
+<pre class="modelica"><code>within MyLibrary.Mechanics.Translational;
+model SuspendedMass "Suspended mass on a damped spring"
+  // ...
+end SuspendedMass;</code></pre>
+<p>The <code>within</code> statement at the top says: “I belong to <code>MyLibrary.Mechanics.Translational</code>.” It’s like writing your ZIP code on a letter — it tells the system exactly where this model lives in the package hierarchy.</p>
+<p>Without <code>within</code>, the tool wouldn’t know where to place the model. With it, the model’s full address becomes <code>MyLibrary.Mechanics.Translational.SuspendedMass</code>. 📬</p>
+<blockquote class="blockquote">
+<p>💡 <strong>Bottom line</strong>: Every <code>.mo</code> file that lives inside a package folder should start with a <code>within</code> clause. The top-level <code>package.mo</code> has <code>within;</code> (with nothing after it — it’s at the root). And funny enough, you might never see the <code>within</code> keyword! Most tools automatically add it when you create a new model inside a package. It’s “hidden” by the tool, and if you open the <code>.mo</code> file with a text editor, you’ll see it! So it’s good to understand what’s going on behind the scenes.</p>
+</blockquote>
+</section>
+</section>
+<section id="three-flavors-of-import" class="level2">
+<h2 class="anchored" data-anchor-id="three-flavors-of-import">Three flavors of <code>import</code></h2>
+<p>Writing <code>Modelica.Units.SI.TranslationalSpringConstant</code> every time you need a spring stiffness type is… <em>exhausting</em>. And we’ve been doing it since <a href="./017-BasicCode.html">article 17</a>. There has to be a better way.</p>
+<p>There is. It’s called <code>import</code>. And it comes in three flavors.</p>
+<section id="flavor-1-qualified-import-the-rename" class="level3">
+<h3 class="anchored" data-anchor-id="flavor-1-qualified-import-the-rename">Flavor 1: Qualified import (the rename)</h3>
+<pre class="modelica"><code>import SI = Modelica.Units.SI;</code></pre>
+<p>This creates a local shortcut: <code>SI</code> now means <code>Modelica.Units.SI</code>. You can then write:</p>
+<pre class="modelica"><code>parameter SI.Mass m = 10;
+parameter SI.TranslationalSpringConstant k = 1000;
+SI.Position x;</code></pre>
+<p>Much shorter! You still see <em>where</em> things come from (<code>SI.Something</code>), but without the full path. It’s like saving a bookmark — short name, full address behind the scenes.</p>
+</section>
+<section id="flavor-2-single-import-the-grab" class="level3">
+<h3 class="anchored" data-anchor-id="flavor-2-single-import-the-grab">Flavor 2: Single import (the grab)</h3>
+<pre class="modelica"><code>import Modelica.Units.SI.Mass;
+import Modelica.Units.SI.Position;</code></pre>
+<p>This imports individual elements by name. After this, you can write <code>Mass</code> and <code>Position</code> directly — no prefix needed:</p>
+<pre class="modelica"><code>parameter Mass m = 10;
+Position x;</code></pre>
+<p>Short and sweet. But you need one import line per element, which can get verbose if you use many types from the same package.</p>
+<p>This is actually what we used in <a href="./017-BasicCode.html">article 17</a> for the gravitational constant:</p>
+<pre class="modelica"><code>import Modelica.Constants.g_n;</code></pre>
+<p>Which is a special case of single import: importing a constant directly by its full path.</p>
+</section>
+<section id="flavor-3-wildcard-import-the-everything" class="level3">
+<h3 class="anchored" data-anchor-id="flavor-3-wildcard-import-the-everything">Flavor 3: Wildcard import (the everything)</h3>
+<pre class="modelica"><code>import Modelica.Units.SI.*;</code></pre>
+<p>The <code>.*</code> grabs <em>everything</em> from the package. Now <code>Mass</code>, <code>Position</code>, <code>Velocity</code>, <code>TranslationalSpringConstant</code> — all available directly. No prefix, no individual imports.</p>
+<p>Sounds convenient, right? It is. But there’s a catch: you lose traceability. When you read <code>Mass</code> in the code, you have no idea where it came from without checking the import. And if two packages both export a <code>Mass</code> type… name collision. 💥</p>
+</section>
+<section id="which-flavor-should-you-use" class="level3">
+<h3 class="anchored" data-anchor-id="which-flavor-should-you-use">Which flavor should you use?</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 27%">
+<col style="width: 27%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Flavor</th>
+<th>Syntax</th>
+<th>Readability</th>
+<th>Convenience</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Qualified</td>
+<td><code>import SI = Modelica.Units.SI</code></td>
+<td>✅ Clear origin</td>
+<td>Good shortcut</td>
+<td>Low</td>
+</tr>
+<tr class="even">
+<td>Single</td>
+<td><code>import Modelica.Units.SI.Mass</code></td>
+<td>✅ Direct name</td>
+<td>One at a time</td>
+<td>Low</td>
+</tr>
+<tr class="odd">
+<td>Wildcard</td>
+<td><code>import Modelica.Units.SI.*</code></td>
+<td>⚠️ Origin unclear</td>
+<td>Very convenient</td>
+<td>Name collisions</td>
+</tr>
+</tbody>
+</table>
+<p>My recommendation? <strong>Qualified imports for packages, single imports for individual elements.</strong> Use wildcards sparingly — they’re tempting but can bite you in larger projects.</p>
+<blockquote class="blockquote">
+<p>🤓 <strong>Fun fact</strong>: Imports in Modelica are <em>local</em>. They only apply inside the model or package where they’re declared. So unlike some programming languages, an import in one model doesn’t “leak” into another. Each model is self-contained. Clean! But if you use the import at package level, it applies to everything inside that package. So you can have a <code>package.mo</code> with imports that all models in that package can use. Handy for common dependencies.</p>
+</blockquote>
+</section>
+</section>
+<section id="building-our-library" class="level2">
+<h2 class="anchored" data-anchor-id="building-our-library">Building our library</h2>
+<p>Enough theory. Let’s take the models we’ve built throughout this newsletter and organize them into a proper library. Here’s the plan:</p>
+<p>We’ll create <code>LearnModelica</code> — a library containing our suspended mass models from <a href="./017-BasicCode.html">articles 17</a>, <a href="./018-CodeEnhancement.html">18</a>, and <a href="./022-Initialization.html">22</a>.</p>
+<section id="the-target-structure" class="level3">
+<h3 class="anchored" data-anchor-id="the-target-structure">The target structure</h3>
+<pre><code>LearnModelica/
+├── package.mo
+└── Mechanics/
+    ├── package.mo
+    └── Translational/
+        ├── package.mo
+        ├── SuspendedMass.mo
+        ├── SuspendedMassInitialized.mo
+        └── SuspendedMassSteady.mo</code></pre>
+<p>Three levels of packages, three models. Let’s write them.</p>
+<blockquote class="blockquote">
+<p>You see how the folder structure is subjective? We could have added a <code>SuspendedMasses</code> package inside <code>Translational</code> to group the variants: <code>Base, Initialized, Steady</code>. Or we could have put the steady-state model in a separate <code>SteadyState</code> package. There’s no right or wrong — just choose what makes sense to you and especially for your users. And by the way, I chose this structure to mirror the MSL’s structure. For the models of this newsletter, I will have to think further about how to organize them — per domain makes little sense, but maybe per concepts or per complexity level? We’ll see.</p>
+</blockquote>
+</section>
+<section id="the-top-level-package" class="level3">
+<h3 class="anchored" data-anchor-id="the-top-level-package">The top-level package</h3>
+<p><code>LearnModelica/package.mo</code>:</p>
+<pre class="modelica"><code>within;
+package LearnModelica "Models from the Learn Modelica &amp; FMI newsletter"
+  annotation(Documentation(info="&lt;html&gt;
+    &lt;p&gt;A collection of example models built throughout the 
+    &lt;a href='https://dr-clementcoic.github.io/LearnModelicaFMI/'&gt;Learn Modelica &amp;amp; FMI&lt;/a&gt; newsletter.&lt;/p&gt;
+    &lt;/html&gt;"));
+end LearnModelica;</code></pre>
+<p>Notice <code>within;</code> with nothing after it — this is the root package. It has no parent.</p>
+</section>
+<section id="the-sub-packages" class="level3">
+<h3 class="anchored" data-anchor-id="the-sub-packages">The sub-packages</h3>
+<p><code>LearnModelica/Mechanics/package.mo</code>:</p>
+<pre class="modelica"><code>within LearnModelica;
+package Mechanics "Mechanical domain models"
+end Mechanics;</code></pre>
+<p><code>LearnModelica/Mechanics/Translational/package.mo</code>:</p>
+<pre class="modelica"><code>within LearnModelica.Mechanics;
+package Translational "Translational mechanics models"
+end Translational;</code></pre>
+<p>See how each <code>within</code> reflects the folder structure? <code>Mechanics</code> is within <code>LearnModelica</code>. <code>Translational</code> is within <code>LearnModelica.Mechanics</code>. The address matches the location. 📬</p>
+</section>
+<section id="the-models" class="level3">
+<h3 class="anchored" data-anchor-id="the-models">The models</h3>
+<p>Now our suspended mass from <a href="./017-BasicCode.html">article 17</a> gets a proper home.</p>
+<p><code>LearnModelica/Mechanics/Translational/SuspendedMass.mo</code>:</p>
+<pre class="modelica"><code>within LearnModelica.Mechanics.Translational;
+model SuspendedMass "Suspended mass on a damped spring"
+  import SI = Modelica.Units.SI;
+  import Modelica.Constants.g_n;
+
+  parameter SI.Mass m = 10 "Mass of the suspended body";
+  parameter SI.TranslationalSpringConstant k = 1000 "Spring stiffness";
+  parameter SI.Length L0 = 1 "Rest length of the spring";
+  parameter SI.TranslationalDampingConstant c = 30 "Damping constant";
+
+  SI.Position x "Position of the mass";
+  SI.Velocity v "Velocity of the mass";
+  SI.Acceleration a "Acceleration of the mass";
+
+equation
+  a = -c/m * v - k/m * (x - L0) - g_n;
+  a = der(v);
+  v = der(x);
+
+end SuspendedMass;</code></pre>
+<p>Compare this to the version in <a href="./017-BasicCode.html">article 17</a> — same physics, but now with <code>within</code>, cleaner <code>import</code> statements, and a proper address: <code>LearnModelica.Mechanics.Translational.SuspendedMass</code>.</p>
+<p>The steady-state variant from <a href="./018-CodeEnhancement.html">article 18</a> goes right next to it in <code>SuspendedMassSteady.mo</code> — same <code>within</code> clause, same package, different model.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/023/03_libraryToolAndFolder.png" class="img-fluid figure-img"></p>
+<figcaption>How the library looks in the tool and in the folder</figcaption>
+</figure>
+</div>
+</section>
+<section id="maintaining-the-package-order" class="level3">
+<h3 class="anchored" data-anchor-id="maintaining-the-package-order">Maintaining the package order</h3>
+<p>When you have multiple “things” in a package and want to make sure they are listed in a specific order, there is a way to do it: together with <code>package.mo</code>, you can have a <code>package.order</code> file. This is a simple text file that lists the names of the “things” in the order you want them to appear in the tool’s browser. We’ll skip this for today for conciseness. Yet, feel free to check the MSL’s <code>package.order</code> files to see how they do it. For example, the top-level packages are organized as per <a href="https://github.com/modelica/ModelicaStandardLibrary/blob/master/Modelica/package.order">this file</a>.</p>
+</section>
+<section id="using-our-library" class="level3">
+<h3 class="anchored" data-anchor-id="using-our-library">Using our library</h3>
+<p>Once the library is loaded in your tool, anyone can use these models:</p>
+<pre class="modelica"><code>model TestBench
+  LearnModelica.Mechanics.Translational.SuspendedMass mass1;
+  LearnModelica.Mechanics.Translational.SuspendedMassSteady mass2;
+end TestBench;</code></pre>
+<p>Or with an import:</p>
+<pre class="modelica"><code>model TestBench
+  import LearnModelica.Mechanics.Translational.*;
+  SuspendedMass mass1;
+  SuspendedMassSteady mass2;
+end TestBench;</code></pre>
+<blockquote class="blockquote">
+<p>I used the wildcard import here to show that, when the names of the models are unique, it can be a convenient way to avoid long paths. But as mentioned before, use it with caution — especially in larger libraries where name collisions can happen.</p>
+</blockquote>
+<p>And if you look at the MSL? It’s the <em>exact same pattern</em>. <code>Modelica.Mechanics.Translational.Components.Spring</code> lives in <code>Modelica/Mechanics/Translational/Components/Spring.mo</code> with <code>within Modelica.Mechanics.Translational.Components;</code> at the top. Our little library follows the same structure as the most widely used Modelica library in the world. Not bad! 😎</p>
+<blockquote class="blockquote">
+<p>💡 <strong>Pro tip</strong>: Most Modelica tools have a “New Package” or “New Library” wizard that creates the folder structure and <code>package.mo</code> files for you. You don’t <em>have</em> to do it by hand. But now you understand what the wizard is doing behind the scenes — and you can fix things when they go wrong.</p>
+</blockquote>
+</section>
+</section>
+<section id="the-end-for-today" class="level2">
+<h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
+<p>Enough for today. Think about this: the MSL — the library used by thousands of engineers worldwide — follows the exact same structure we just built. Same <code>package.mo</code> files. Same <code>within</code> clauses. Same <code>import</code> statements. The difference? Theirs has a few more models. 😉</p>
+<p>And if you want to read more “rigorous” content about this part of the Modelica language, check out the dedicated chapter of the <a href="https://specification.modelica.org/maint/3.6/packages.html">Modelica Language Specification</a> — it’s the official source for all things packages.</p>
+<p>You’re now equipped to write models, organize them, and share them. Not a bad journey from <a href="./001-Commitment.html">that first commitment in article 1</a>.</p>
+<p><em>Break is over, go back to what you were doing.</em></p>
+<p>Clem</p>
+<p><a href="./024-Annotations.html">Next</a> -&gt;</p>
+
+
+</section>
+
+<p>© 2025-2026 Clément Coïc — Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">creative commons 4.0</a>. Non-commercial use only.</p></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

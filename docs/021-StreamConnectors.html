@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Stream Connectors — What Flows Inside Your Pipes – Modelica &amp; FMI</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7b1b06e26e1e2798ccde3208f86b5bbd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./021-StreamConnectors.html">Stream Connectors</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Modelica &amp; FMI</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./001-Commitment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A bit of context</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Modelica</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./002-Modelica101.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Modelica 101</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./003-FirstModel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./004-FirstSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./005-ModelRefactoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model refactoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./007-AcausalityEquation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acausality, the secret service of Modelica</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./008-AcausalityModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">One model serves several purposes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./009-NeedForDynamicSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The need for dynamic simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Dynamic Simulation Does?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./011-LetsIntegrate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Understand your model: let’s integrate!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./012-ReplaceableModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing your Christmas gift!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./013-ConditionalModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Do you deserve a Christmas present?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./014-ModelVariants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A (technical) summary of model variants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./015-ModelUsage.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The different use of models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./017-BasicCode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The basic structure of Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./018-CodeEnhancement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing our first Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./020-WhatsInsideAConnector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What’s inside a connector?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./021-StreamConnectors.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Stream Connectors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./022-Initialization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initialization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./023-BuildingYourLibrary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Building Your Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./024-Annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Annotations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./025-Events.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Events</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">FMI</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./006-SpreadingWithFMI.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spreading the word with FMI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./016-MEvsCS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Exchange vs Co-Simulation FMUs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./019-fmpySimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating our FMU with FMPy</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-problem-with-regular-connectors" id="toc-the-problem-with-regular-connectors" class="nav-link active" data-scroll-target="#the-problem-with-regular-connectors">The problem with regular connectors</a></li>
+  <li><a href="#enter-stream" id="toc-enter-stream" class="nav-link" data-scroll-target="#enter-stream">Enter <code>stream</code></a></li>
+  <li><a href="#instream-asking-the-upstream-question" id="toc-instream-asking-the-upstream-question" class="nav-link" data-scroll-target="#instream-asking-the-upstream-question"><code>inStream()</code> — Asking the upstream question</a>
+  <ul class="collapse">
+  <li><a href="#the-two-component-case" id="toc-the-two-component-case" class="nav-link" data-scroll-target="#the-two-component-case">The two-component case</a></li>
+  <li><a href="#the-three-component-case-our-t-junction" id="toc-the-three-component-case-our-t-junction" class="nav-link" data-scroll-target="#the-three-component-case-our-t-junction">The three-component case (our T-junction!)</a></li>
+  </ul></li>
+  <li><a href="#actualstream-what-you-write-in-your-models" id="toc-actualstream-what-you-write-in-your-models" class="nav-link" data-scroll-target="#actualstream-what-you-write-in-your-models"><code>actualStream()</code> — What you write in your models</a>
+  <ul class="collapse">
+  <li><a href="#when-to-use-which" id="toc-when-to-use-which" class="nav-link" data-scroll-target="#when-to-use-which">When to use which?</a></li>
+  </ul></li>
+  <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./021-StreamConnectors.html">Stream Connectors</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Stream Connectors — What Flows Inside Your Pipes</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/021/01_header.png" class="img-fluid figure-img"></p>
+<figcaption>Stream connectors: when effort and flow aren’t enough</figcaption>
+</figure>
+</div>
+<p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
+<p>Remember <a href="./020-WhatsInsideAConnector.html">the teaser from last time</a>? We peeked inside connectors, found effort and flow variables, and I casually mentioned a <code>stream</code> keyword lurking in <code>Modelica.Fluid</code>. Time to deliver on that promise.</p>
+<p>Here’s a thought experiment: imagine hot water at 90°C flowing into a T-junction from the left, and cold water at 20°C flowing in from the right. They mix and flow out the bottom. Simple enough, right?</p>
+<p>Now here’s the problem: which temperature does the downstream pipe “see”? It depends on which way the fluid is flowing. And <em>that</em> can change during the simulation. 😅</p>
+<p>Effort + flow got us far. But for thermo-fluids, we need one more trick. Let’s dig into it!</p>
+<section id="the-problem-with-regular-connectors" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-with-regular-connectors">The problem with regular connectors</h2>
+<p>Let’s go back to what we learned <a href="./020-WhatsInsideAConnector.html">last time</a>. A well-formed physical connector has effort and flow variables. For fluids, that would be:</p>
+<pre class="modelica"><code>connector FluidPort_simple
+  Modelica.Units.SI.AbsolutePressure p "Pressure (effort)";
+  flow Modelica.Units.SI.MassFlowRate m_flow "Mass flow rate (flow)";
+end FluidPort_simple;</code></pre>
+<p>Pressure equalizes at the connection point. Mass flow sums to zero. Conservation of mass: ✅. This is exactly the fluid row from our <a href="./020-WhatsInsideAConnector.html">effort/flow table in article 20</a>.</p>
+<p>Now let’s try to model our T-junction with this connector. Hot water comes in from the left (90°C), cold water comes in from the right (20°C), and mixed water flows out the bottom.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/021/02_teeJunction.png" class="img-fluid figure-img"></p>
+<figcaption>T-junction: hot water (left) + cold water (right) → mixed water (bottom)</figcaption>
+</figure>
+</div>
+<p>Here’s the question: what is the temperature of the mixed water? Intuitively, it depends on <em>how much</em> hot vs.&nbsp;cold water is flowing in. If the hot side has a mass flow of 2 kg/s and the cold side has 1 kg/s, the mix will be closer to 90°C than to 20°C.</p>
+<p>But our connector only carries pressure and mass flow. There’s <em>no temperature information</em> in the connection. We literally have no way to compute the output temperature. 😮</p>
+<p>“But wait,” you might say, “can’t we just add temperature to the connector? Like our thermal <code>HeatPort</code>?”</p>
+<p>We could try:</p>
+<pre class="modelica"><code>connector FluidPort_attempt
+  Modelica.Units.SI.AbsolutePressure p "Pressure";
+  flow Modelica.Units.SI.MassFlowRate m_flow "Mass flow rate";
+  Modelica.Units.SI.Temperature T "Temperature... but whose?";
+end FluidPort_attempt;</code></pre>
+<p>But think about what <code>connect()</code> would do with <code>T</code>: it would generate <code>T_a = T_b = T_c</code>, making all temperatures equal. That’s the effort variable rule! The hot water, the cold water, and the mix would all be forced to the same temperature at the junction point. That’s obviously wrong — 90°C ≠ 20°C. 🤦</p>
+<p>And if we tried making <code>T</code> a <code>flow</code> variable? Then temperatures would <em>sum to zero</em>. That’s even more nonsensical. Temperature is not a conserved quantity.</p>
+<blockquote class="blockquote">
+<p>Note that both of these attempts make the connector unbalanced - as we discussed last time, a connector must have an equal number of effort and flow variables. Adding a third variable without the right keyword breaks that balance and leads to incorrect equations.</p>
+</blockquote>
+<p>The truth is, <code>T</code> is neither an effort nor a flow. It’s something else entirely: an <em>intensive property</em> that travels <em>with</em> the fluid. Its value at the junction depends on <em>which direction</em> the mass is flowing. And that direction can change during the simulation.</p>
+<p>This is the fundamental problem that the <code>stream</code> keyword solves.</p>
+</section>
+<section id="enter-stream" class="level2">
+<h2 class="anchored" data-anchor-id="enter-stream">Enter <code>stream</code></h2>
+<p>Modelica’s answer to this problem is elegant: a third type of variable, declared with the <code>stream</code> keyword. It’s specifically designed for intensive properties that are transported by fluid flow.</p>
+<p>Let’s have a quick view at what the <code>Modelica.Fluid</code> connector looks like:</p>
+<pre class="modelica"><code>connector FluidPort
+  Modelica.Units.SI.AbsolutePressure p "Pressure (effort)";
+  flow Modelica.Units.SI.MassFlowRate m_flow "Mass flow rate (flow)";
+  stream Modelica.Units.SI.SpecificEnthalpy h_outflow 
+    "Specific enthalpy of fluid close to the connection point if m_flow &lt; 0";
+  /* In the MSL, there are also stream variables for mass fractions of different substances, but we'll focus on enthalpy for this discussion. */
+end FluidPort;</code></pre>
+<p>See that <code>stream</code> keyword in front of <code>h_outflow</code>? That’s the magic ingredient we were missing. 🪄</p>
+<p>Let’s unpack what’s going on:</p>
+<ul>
+<li><strong><code>p</code></strong> is the effort variable → equalizes at the connection point (same pressure)</li>
+<li><strong><code>m_flow</code></strong> is the flow variable → sums to zero at the connection point (conservation of mass)</li>
+<li><strong><code>h_outflow</code></strong> is the stream variable → carries the specific enthalpy <em>of the fluid leaving this component</em></li>
+</ul>
+<blockquote class="blockquote">
+<p>Remember the sign convention discussed in <a href="./020-WhatsInsideAConnector.html">our previous article about connectors</a>? Positive when entering the component.</p>
+</blockquote>
+<p>That last point is crucial. Read the documentation string again: <em>“if m_flow &lt; 0”</em>. This means that each component says: “If fluid flows <em>out of me</em> through this port, here’s the enthalpy of that fluid.” It’s a conditional declaration — the value is only meaningful when the fluid actually flows outward. Else it doesn’t play a role.</p>
+<blockquote class="blockquote">
+<p>Why <code>h_outflow</code> and not just <code>h</code>? Because the name reminds you of the convention: this is the enthalpy of the <em>outflowing</em> fluid from this component’s perspective. Each side of a connection declares what it <em>would send out</em>. The system then figures out which side is actually sending and which is receiving.</p>
+</blockquote>
+<p>Think of it like a restaurant kitchen with two doors. 🚪🚪 Each door has a sign that says “If I’m the exit, the food coming through me is a dessert, else a main course.” The system then looks at which way people are actually walking to determine what food gets delivered where.</p>
+<p>Back to our T-junction. With <code>stream</code> connectors, each of the three pipes declares its outflow enthalpy:</p>
+<ul>
+<li>Left pipe: “If fluid flows out of me, it has enthalpy corresponding to 90°C”</li>
+<li>Right pipe: “If fluid flows out of me, it has enthalpy corresponding to 20°C”</li>
+<li>Bottom pipe: “If fluid flows out of me, it has the mixed enthalpy”</li>
+</ul>
+<p>Now the system has all the information it needs! But how does a component <em>on the receiving end</em> figure out what enthalpy is actually coming in? That’s where <code>inStream()</code> comes in.</p>
+</section>
+<section id="instream-asking-the-upstream-question" class="level2">
+<h2 class="anchored" data-anchor-id="instream-asking-the-upstream-question"><code>inStream()</code> — Asking the upstream question</h2>
+<p>So each component declares the enthalpy of its <em>outflowing</em> fluid via <code>h_outflow</code>. Great. But inside a component, what you usually need to know is: <em>“What enthalpy is coming IN to me?”</em></p>
+<p>That’s exactly what <code>inStream()</code> does. It’s a built-in operator that answers the question: “If fluid is flowing <em>into</em> my port right now, what is the value of the stream variable that’s being carried in?”</p>
+<p>Here’s how you use it inside a component:</p>
+<pre class="modelica"><code>model SimplePipe
+  FluidPort port_a;
+  FluidPort port_b;
+equation
+  // Mass balance
+  port_a.m_flow + port_b.m_flow = 0;
+  // Pressure drop (simplified)
+  port_a.p - port_b.p = some_loss;
+  // Enthalpy: what I send out is what came in from the other side
+  port_a.h_outflow = inStream(port_b.h_outflow);
+  port_b.h_outflow = inStream(port_a.h_outflow);
+end SimplePipe;</code></pre>
+<p>Look at those last two lines. They say:</p>
+<ul>
+<li>“The enthalpy I would send out of <code>port_a</code> is whatever is streaming in through <code>port_b</code>”</li>
+<li>“The enthalpy I would send out of <code>port_b</code> is whatever is streaming in through <code>port_a</code>”</li>
+</ul>
+<p>In other words: a simple pipe just passes the enthalpy through. No mixing, no transformation. Whatever comes in one end goes out the other. Makes sense! 🙂</p>
+<section id="the-two-component-case" class="level3">
+<h3 class="anchored" data-anchor-id="the-two-component-case">The two-component case</h3>
+<p>We have just seen what happens inside a component. But what about the connection itself? What equations does <code>connect()</code> generate for stream variables? Let’s start simple. Two components connected:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/021/03_twoComponents.png" class="img-fluid figure-img"></p>
+<figcaption>Two components connected</figcaption>
+</figure>
+</div>
+<p>When Modelica sees <code>connect(A.port, B.port)</code>, it generates:</p>
+<pre class="modelica"><code>// Effort equality (as always)
+A.port.p = B.port.p;
+// Flow conservation (as always)
+A.port.m_flow + B.port.m_flow = 0;
+// Stream variable magic ✨
+// inStream(A.port.h_outflow) = B.port.h_outflow
+// inStream(B.port.h_outflow) = A.port.h_outflow</code></pre>
+<p>For two components, <code>inStream()</code> is straightforward: the incoming stream value is simply the outflow value from the <em>other side</em> of the connection. If A sends out 90°C-equivalent enthalpy, then B receives 90°C-equivalent enthalpy. No surprises.</p>
+</section>
+<section id="the-three-component-case-our-t-junction" class="level3">
+<h3 class="anchored" data-anchor-id="the-three-component-case-our-t-junction">The three-component case (our T-junction!)</h3>
+<p>Now it gets interesting. Three components connected at a single point. That’s our T-junction!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/021/02_teeJunction.png" class="img-fluid figure-img"></p>
+<figcaption>Reminder: T-junction: hot water (left) + cold water (right) → mixed water (bottom)</figcaption>
+</figure>
+</div>
+<p>What does <code>inStream(C.port.h_outflow)</code> return? C wants to know: “What enthalpy is flowing <em>into</em> me?”</p>
+<p>The answer: a <strong>mass-flow-weighted average</strong> of the outflow enthalpies from all <em>other</em> connected ports that are actually sending fluid toward C.</p>
+<p>Mathematically, for a connection set with <span class="math inline">\(n\)</span> connectors, <code>inStream()</code> for connector <span class="math inline">\(i\)</span> is defined as:</p>
+<p><span class="math display">\[\texttt{inStream}(h_i) = \frac{\sum_{j \neq i} \max(-\dot{m}_j, 0) \cdot h_j}{\sum_{j \neq i} \max(-\dot{m}_j, 0)}\]</span></p>
+<p>Where <span class="math inline">\(\dot{m}_j\)</span> is the mass flow rate and <span class="math inline">\(h_j\)</span> is <code>h_outflow</code> of connector <span class="math inline">\(j\)</span>. The <span class="math inline">\(\max(-\dot{m}_j, 0)\)</span> picks out only the connectors that have fluid flowing <em>out</em> (into the connection point), and weights their enthalpy by how much mass they contribute.</p>
+<blockquote class="blockquote">
+<p>Again, the minus sign is because of the convention: positive mass flow means fluid is entering the component, so the flow leaving the component has a negative sign - we need to take its negative to get the correct contribution.</p>
+</blockquote>
+<p>In our T-junction, if A sends 2 kg/s of 90°C fluid and B sends 1 kg/s of 20°C fluid (both flowing into the junction), then what C sees is:</p>
+<p><span class="math display">\[\texttt{inStream}(h_C) = \frac{2 \cdot h_{90°C} + 1 \cdot h_{20°C}}{2 + 1}\]</span></p>
+<p>A mass-flow-weighted mix. Exactly what physics tells us should happen! 🎉</p>
+<blockquote class="blockquote">
+<p>⚠️ <strong>Important</strong>: <code>inStream()</code> is not a function you implement — it’s a built-in language operator. The Modelica compiler generates the appropriate equations based on the connection topology. You just call it and trust the compiler to do the right thing. That’s the <a href="./007-AcausalityEquation.html">acausal magic</a> at work.</p>
+</blockquote>
+<p>But there are cases where you actually need to know the <em>actual</em> enthalpy at a port, regardless of flow direction. For that, there’s another operator: <code>actualStream()</code>.</p>
+</section>
+</section>
+<section id="actualstream-what-you-write-in-your-models" class="level2">
+<h2 class="anchored" data-anchor-id="actualstream-what-you-write-in-your-models"><code>actualStream()</code> — What you write in your models</h2>
+<p>So <code>inStream()</code> gives you the enthalpy of fluid coming <em>into</em> your port. But here’s the thing: inside a component, you often need to compute energy balances. And for that, you need to know: “What is the <em>actual</em> enthalpy of the fluid passing through this port, regardless of flow direction?”</p>
+<p>If fluid flows <em>in</em>, you want <code>inStream(port.h_outflow)</code> — the enthalpy carried by the incoming fluid. If fluid flows <em>out</em>, you want <code>port.h_outflow</code> — the enthalpy your component is sending out.</p>
+<p>You could write this yourself with an <code>if</code>:</p>
+<pre class="modelica"><code>h_actual = if port.m_flow &gt;= 0 then inStream(port.h_outflow) else port.h_outflow;</code></pre>
+<p>That’s exactly what <code>actualStream()</code> does for you. It handles the logic of checking the flow direction and returning the correct value. So you can simply write:</p>
+<pre class="modelica"><code>h_actual = actualStream(port.h_outflow);</code></pre>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Mass flow</th>
+<th><code>actualStream()</code> returns</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Positive or zero (fluid flowing in)</td>
+<td>≈ <code>inStream(port.h_outflow)</code></td>
+</tr>
+<tr class="even">
+<td>Strictly negative (fluid flowing out)</td>
+<td>≈ <code>port.h_outflow</code></td>
+</tr>
+</tbody>
+</table>
+<p>Conceptually, <code>actualStream()</code> behaves like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/021/04_actualStream.png" class="img-fluid figure-img"></p>
+<figcaption>actualStream transitions between inStream and h_outflow at zero mass flow</figcaption>
+</figure>
+</div>
+<blockquote class="blockquote">
+<p>This image is a screenshot from <a href="https://playground.modelica.university/id/kl7ztjGzuANuR1DED1S72">my lesson</a> on Michael Tiller’s Modelica playground app. Play with it yourself: <a href="https://playground.modelica.university/?lesson=2&amp;toc=https%3A%2F%2Fraw.githubusercontent.com%2FDr-ClementCoic%2FLinkedIn%2Frefs%2Fheads%2Fmain%2F05_Modelica%2Fstream.json">here</a></p>
+</blockquote>
+<p>But there’s a nasty problem lurking here. What happens at <em>exactly</em> <code>m_flow = 0</code>? The <code>if</code> creates a sharp discontinuity — a sudden jump between two values. Numerical solvers <em>hate</em> this. 😤 It can create chattering, convergence issues, and sometimes outright simulation failures.</p>
+<p>So most of the time, <code>actualStream()</code> isn’t used alone. It’s used in energy balance equations - <code>port.m_dot * actualStream(port.h_outflow)</code> - where the product of the mass flow and enthalpy mix naturally goes to zero as flow goes to zero, smoothing out the transition. So the product is smooth and continuous! (This is explained <a href="https://specification.modelica.org/maint/3.6/stream-connectors.html#actualstream">here in the Modelica specification</a>.)</p>
+<p>This is really clever: near zero flow, this product <strong>smoothly blends</strong> between the inflow and outflow values using a regularization. No sharp jumps. No solver tantrums.</p>
+<section id="when-to-use-which" class="level3">
+<h3 class="anchored" data-anchor-id="when-to-use-which">When to use which?</h3>
+<p>Here’s a simple rule of thumb:</p>
+<ul>
+<li><strong><code>inStream()</code></strong>: Use when you’re defining <code>h_outflow</code> equations. “What’s coming in from the other side?” → used to compute what you send out. That’s what we did in the <code>SimplePipe</code> example.</li>
+<li><strong><code>actualStream()</code></strong>: Use when you need the <em>actual</em> enthalpy at a port for energy balance calculations. “What’s the enthalpy of the fluid <em>actually</em> passing through here?”</li>
+</ul>
+<p>And the good thing is that you might not need to think about this too much. If you’re using <code>Modelica.Fluid</code> components, they already use these operators correctly under the hood. You just connect them and let the magic happen. But if you’re building your own custom fluid models, now you know how to handle the enthalpy transport properly.</p>
+</section>
+</section>
+<section id="the-end-for-today" class="level2">
+<h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
+<p>Enough for today. <code>stream</code>, <code>inStream()</code>, <code>actualStream()</code> — you now speak fluid connector. 🌊 I wanted to do more on this topic, like showing how to implement a T-junction component yourself using these concepts, but I think this is already a lot to digest. We can always come back to it in a future article if there’s interest.</p>
+<p>Next time: <strong>initialization</strong>. Or as I like to call it, “why does my model fail at t=0?” Stay tuned.</p>
+<p><em>Break is over, go back to what you were doing.</em></p>
+<p>Clem</p>
+<!-- [Next](./022-Initialization.qmd) -> -->
+
+
+</section>
+
+<p>© 2025-2026 Clément Coïc — Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">creative commons 4.0</a>. Non-commercial use only.</p></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
