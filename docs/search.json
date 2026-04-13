@@ -50,6 +50,39 @@
     ]
   },
   {
+    "objectID": "027-FMICheatSheet.html",
+    "href": "027-FMICheatSheet.html",
+    "title": "FMI 3.0 & FMPy Cheat Sheet",
+    "section": "",
+    "text": "A quick-reference cheat sheet covering FMI 3.0 (Co-Simulation & Model Exchange) and the FMPy Python library — all in one page.\nYou can also open it in a new tab or run the examples in Google Colab.\n© 2025-2026 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "FMI",
+      "FMI 3.0 & FMPy Cheat Sheet"
+    ]
+  },
+  {
+    "objectID": "027-FMICheatSheet.html#the-cheat-sheet",
+    "href": "027-FMICheatSheet.html#the-cheat-sheet",
+    "title": "FMI 3.0 & FMPy Cheat Sheet",
+    "section": "The Cheat Sheet 👇",
+    "text": "The Cheat Sheet 👇",
+    "crumbs": [
+      "FMI",
+      "FMI 3.0 & FMPy Cheat Sheet"
+    ]
+  },
+  {
+    "objectID": "027-FMICheatSheet.html#the-end-for-today",
+    "href": "027-FMICheatSheet.html#the-end-for-today",
+    "title": "FMI 3.0 & FMPy Cheat Sheet",
+    "section": "The END for today",
+    "text": "The END for today\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
+    "crumbs": [
+      "FMI",
+      "FMI 3.0 & FMPy Cheat Sheet"
+    ]
+  },
+  {
     "objectID": "025-Events.html",
     "href": "025-Events.html",
     "title": "Events — When Your Simulation Hits a Wall (Literally)",
@@ -1911,6 +1944,72 @@
     "crumbs": [
       "Modelica",
       "Annotations"
+    ]
+  },
+  {
+    "objectID": "026-EventsInFMUs.html",
+    "href": "026-EventsInFMUs.html",
+    "title": "Events in FMUs — From Modelica to the Standard",
+    "section": "",
+    "text": "Events in FMUs: what survives the export?\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nRemember last time? We learned how Modelica handles events — zero crossings, when clauses, bouncing balls, the whole Event management.\nWell, Christian Bertsch — project leader of the FMI standard (no less 😉) — read that article and basically said: “Great, Clem. But what happens to those events when you export your model as an FMU?” (I’m paraphrasing, but you get the idea 😅.)\nAnd honestly? That’s a great question. Because the answer is: it depends on the type of FMU. And the differences are… significant.\nToday, we follow our beloved events on their journey from Modelica to FMI. Buckle up.\n© 2025-2026 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "FMI",
+      "Events in FMUs"
+    ]
+  },
+  {
+    "objectID": "026-EventsInFMUs.html#quick-recap-whats-an-event",
+    "href": "026-EventsInFMUs.html#quick-recap-whats-an-event",
+    "title": "Events in FMUs — From Modelica to the Standard",
+    "section": "Quick recap: what’s an event?",
+    "text": "Quick recap: what’s an event?\nI won’t redo the full lecture — you just read the article (right? RIGHT?! 😉). But let’s refresh the essentials in FMI-friendly vocabulary:\n\nEvent indicators are continuous functions whose sign changes indicate that something discrete needs to happen. In Modelica, these come from conditions in when and if clauses. When the sign flips, the solver knows: “something happened here, I need to stop and deal with it.”\nEvent handling is the process of freezing time, applying discrete changes (like reinit(), thermostat switches, etc.), and re-evaluating the equations until everything is consistent.\nAfter the event, the solver restarts with the new state. Smooth sailing again — until the next event.\n\nIn your Modelica tool, all of this is handled internally. The tool compiles the model, generates event indicators, and manages the whole event detection + handling loop. You don’t see any of it (unless you go digging in solver logs 🤓).\nBut when you export that model as an FMU… who does all this work? That depends on where the solver lives. And if you remember article 16, you know the answer to that question is different for Model Exchange and Co-Simulation.",
+    "crumbs": [
+      "FMI",
+      "Events in FMUs"
+    ]
+  },
+  {
+    "objectID": "026-EventsInFMUs.html#events-in-model-exchange-fmus",
+    "href": "026-EventsInFMUs.html#events-in-model-exchange-fmus",
+    "title": "Events in FMUs — From Modelica to the Standard",
+    "section": "Events in Model Exchange FMUs",
+    "text": "Events in Model Exchange FMUs\nRemember the key difference from article 16? In Model Exchange, the FMU has no solver. It exposes the raw equations — derivatives, algebraic relations, and yes, event indicators — and the importer’s solver does all the heavy lifting.\nThis is great news for events. Here’s why.\n\nThe FMU exposes its event indicators\nWhen a Modelica tool exports a model as a Model Exchange FMU, it translates all those when conditions and if clauses into event indicator functions. These are continuous functions \\(z_j(t)\\) that the FMU can compute at any time. An event is signaled by a domain change: \\(z_j\\) going from positive to negative (or vice versa).\nSound familiar? It should — that’s essentially what your Modelica tool was doing internally (we covered zero-crossings in article 25). The difference is: now those zero-crossing functions are exposed to the outside world through the FMI API.\nThe importer can call fmi3GetEventIndicators() at any point during integration and get back a vector of values. If any sign has flipped since the last check — boom, state event detected.\n\n\nThe importer runs the show\nHere’s how the event handling loop works in ME. It’s exactly what we described in article 25, but now split across two parties — the FMU and the importer:\n\nContinuous integration — The importer advances time, sets states, gets derivatives from the FMU. Business as usual.\nEvent indicator check — After each step, the importer calls fmi3GetEventIndicators() and compares signs with the previous step.\nBisection — If a sign changed, the importer narrows down the exact crossing time. (The importer does this — not the FMU!)\nEnter Event Mode — The importer calls fmi3EnterEventMode(). Time freezes.\nEvent iteration — The importer calls fmi3UpdateDiscreteStates() in a loop. The FMU updates its discrete variables, applies reinit() if needed, and reports back: “I need another iteration” or “I’m done.”\nRestart — The importer calls fmi3EnterContinuousTimeMode() and resumes integration with the updated state.\n\nThe beauty of ME: nothing is hidden. The importer sees every event indicator, controls every bisection step, and decides when to enter and leave Event Mode. Full transparency. Full control.\nThe price? The importer has to implement all of this. Not every importer is created equal — a sophisticated one handles events beautifully, a simple one might struggle. But the information is there for the taking.\n\n💡 If your Modelica model uses reinit() (like our bouncing ball), the FMU tells the importer that state values changed during Event Mode. The importer must then fetch the new states before restarting. It’s all explicit — no surprises.\n\n\n\nIn short\nModel Exchange FMUs treat events the same way a Modelica tool does internally — they just split the responsibilities. The FMU provides the math (derivatives, event indicators, discrete updates). The importer provides the brains (integration, bisection, event orchestration).\nThink of it this way: ME gives you all the ingredients and the recipe. You do the cooking. 🧑‍🍳",
+    "crumbs": [
+      "FMI",
+      "Events in FMUs"
+    ]
+  },
+  {
+    "objectID": "026-EventsInFMUs.html#events-in-co-simulation-fmus",
+    "href": "026-EventsInFMUs.html#events-in-co-simulation-fmus",
+    "title": "Events in FMUs — From Modelica to the Standard",
+    "section": "Events in Co-Simulation FMUs",
+    "text": "Events in Co-Simulation FMUs\nCo-Simulation is a different beast. Remember: the FMU brings its own solver. The importer just says “go from time \\(t\\) to time \\(t + h\\)” by calling fmi3DoStep(), and the FMU figures out everything internally — integration, event detection, event handling, all of it.\nThis simplicity is both the strength and the weakness of Co-Simulation when it comes to events.\n\nThe classic problem: hidden events\nIn a basic Co-Simulation setup (the kind we had in FMI 2.0), the importer has zero visibility into what happens inside fmi3DoStep(). The FMU steps from one communication point to the next, and the importer only sees the outputs at those communication points.\nSo what happens when the bouncing ball hits the floor between two communication points?\nThe FMU might handle the bounce internally — it has its own solver after all. But the importer doesn’t know the bounce happened. The outputs it gets are at the communication points before and after the bounce. If the communication step is too large, the trajectory looks weird. The ball might appear to go through the floor for an instant, or the bounce might seem to happen at the wrong time or height - not on the floor as shown here:\n\n\n\nBasic Co-Simulation: the ball bounces in the air\n\n\nIt’s not that the events didn’t happen — they did, inside the FMU. But the importer couldn’t react to them. It couldn’t adjust its communication step. It couldn’t synchronize with other FMUs that might need to know about the bounce. The events were there, but trapped in a black box. 📦\n\nThis is fine if you’re simulating a single FMU and you only care about the outputs at communication points. But in a multi-FMU co-simulation? When FMU A bounces and FMU B needs to know exactly when? That’s where things get… painful. 😅\n\n\n\nFMI 3.0 to the rescue: Event Mode for Co-Simulation\nThis is what Christian was talking about: hybrid co-simulation. FMI 3.0 introduced Event Mode for Co-Simulation FMUs, and it changes the game.\nThe idea: the CS FMU can now signal to the importer that something happened during fmi3DoStep(), and the importer can enter Event Mode to handle it — just like in Model Exchange.\nHere’s how it works:\nStep 1: The FMU announces support. In the modelDescription.xml, the FMU sets hasEventMode = true. This tells the importer: “I know what Event Mode is, and I can use it.”\nStep 2: The importer opts in. When instantiating, the importer sets eventModeUsed = fmi3True. Both parties have agreed: events will be a cooperative effort.\nStep 3: During fmi3DoStep(), the FMU detects an event. Instead of silently handling it internally, the FMU returns early. It sets eventHandlingNeeded = fmi3True and reports the exact time of the event in lastSuccessfulTime.\nStep 4: The importer enters Event Mode. It calls fmi3EnterEventMode(), applies any discrete input changes, and iterates with fmi3UpdateDiscreteStates() — just like it would in Model Exchange.\nStep 5: Back to stepping. After the event is handled, the importer calls fmi3EnterStepMode() and resumes fmi3DoStep() from where the FMU left off.\nThe result? The bouncing ball works properly, even in Co-Simulation:\n\n\n\nCo-Simulation with Event Mode: bounces are properly captured\n\n\nThe importer sees exactly when the ball bounces, can record the output just before and after, and can synchronize the event with other FMUs. The black box just got a window. 🪟\n\n\nWhat about early return without Event Mode?\nFMI 3.0 actually offers a middle ground too. A CS FMU can support early return without full Event Mode. In that case, the FMU returns early from fmi3DoStep() to signal that something happened, and the importer can adjust its next communication point accordingly — but there’s no event iteration, no fmi3UpdateDiscreteStates().\nThink of it as: “Hey, something happened at \\(t = 1.37\\) s. I handled it myself, but you should know.” The importer gets the timing information, but doesn’t participate in the event handling.\nAnd it’s not just the FMU that can trigger an early return. If the FMU supports Intermediate Update Mode, the importer can also request one — by setting earlyReturnRequested = fmi3True during an intermediate update callback. This is useful, for example, when another FMU in the co-simulation has produced an event and the importer needs everyone to synchronize.\nEarly return (from either side) is useful when you want better time resolution around events without the full complexity of Event Mode.\n\n\nThe three flavors of Co-Simulation events\nLet me summarize, because there are now three levels:\n\n\n\n\n\n\n\n\n\nCS Flavor\nEvent Visibility\nEvent Handling\nBest For\n\n\n\n\nBasic CS (no early return)\nNone — events hidden inside FMU\nFMU handles internally\nSimple setups, no event synchronization needed\n\n\nCS with Early Return\nFMU reports event time\nFMU handles internally, importer adjusts timing\nBetter time resolution, single-FMU scenarios\n\n\nCS with Event Mode (hybrid)\nFull — importer enters Event Mode\nCooperative: FMU + importer iterate together\nMulti-FMU co-simulation, event synchronization",
+    "crumbs": [
+      "FMI",
+      "Events in FMUs"
+    ]
+  },
+  {
+    "objectID": "026-EventsInFMUs.html#a-side-by-side-comparison",
+    "href": "026-EventsInFMUs.html#a-side-by-side-comparison",
+    "title": "Events in FMUs — From Modelica to the Standard",
+    "section": "A side-by-side comparison",
+    "text": "A side-by-side comparison\nLet’s put it all together. Here’s how events are handled across the different FMU flavors:\n\n\n\n\n\n\n\n\n\n\n\nModel Exchange\nCo-Simulation (basic)\nCS with Early Return\nCS with Event Mode\n\n\n\n\nSolver location\nImporter\nFMU\nFMU\nFMU\n\n\nEvent indicators exposed?\n✅ Yes\n❌ No\n❌ No\n❌ No\n\n\nEvent detection\nImporter (zero-crossing)\nFMU (internal)\nFMU (internal)\nFMU (internal)\n\n\nEvent time reported?\nImporter computes it\n❌ No\n✅ Yes (lastSuccessfulTime)\n✅ Yes (lastSuccessfulTime)\n\n\nEvent handling\nImporter + FMU cooperate\nFMU alone\nFMU alone\nImporter + FMU cooperate\n\n\nfmi3EnterEventMode()?\n✅ Yes\n❌ No\n❌ No\n✅ Yes\n\n\nEvent iteration?\n✅ Yes\n❌ No\n❌ No\n✅ Yes\n\n\nMulti-FMU event sync?\n✅ Full\n❌ None\n⚠️ Timing only\n✅ Full\n\n\nFMI version\n2.0 + 3.0\n2.0 + 3.0\n3.0\n3.0\n\n\nComplexity for importer\nHigh\nLow\nMedium\nHigh\n\n\n\nA few things to notice:\nModel Exchange and CS with Event Mode are siblings. They both support cooperative event handling with event iteration. The difference? In ME, the importer also does the integration and the bisection. In CS with Event Mode, the FMU still integrates — it just tells the importer when to stop for events.\nBasic CS is the simplest, but the most limited. If your events don’t need synchronization with the outside world, this is totally fine. Many industrial FMUs work perfectly in basic CS mode. Don’t overcomplicate things if you don’t need to.\nCS with Event Mode is the FMI 3.0 sweet spot for complex co-simulation setups — especially when multiple FMUs exchange discrete signals or when event timing matters for correctness. This is what Christian meant by “hybrid co-simulation.” Best of both worlds: the FMU keeps its solver, but cooperates on events. 🤝\nOne more thing worth mentioning: Event Mode enables direct feedthrough in Co-Simulation. In normal Step Mode, there’s always a one-step delay between setting an input and seeing its effect on the output — the importer sets inputs, calls fmi3DoStep(), then reads outputs. But in Event Mode, the importer can set inputs and get outputs within the same time instant, just like in ME. At least at events, CS FMUs can react instantaneously. That’s a big deal for tightly coupled systems.\n\n⚠️ Not all tools support Event Mode for CS FMUs yet. FMI 3.0 is still gaining adoption. If you’re exporting FMUs today, check what your importer supports. When in doubt, Model Exchange gives you the most flexibility — at the cost of requiring a capable importer.",
+    "crumbs": [
+      "FMI",
+      "Events in FMUs"
+    ]
+  },
+  {
+    "objectID": "026-EventsInFMUs.html#the-end-for-today",
+    "href": "026-EventsInFMUs.html#the-end-for-today",
+    "title": "Events in FMUs — From Modelica to the Standard",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. Thanks to Christian for the nudge — it’s a topic I’d been meaning to cover, and his question was the perfect excuse.\nThe key takeaway: events don’t disappear when you export to FMI — but how they’re handled depends entirely on the FMU type. Model Exchange exposes everything. Basic Co-Simulation hides everything. And FMI 3.0’s hybrid co-simulation finds a sweet spot in between.\nAnd one more teaser: so far, all our events have been detected internally — a zero-crossing triggers, the FMU or solver reacts. But FMI 3.0 also introduced Clocks, which allow events to be triggered from the outside. Input Clocks let the importer tell the FMU: “this specific event is happening right now” — synchronizing events across FMUs with precision. That’s a topic for another day. 😉\nNext time, we’ll get our hands dirty with something practical. Stay tuned.\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
+    "crumbs": [
+      "FMI",
+      "Events in FMUs"
     ]
   },
   {

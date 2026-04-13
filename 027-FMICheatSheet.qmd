@@ -1,0 +1,28 @@
+---
+title: "FMI 3.0 & FMPy Cheat Sheet"
+resources:
+  - assets/cheatsheet/**
+---
+
+A quick-reference cheat sheet covering FMI 3.0 (Co-Simulation & Model Exchange) and the FMPy Python library — all in one page.
+
+You can also [open it in a new tab](./assets/cheatsheet/fmi_cheatsheet.html){target="_blank"} or [run the examples in Google Colab](https://colab.research.google.com/github/Dr-ClementCoic/fmi-cheat-sheet/blob/main/fmpy_cheatsheet_notebook.ipynb){target="_blank"}.
+
+## The Cheat Sheet 👇
+
+```{=html}
+<iframe
+  src="./assets/cheatsheet/fmi_cheatsheet.html"
+  style="width: 100%; height: 85vh; border: 1px solid #ddd; border-radius: 6px;"
+  title="FMI 3.0 & FMPy Cheat Sheet"
+  loading="lazy">
+</iframe>
+```
+
+## The END for today
+
+*Break is over, go back to what you were doing.*
+
+Clem
+
+[Next](./about.qmd) ->

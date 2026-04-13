@@ -70,6 +70,10 @@ website:
             href: 016-MEvsCS.qmd
           - text: "Simulating our FMU with FMPy"
             href: 019-fmpySimulation.qmd
+          - text: "Events in FMUs"
+            href: 026-EventsInFMUs.qmd
+          - text: "FMI 3.0 & FMPy Cheat Sheet"
+            href: 027-FMICheatSheet.qmd
       - text: "About"
         href: about.qmd
 

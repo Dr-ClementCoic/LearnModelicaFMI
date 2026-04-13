@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FMI 3.0 &amp; FMPy Cheatsheet — Co-Simulation · Model Exchange</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 15px; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.55;
+    color: #1a1a2e;
+    background: #f6f8fc;
+    padding: 0;
+  }
+
+  /* ── Navigation ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    padding: 0.6rem 1.2rem;
+    display: flex; flex-wrap: wrap; gap: 0.3rem 1rem;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  nav .nav-title {
+    font-weight: 700; color: #00b4d8; font-size: 1rem;
+    margin-right: 1rem; white-space: nowrap;
+  }
+  nav a {
+    color: #a8c8d8; text-decoration: none; font-size: 0.82rem;
+    padding: 0.2rem 0.5rem; border-radius: 4px; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  nav a:hover { color: #fff; background: rgba(0,180,216,0.25); }
+  nav a.nav-social {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  nav a.nav-social svg {
+    width: 0.9rem;
+    height: 0.9rem;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+  nav a.nav-author {
+    margin-left: auto;
+    font-weight: 600;
+    color: #d7f3ff;
+  }
+  nav a.nav-youtube { color: #ffd1d1; }
+
+  /* ── Main Container ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.2rem 3rem; }
+
+  /* ── Header ── */
+  .hero {
+    text-align: center; padding: 2rem 1rem 1.5rem;
+    border-bottom: 3px solid #0077b6;
+    margin-bottom: 2rem;
+  }
+  .hero .logo { height: 3.5rem; margin-bottom: 0.6rem; }
+  .hero h1 { font-size: 1.8rem; color: #1a1a2e; margin-bottom: 0.3rem; }
+  .hero .subtitle { color: #555; font-size: 1rem; }
+  .hero .scope {
+    display: inline-block; margin-top: 0.6rem; padding: 0.25rem 0.8rem;
+    background: #0077b6; color: #fff; border-radius: 20px; font-size: 0.78rem;
+    font-weight: 600; letter-spacing: 0.5px;
+  }
+  .hero .scope + .scope { margin-left: 0.4rem; background: #00b4d8; }
+  .hero a.scope { text-decoration: none; }
+  .hero .scope.scope-link { background: #2e7d32; }
+
+  /* ── Section Styling ── */
+  section { margin-bottom: 2.2rem; }
+  section > h2 {
+    font-size: 1.35rem; color: #1a1a2e;
+    border-left: 4px solid #0077b6; padding-left: 0.7rem;
+    margin-bottom: 1rem; padding-top: 0.5rem;
+  }
+  h3 {
+    font-size: 1.05rem; color: #16213e;
+    margin: 1.2rem 0 0.5rem; padding-bottom: 0.2rem;
+    border-bottom: 1px solid #d0dde6;
+  }
+  h4 { font-size: 0.95rem; color: #333; margin: 0.8rem 0 0.3rem; }
+
+  /* ── Boxes ── */
+  .box {
+    border-radius: 6px; padding: 0.75rem 1rem; margin: 0.8rem 0;
+    font-size: 0.9rem; line-height: 1.5;
+  }
+  .box-info    { background: #e8f4fd; border-left: 4px solid #0077b6; }
+  .box-warn    { background: #fff8e1; border-left: 4px solid #ff9800; }
+  .box-danger  { background: #fce4ec; border-left: 4px solid #d32f2f; }
+  .box-success { background: #e8f5e9; border-left: 4px solid #4caf50; }
+  .box-title {
+    font-weight: 700; font-size: 0.85rem; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 0.3rem;
+  }
+  .box-info  .box-title { color: #01579b; }
+  .box-warn  .box-title { color: #e65100; }
+  .box-danger .box-title { color: #c62828; }
+  .box-success .box-title { color: #2e7d32; }
+
+  /* ── Code ── */
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+  }
+  :not(pre) > code {
+    background: #e6eef5; padding: 0.1rem 0.35rem; border-radius: 3px;
+    color: #0d47a1; font-size: 0.82rem;
+  }
+  pre {
+    background: #1e1e2e; color: #cdd6f4; border-radius: 6px;
+    padding: 0.9rem 1rem; overflow-x: auto; margin: 0.6rem 0;
+    line-height: 1.45; font-size: 0.82rem;
+    border: 1px solid #313244;
+  }
+  pre code { color: inherit; background: none; padding: 0; font-size: inherit; }
+  .kw { color: #cba6f7; }  /* keyword */
+  .ty { color: #89b4fa; }  /* type / class */
+  .cm { color: #6c7086; font-style: italic; }  /* comment */
+  .st { color: #a6e3a1; }  /* string */
+  .fn { color: #f9e2af; }  /* function */
+  .nr { color: #fab387; }  /* number */
+  .op { color: #89dceb; }  /* operator */
+
+  /* ── Tables ── */
+  table {
+    width: 100%; border-collapse: collapse; margin: 0.8rem 0;
+    font-size: 0.85rem;
+  }
+  th, td {
+    padding: 0.5rem 0.7rem; text-align: left;
+    border: 1px solid #c0cdd8;
+  }
+  th {
+    background: #0f2027; color: #fff; font-weight: 600;
+    font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  tr:nth-child(even) { background: #edf2f7; }
+  tr:hover { background: #dce6f0; }
+
+  /* ── Pipeline / State Diagram ── */
+  .pipeline {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: 0; margin: 1rem 0; justify-content: center;
+  }
+  .pipeline .step {
+    background: #203a43; color: #fff; padding: 0.5rem 0.9rem;
+    border-radius: 6px; font-size: 0.8rem; font-weight: 600;
+    text-align: center; min-width: 90px;
+  }
+  .pipeline .step.highlight { background: #0077b6; }
+  .pipeline .step.highlight2 { background: #00b4d8; }
+  .pipeline .arrow {
+    font-size: 1.3rem; color: #888; padding: 0 0.3rem;
+    user-select: none;
+  }
+
+  /* ── Decision Tree ── */
+  .tree { margin: 1rem 0; }
+  .tree-node {
+    border: 2px solid #ccc; border-radius: 8px; padding: 0.6rem 0.9rem;
+    margin: 0.4rem 0; font-size: 0.87rem; position: relative;
+  }
+  .tree-node.question { background: #fff3e0; border-color: #ff9800; font-weight: 600; }
+  .tree-node.answer-yes { background: #e8f5e9; border-color: #4caf50; margin-left: 2rem; }
+  .tree-node.answer-no { background: #fce4ec; border-color: #d32f2f; margin-left: 2rem; }
+  .tree-node.action { background: #e3f2fd; border-color: #0077b6; margin-left: 4rem; font-style: italic; }
+  .tree-label {
+    display: inline-block; font-size: 0.72rem; font-weight: 700;
+    padding: 0.1rem 0.4rem; border-radius: 3px; margin-right: 0.4rem; color: #fff;
+  }
+  .tree-label.yes { background: #4caf50; }
+  .tree-label.no  { background: #d32f2f; }
+  .tree-connector { width: 2px; height: 12px; background: #aaa; margin-left: 1.5rem; }
+
+  /* ── File Tree ── */
+  .file-tree {
+    background: #1e1e2e; color: #cdd6f4; border-radius: 6px;
+    padding: 0.9rem 1rem; margin: 0.6rem 0; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem; line-height: 1.6;
+  }
+  .file-tree .dir { color: #89b4fa; font-weight: 600; }
+  .file-tree .file { color: #cdd6f4; }
+  .file-tree .desc { color: #6c7086; font-style: italic; }
+
+  /* ── Columns ── */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 700px) { .cols { grid-template-columns: 1fr; } }
+
+  /* ── Lists ── */
+  ul, ol { margin: 0.4rem 0 0.4rem 1.5rem; }
+  li { margin-bottom: 0.25rem; font-size: 0.9rem; }
+
+  /* ── Tags ── */
+  .tag {
+    display: inline-block; font-size: 0.7rem; font-weight: 700;
+    padding: 0.1rem 0.45rem; border-radius: 3px;
+    text-transform: uppercase; letter-spacing: 0.3px;
+    vertical-align: middle;
+  }
+  .tag-cs  { background: #bbdefb; color: #0d47a1; }
+  .tag-me  { background: #c8e6c9; color: #1b5e20; }
+  .tag-se  { background: #f3e5f5; color: #4a148c; }
+  .tag-new { background: #fff3e0; color: #e65100; }
+  .tag-fmpy { background: #e0f2f1; color: #00695c; }
+
+  /* ── Misc ── */
+  hr { border: none; border-top: 2px solid #d0dde6; margin: 2rem 0; }
+  p { margin: 0.4rem 0; font-size: 0.9rem; }
+  strong { color: #1a1a2e; }
+  .small { font-size: 0.8rem; color: #666; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.9rem;
+    margin-top: 0.9rem;
+  }
+  .image-card {
+    background: #fff;
+    border: 1px solid #cfd8e3;
+    border-radius: 8px;
+    padding: 0.6rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .image-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+  .image-caption {
+    margin-top: 0.45rem;
+    font-size: 0.8rem;
+    color: #54606c;
+  }
+
+  /* ── Print ── */
+  @media print {
+    nav { display: none; }
+    body { font-size: 12px; background: #fff; }
+    .container { max-width: 100%; padding: 0.5cm; }
+    pre { font-size: 10px; border: 1px solid #999; }
+    section { page-break-inside: avoid; }
+    .hero { padding: 0.5rem; }
+    h2 { page-break-after: avoid; }
+    table { font-size: 11px; }
+    .tag { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    th { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVIGATION ═══════════ -->
+<nav>
+  <span class="nav-title">📦 FMI 3.0 &amp; FMPy Cheatsheet</span>
+  <a href="#sec-overview">1. Overview</a>
+  <a href="#sec-anatomy">2. FMU Anatomy</a>
+  <a href="#sec-cosim">3. Co-Simulation</a>
+  <a href="#sec-me">4. Model Exchange</a>
+  <a href="#sec-fmpy">5. FMPy Reference</a>
+  <a href="#sec-troubleshoot">6. Troubleshooting</a>
+  <a href="#sec-tables">7. Reference Tables</a>
+  <a class="nav-social nav-author" href="https://www.linkedin.com/in/clementcoic/" target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8A53.79 53.79 0 0 1 53.79 0a53.79 53.79 0 0 1 53.79 53.8c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.3 0-55.7 37.7-55.7 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.7-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg>
+    <span>Dr. Clément Coïc</span>
+  </a>
+  <a class="nav-social nav-youtube" href="https://www.youtube.com/@ClemsPlayground" target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 576 512" aria-hidden="true"><path d="M549.7 124.1c-6.3-23.7-24.8-42.2-48.3-48.4C458.7 64 288 64 288 64S117.3 64 74.6 75.7c-23.5 6.2-42 24.7-48.3 48.4C16 166.6 16 256 16 256s0 89.4 10.3 131.9c6.3 23.7 24.8 42.2 48.3 48.4C117.3 448 288 448 288 448s170.7 0 213.4-11.7c23.5-6.2 42-24.7 48.3-48.4C560 345.4 560 256 560 256s0-89.4-10.3-131.9zM232 336V176l142.9 80L232 336z"/></svg>
+    <span>ClemsPlayground</span>
+  </a>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero">
+  <img src="resources/images/FMI.svg" alt="FMI Logo" class="logo">
+  <h1>FMI 3.0 &amp; FMPy Cheatsheet</h1>
+  <p class="subtitle">Functional Mock-up Interface · Co-Simulation · Model Exchange</p>
+  <span class="scope">FMI 3.0</span>
+  <span class="scope">FMPy (Python)</span>
+  <span class="scope">Intermediate Level</span>
+  <a class="scope scope-link" href="https://colab.research.google.com/github/Dr-ClementCoic/fmi-cheat-sheet/blob/main/fmpy_cheatsheet_notebook.ipynb">🔗 Run the examples yourself</a>
+  <br><br>
+  <p>Learn more about FMI 3.0 and FMPy in the <i>Learn Modelica & FMI newsletter</i> on <a href="https://www.linkedin.com/newsletters/learn-modelica-fmi-7373084674463719424/r">LinkedIn</a> or visit the <a href="https://dr-clementcoic.github.io/LearnModelicaFMI/">dedicated website</a>.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 1 — FMI 3.0 OVERVIEW
+     ═══════════════════════════════════════════════════════ -->
+<section id="sec-overview">
+<h2>1. FMI 3.0 Overview</h2>
+
+<p>The <strong>Functional Mock-up Interface (FMI)</strong> is an open standard for exchanging simulation models as
+<strong>Functional Mock-up Units (FMUs)</strong>. An FMU is a zip file containing a model description (XML) and
+compiled binaries (or C source) that any FMI-compatible tool can import and simulate.</p>
+
+<h3>FMI 3.0 — What's New vs. 2.0</h3>
+<table>
+<tr><th>Feature</th><th>FMI 2.0</th><th>FMI 3.0</th></tr>
+<tr><td><strong>Interface types</strong></td><td>Co-Simulation, Model Exchange</td><td>+ Scheduled Execution <span class="small">(limited tool support — see footnote<sup>*</sup>)</span></td></tr>
+<tr><td><strong>Data types</strong></td><td>Real, Integer, Boolean, String, Enumeration</td><td>+ <span class="tag tag-new">NEW</span> Float32, Int8/16/(32)/64, UInt8/16/32/64, Binary, Clock</td></tr>
+<tr><td><strong>Array variables</strong></td><td>❌ Not supported</td><td>✅ First-class support for arrays</td></tr>
+<tr><td><strong>Clocks</strong></td><td>❌</td><td>✅ Synchronous clocks for CS and ME (hybrid co-simulation)</td></tr>
+<tr><td><strong>Terminals &amp; icons</strong></td><td>Backported to FMI 2.0.x</td><td>✅ Structured grouping of variables into bus-like terminals</td></tr>
+<tr><td><strong>Layered standards</strong></td><td>Backported to FMI 2.0.x</td><td>✅ Extensibility via layered standard concept</td></tr>
+<tr><td><strong>Build configuration</strong></td><td> Back ported to FMI 2.0.4</td><td>✅ Source code FMUs with build instructions</td></tr>
+<tr><td><strong>Early return (CS)</strong></td><td>🟠 Limited support</td><td>✅ FMU can return before communication step ends</td></tr>
+<tr><td><strong>Intermediate update (CS)</strong></td><td>❌</td><td>✅ FMU can report intermediate values during a step</td></tr>
+<tr><td><strong>Event handling (CS)</strong></td><td>❌</td><td>✅ Explicit event mode in CS (not just ME)</td></tr>
+<tr><td><strong>Adjoint derivatives</strong></td><td>❌ (only directional)</td><td><span class="tag tag-new">NEW</span> Adjoint derivatives for optimization / sensitivity analysis</td></tr>
+<tr><td><strong>Variable naming</strong></td><td><code>&lt;ScalarVariable&gt;</code></td><td>Type-specific: <code>&lt;Float64&gt;</code>, <code>&lt;Int32&gt;</code>, <code>&lt;Binary&gt;</code>, etc.</td></tr>
+<tr><td><strong>Model description</strong></td><td><code>fmiVersion="2.0"</code></td><td><code>fmiVersion="3.0"</code></td></tr>
+</table>
+
+<h3>Three Interface Types</h3>
+<div class="cols">
+<div>
+<div class="box box-info" style="margin-top:0">
+  <div class="box-title"><span class="tag tag-cs">CS</span> Co-Simulation</div>
+  <p>The FMU <strong>contains its own solver</strong>. A master algorithm just tells it "advance by Δt" and reads outputs.
+  Simplest to use — ideal for coupling models from different tools.</p>
+</div>
+<div class="box box-success" style="margin-top:0.5rem">
+  <div class="box-title"><span class="tag tag-me">ME</span> Model Exchange</div>
+  <p>The FMU provides <strong>equations only</strong> (derivatives, event indicators). An external solver integrates the ODEs.
+  More control, potentially more accurate — but the importing tool must provide a suitable solver.</p>
+</div>
+</div>
+<div>
+<div class="box box-info" style="margin-top:0">
+  <div class="box-title">🔍 Which One to Use?</div>
+  <ul>
+    <li><strong>CS</strong> — Default choice. Tool coupling. Black-box simulation. Also supports clocks &amp; events in FMI 3.0 (hybrid co-simulation) — suitable for SiL, vECU, and most discrete-time use cases.</li>
+    <li><strong>ME</strong> — Tight integration of an external model in a simulation tool. Custom solvers, stiff systems, or variable-step integration.</li>
+  </ul>
+</div>
+<div class="box box-warn" style="margin-top:0.5rem">
+  <div class="box-title">⚠️ <sup>*</sup>About Scheduled Execution (SE)</div>
+  <p>FMI 3.0 also defines a <strong>Scheduled Execution</strong> interface for clock-driven, real-time systems (HiL, RTOS).
+  However, <strong>there is practically no tool support for SE at this time</strong>, including FMPy.
+  For most use cases — including SiL, vECU testing, and multi-rate systems — <strong>CS FMUs with clocks</strong>
+  (hybrid co-simulation) are the recommended approach.
+  SE is therefore omitted from this cheatsheet.</p>
+  <p class="small" style="margin-top:0.3rem">Note: Clocks in CS/ME (synchronous clocks, similar to Modelica clocks) are different from the partition-based clocks in SE.</p>
+</div>
+</div>
+</div>
+
+<h3>FMU Lifecycle — State Machine (Simplified)</h3>
+<div class="pipeline">
+  <div class="step">Instantiated</div>
+  <div class="arrow">→</div>
+  <div class="step highlight">Configuration<br>Mode</div>
+  <div class="arrow">→</div>
+  <div class="step highlight">Initialization<br>Mode</div>
+  <div class="arrow">→</div>
+  <div class="step highlight2">Event Mode</div>
+  <div class="arrow">⇄</div>
+  <div class="step highlight2">Step Mode<br><span style="font-size:0.7rem">(CS)</span></div>
+  <div class="arrow">→</div>
+  <div class="step">Terminated</div>
+</div>
+<div class="pipeline" style="margin-top:0.3rem">
+  <div class="step" style="background:transparent; color:#666; font-size:0.75rem; min-width: auto;">
+    ME also has: Event Mode ⇄ <strong>Continuous-Time Mode</strong> (where solver calls getDerivatives)
+  </div>
+</div>
+
+<div class="box box-info">
+  <div class="box-title">🔍 FMI 3.0 State Transitions</div>
+  <p><strong>Key rule:</strong> You can only call certain FMI functions in certain states.
+  For example, you can only set parameters in <em>Configuration Mode</em> or <em>Initialization Mode</em>,
+  and you can only call <code>fmi3DoStep</code> in <em>Step Mode</em> (CS).</p>
+  <p><strong>FMPy handles state transitions automatically</strong> when you use its high-level <code>simulate_fmu()</code> function.</p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 2 — FMU ANATOMY
+     ═══════════════════════════════════════════════════════ -->
+<section id="sec-anatomy">
+<h2>2. FMU Anatomy &amp; modelDescription.xml</h2>
+
+<h3>FMU File Structure</h3>
+<p>An FMU is a <strong>zip file</strong> (renamed to <code>.fmu</code>) with a standardized internal layout:</p>
+
+<div class="file-tree">
+<span class="dir">myModel.fmu</span> (zip archive)<br>
+├── <span class="file">modelDescription.xml</span> &nbsp;<span class="desc">← The "contract" — all variable info, capabilities, metadata</span><br>
+├── <span class="dir">binaries/</span><br>
+│&nbsp;&nbsp; ├── <span class="dir">x86_64-windows/</span><br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── <span class="file">myModel.dll</span> &nbsp;<span class="desc">← Compiled shared library (platform-specific)</span><br>
+│&nbsp;&nbsp; ├── <span class="dir">x86_64-linux/</span><br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── <span class="file">myModel.so</span><br>
+│&nbsp;&nbsp; └── <span class="dir">aarch64-darwin/</span><br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └── <span class="file">myModel.dylib</span><br>
+├── <span class="dir">sources/</span> &nbsp;<span class="desc">← Optional: C source code (for source-code FMUs)</span><br>
+│&nbsp;&nbsp; ├── <span class="file">myModel.c</span><br>
+│&nbsp;&nbsp; └── <span class="file">buildDescription.xml</span> &nbsp;<span class="desc">← FMI 3.0: build instructions</span><br>
+├── <span class="dir">resources/</span> &nbsp;<span class="desc">← Data files, tables, maps needed by the model</span><br>
+│&nbsp;&nbsp; └── <span class="file">data.csv</span><br>
+├── <span class="dir">documentation/</span> &nbsp;<span class="desc">← Optional: HTML docs, images</span><br>
+│&nbsp;&nbsp; └── <span class="file">index.html</span><br>
+└── <span class="dir">terminalsAndIcons/</span> &nbsp;<span class="desc">← FMI 3.0: model icons (SVG/PNG)</span><br>
+&nbsp;&nbsp;&nbsp; └── <span class="file">icon.svg</span>
+</div>
+
+<div class="box box-warn">
+  <div class="box-title">⚠️ Platform Binaries</div>
+  <p>FMI 3.0 uses consistent <a href="https://fmi-standard.org/docs/main/#platform-tuple-examples" style="color:#01579b">platform tuples</a>: <code>{arch}-{os}</code> (e.g., <code>x86_64-linux</code>, <code>aarch64-darwin</code>).
+  FMI 2.0 used different names (<code>linux64</code>, <code>darwin64</code>). An FMU only works on platforms for which it has binaries (or sources).</p>
+</div>
+
+<h3>modelDescription.xml — Key Elements</h3>
+
+<h4>Root Element</h4>
+<pre><code>&lt;<span class="ty">fmiModelDescription</span>
+  <span class="fn">fmiVersion</span>=<span class="st">"3.0"</span>
+  <span class="fn">modelName</span>=<span class="st">"HeatExchanger"</span>
+  <span class="fn">instantiationToken</span>=<span class="st">"{8c4e810f-...}"</span>  <span class="cm">&lt;!-- was 'guid' in FMI 2.0 --&gt;</span>
+  <span class="fn">description</span>=<span class="st">"Counter-flow heat exchanger model"</span>
+  <span class="fn">generationTool</span>=<span class="st">"MyTool 4.2"</span>&gt;
+
+  &lt;<span class="ty">CoSimulation</span> <span class="fn">modelIdentifier</span>=<span class="st">"HeatExchanger"</span>
+    <span class="fn">canHandleVariableCommunicationStepSize</span>=<span class="st">"true"</span>
+    <span class="fn">canReturnEarlyAfterIntermediateUpdate</span>=<span class="st">"true"</span> /&gt;  <span class="cm">&lt;!-- capabilities --&gt;</span>
+
+  <span class="cm">&lt;!-- and/or: &lt;ModelExchange .../&gt;, &lt;ScheduledExecution .../&gt; --&gt;</span></code></pre>
+
+<h4>Variable Declarations (FMI 3.0 — Typed Elements)</h4>
+<pre><code>&lt;<span class="ty">ModelVariables</span>&gt;
+  &lt;<span class="ty">Float64</span> <span class="fn">name</span>=<span class="st">"T_inlet"</span> <span class="fn">valueReference</span>=<span class="st">"1"</span>
+    <span class="fn">causality</span>=<span class="st">"input"</span> <span class="fn">start</span>=<span class="st">"293.15"</span>
+    <span class="fn">description</span>=<span class="st">"Inlet temperature [K]"</span> /&gt;
+
+  &lt;<span class="ty">Float64</span> <span class="fn">name</span>=<span class="st">"T_outlet"</span> <span class="fn">valueReference</span>=<span class="st">"2"</span>
+    <span class="fn">causality</span>=<span class="st">"output"</span>
+    <span class="fn">description</span>=<span class="st">"Outlet temperature [K]"</span> /&gt;
+
+  &lt;<span class="ty">Float64</span> <span class="fn">name</span>=<span class="st">"k"</span> <span class="fn">valueReference</span>=<span class="st">"3"</span>
+    <span class="fn">causality</span>=<span class="st">"parameter"</span> <span class="fn">variability</span>=<span class="st">"fixed"</span>
+    <span class="fn">start</span>=<span class="st">"500.0"</span> <span class="fn">description</span>=<span class="st">"Heat transfer coeff [W/(m²K)]"</span> /&gt;
+
+  <span class="cm">&lt;!-- FMI 3.0: Array variable --&gt;</span>
+  &lt;<span class="ty">Float64</span> <span class="fn">name</span>=<span class="st">"T_profile"</span> <span class="fn">valueReference</span>=<span class="st">"10"</span>
+    <span class="fn">causality</span>=<span class="st">"output"</span>&gt;
+    &lt;<span class="ty">Dimension</span> <span class="fn">start</span>=<span class="st">"20"</span> /&gt;  <span class="cm">&lt;!-- array of 20 elements --&gt;</span>
+  &lt;/<span class="ty">Float64</span>&gt;
+
+  <span class="cm">&lt;!-- FMI 3.0: Clock variable --&gt;</span>
+  &lt;<span class="ty">Clock</span> <span class="fn">name</span>=<span class="st">"samplingClock"</span> <span class="fn">valueReference</span>=<span class="st">"100"</span>
+    <span class="fn">causality</span>=<span class="st">"input"</span> <span class="fn">intervalVariability</span>=<span class="st">"fixed"</span>
+    <span class="fn">intervalDecimal</span>=<span class="st">"0.01"</span> /&gt;
+&lt;/<span class="ty">ModelVariables</span>&gt;</code></pre>
+
+<h4>Causality × Variability</h4>
+<table>
+<tr><th>Causality</th><th>Meaning</th><th>Allowed Variability</th></tr>
+<tr><td><code>parameter</code></td><td>Set before simulation, constant during run</td><td><code>fixed</code>, <code>tunable</code></td></tr>
+<tr><td><code>calculatedParameter</code></td><td>Computed from parameters only during init for fixed and re-computed during simulation when tunable</td><td><code>fixed</code>, <code>tunable</code></td></tr>
+<tr><td><code>input</code></td><td>Set by the environment (master) during simulation</td><td><code>discrete</code>, <code>continuous</code></td></tr>
+<tr><td><code>output</code></td><td>Computed by the FMU, readable by the environment</td><td><code>constant</code>, <code>discrete</code>, <code>continuous</code></td></tr>
+<tr><td><code>local</code></td><td>Internal variable, not for external use</td><td>any</td></tr>
+<tr><td><code>independent</code></td><td>The independent variable (usually time)</td><td><code>continuous</code></td></tr>
+<tr><td><code>structuralParameter</code></td><td><span class="tag tag-new">3.0</span> Affects model structure (e.g., array sizes)</td><td><code>fixed</code>, <code>tunable</code></td></tr>
+</table>
+
+<h3>Inspecting an FMU with FMPy</h3>
+<pre><code><span class="kw">from</span> fmpy <span class="kw">import</span> read_model_description, dump
+
+<span class="cm"># Quick summary of FMU contents</span>
+<span class="fn">dump</span>(<span class="st">'HeatExchanger.fmu'</span>)
+
+<span class="cm"># Detailed programmatic access</span>
+md = <span class="fn">read_model_description</span>(<span class="st">'HeatExchanger.fmu'</span>)
+<span class="fn">print</span>(f<span class="st">"Model: {md.modelName}, FMI: {md.fmiVersion}"</span>)
+<span class="fn">print</span>(f<span class="st">"GUID: {md.guid}"</span>)
+<span class="fn">print</span>(f<span class="st">"CS: {md.coSimulation is not None}"</span>)
+<span class="fn">print</span>(f<span class="st">"ME: {md.modelExchange is not None}"</span>)
+
+<span class="cm"># List all variables</span>
+<span class="kw">for</span> var <span class="kw">in</span> md.modelVariables:
+    <span class="fn">print</span>(f<span class="st">"  {var.name:30s}  causality={var.causality:20s}  start={var.start}"</span>)
+
+<span class="cm"># Filter inputs and outputs</span>
+inputs  = [v <span class="kw">for</span> v <span class="kw">in</span> md.modelVariables <span class="kw">if</span> v.causality == <span class="st">'input'</span>]
+outputs = [v <span class="kw">for</span> v <span class="kw">in</span> md.modelVariables <span class="kw">if</span> v.causality == <span class="st">'output'</span>]
+params  = [v <span class="kw">for</span> v <span class="kw">in</span> md.modelVariables <span class="kw">if</span> v.causality == <span class="st">'parameter'</span>]</code></pre>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 3 — CO-SIMULATION
+     ═══════════════════════════════════════════════════════ -->
+<section id="sec-cosim">
+<h2>3. Co-Simulation (CS) <span class="tag tag-cs">CS</span></h2>
+
+<h3>How It Works</h3>
+<p>In Co-Simulation, the FMU <strong>contains its own ODE/DAE solver</strong>. The master algorithm:</p>
+<ol>
+  <li>Sets inputs at the current communication point</li>
+  <li>Tells the FMU to advance by <code>stepSize</code></li>
+  <li>Reads outputs at the new communication point</li>
+  <li>Repeats until <code>tEnd</code></li>
+</ol>
+
+<div class="pipeline">
+  <div class="step highlight">Set Inputs</div>
+  <div class="arrow">→</div>
+  <div class="step highlight">fmi3DoStep(Δt)</div>
+  <div class="arrow">→</div>
+  <div class="step highlight">Get Outputs</div>
+  <div class="arrow">→</div>
+  <div class="step" style="background:#555">Repeat</div>
+</div>
+
+<h3>FMPy — Quick Simulation (High-Level API)</h3>
+<pre><code><span class="kw">from</span> fmpy <span class="kw">import</span> simulate_fmu
+<span class="kw">from</span> fmpy.util <span class="kw">import</span> plot_result
+
+<span class="cm"># Simplest possible simulation</span>
+result = <span class="fn">simulate_fmu</span>(
+    <span class="st">'HeatExchanger.fmu'</span>,
+    stop_time=<span class="nr">10.0</span>,
+    output_interval=<span class="nr">0.01</span>
+)
+<span class="fn">plot_result</span>(result)
+
+<span class="cm"># With parameters and input signals</span>
+result = <span class="fn">simulate_fmu</span>(
+    <span class="st">'HeatExchanger.fmu'</span>,
+    stop_time=<span class="nr">100.0</span>,
+    step_size=<span class="nr">0.1</span>,            <span class="cm"># communication step size</span>
+    output_interval=<span class="nr">0.1</span>,       <span class="cm"># output recording interval</span>
+    start_values={
+        <span class="st">'k'</span>: <span class="nr">750.0</span>,              <span class="cm"># parameter override</span>
+        <span class="st">'T_inlet'</span>: <span class="nr">350.0</span>,        <span class="cm"># initial input value</span>
+    },
+    output=[<span class="st">'T_outlet'</span>, <span class="st">'Q_flow'</span>],  <span class="cm"># variables to record</span>
+)
+
+<span class="cm"># Access results (structured NumPy array)</span>
+time = result[<span class="st">'time'</span>]
+T_out = result[<span class="st">'T_outlet'</span>]</code></pre>
+
+<h3>Providing Input Signals</h3>
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="cm"># Option 1: NumPy structured array</span>
+dtype = np.dtype([(<span class="st">'time'</span>, np.float64), (<span class="st">'T_inlet'</span>, np.float64)])
+input_signals = np.array([
+    (<span class="nr">0.0</span>,  <span class="nr">293.15</span>),
+    (<span class="nr">10.0</span>, <span class="nr">293.15</span>),
+    (<span class="nr">10.0</span>, <span class="nr">350.00</span>),   <span class="cm"># step change at t=10</span>
+    (<span class="nr">50.0</span>, <span class="nr">350.00</span>),
+    (<span class="nr">50.0</span>, <span class="nr">320.00</span>),   <span class="cm"># step change at t=50</span>
+    (<span class="nr">100.0</span>, <span class="nr">320.00</span>),
+], dtype=dtype)
+
+result = <span class="fn">simulate_fmu</span>(
+    <span class="st">'HeatExchanger.fmu'</span>,
+    stop_time=<span class="nr">100.0</span>,
+    input=input_signals,       <span class="cm"># FMPy interpolates between points</span>
+    output=[<span class="st">'T_outlet'</span>],
+)
+
+<span class="cm"># Option 2: Read from CSV file</span>
+<span class="kw">from</span> fmpy.util <span class="kw">import</span> read_csv
+input_signals = <span class="fn">read_csv</span>(<span class="st">'inputs.csv'</span>)   <span class="cm"># columns: time, T_inlet, ...</span></code></pre>
+
+<h3>FMPy — Low-Level API (Full Control)</h3>
+<pre><code><span class="kw">from</span> fmpy <span class="kw">import</span> read_model_description, extract
+<span class="kw">from</span> fmpy.fmi3 <span class="kw">import</span> FMU3Slave
+
+md = <span class="fn">read_model_description</span>(<span class="st">'HeatExchanger.fmu'</span>)
+unzipdir = <span class="fn">extract</span>(<span class="st">'HeatExchanger.fmu'</span>)
+
+fmu = <span class="ty">FMU3Slave</span>(
+    instanceName=<span class="st">'instance1'</span>,
+    unzipDirectory=unzipdir,
+    modelIdentifier=md.coSimulation.modelIdentifier,
+)
+
+<span class="cm"># Lifecycle: Instantiate → Configure → Initialize → Step → Terminate → Free</span>
+fmu.<span class="fn">instantiate</span>()
+fmu.<span class="fn">enterInitializationMode</span>()
+fmu.<span class="fn">setFloat64</span>([<span class="nr">3</span>], [<span class="nr">750.0</span>])   <span class="cm"># set parameter k (valueReference=3)</span>
+fmu.<span class="fn">exitInitializationMode</span>()
+
+<span class="cm"># Simulation loop</span>
+time, step_size = <span class="nr">0.0</span>, <span class="nr">0.1</span>
+<span class="kw">while</span> time &lt; <span class="nr">10.0</span>:
+    fmu.<span class="fn">setFloat64</span>([<span class="nr">1</span>], [<span class="nr">350.0</span>])   <span class="cm"># set input T_inlet</span>
+    fmu.<span class="fn">doStep</span>(
+        currentCommunicationPoint=time,
+        communicationStepSize=step_size
+    )
+    T_out = fmu.<span class="fn">getFloat64</span>([<span class="nr">2</span>])     <span class="cm"># get output T_outlet</span>
+    <span class="fn">print</span>(f<span class="st">"t={time:.1f}  T_out={T_out[0]:.2f}"</span>)
+    time += step_size
+
+fmu.<span class="fn">terminate</span>()
+fmu.<span class="fn">freeInstance</span>()</code></pre>
+
+<h3>FMI 3.0 CS Additions</h3>
+<div class="cols">
+<div>
+<div class="box box-info" style="margin-top:0">
+  <div class="box-title"><span class="tag tag-new">3.0</span> Early Return</div>
+  <p>The FMU can return from <code>doStep</code> <em>before</em> the full step is completed (e.g., because an event occurred).
+  The master reads the actual time reached and adjusts.</p>
+  <p>Capability flag: <code>canReturnEarlyAfterIntermediateUpdate</code></p>
+</div>
+</div>
+<div>
+<div class="box box-info" style="margin-top:0">
+  <div class="box-title"><span class="tag tag-new">3.0</span> Intermediate Update</div>
+  <p>During <code>doStep</code>, the FMU can call back to the master to report intermediate values or request input updates.
+  Enables tighter coupling without reducing the communication step.</p>
+  <p>Capability flag: <code>providesIntermediateUpdate</code></p>
+</div>
+</div>
+<div>
+<div class="box box-info" style="margin-top:0">
+  <div class="box-title"><span class="tag tag-new">3.0</span> Event Mode</div>
+  <p>In FMI 3.0, CS FMUs can enter <strong>Event Mode</strong> (via <code>fmi3EnterEventMode</code>) to handle discrete events during simulation —
+  triggered by early return or when <code>eventHandlingNeeded</code> is set after <code>doStep</code>.</p>
+</div>
+</div>
+<div>
+<div class="box box-info" style="margin-top:0">
+  <div class="box-title"><span class="tag tag-new">3.0</span> Clocks</div>
+  <p>FMI 3.0 introduces <strong>synchronous clocks</strong> for CS, enabling hybrid co-simulation with discrete-time and multi-rate behavior —
+  without needing Scheduled Execution.</p>
+</div>
+</div>
+</div>
+
+<div class="box box-success">
+  <div class="box-title">✅ CS Best Practices</div>
+  <ul>
+    <li><strong>Step size:</strong> Start with the output interval. If results are inaccurate, reduce step size (not output interval).</li>
+    <li><strong>Variable step:</strong> If the FMU supports <code>canHandleVariableCommunicationStepSize</code>, adapt step size to dynamics.</li>
+    <li><strong>Multiple FMUs:</strong> Use Gauss-Seidel ordering (set outputs of FMU1 as inputs to FMU2, then advance both).</li>
+    <li><strong>Events:</strong> In FMI 3.0, check <code>eventHandlingNeeded</code> after <code>doStep</code> and enter Event Mode if true.</li>
+    <li><strong>Co-simulation error:</strong> Compared to a monolithic simulation, co-simulation introduces a certain coupling error. The importer can influence/reduce this by choosing the right co-simulation algorithm — e.g., the order of get/set calls, inter-/extrapolation of values passed between FMUs, and iterating until reaching convergence.</li>
+  </ul>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 4 — MODEL EXCHANGE
+     ═══════════════════════════════════════════════════════ -->
+<section id="sec-me">
+<h2>4. Model Exchange (ME) <span class="tag tag-me">ME</span></h2>
+
+<h3>How It Works</h3>
+<p>The FMU provides the <strong>model equations</strong> — derivatives, algebraic outputs, event indicators. An <strong>external ODE solver</strong>
+(provided by the master / tool) drives the integration.</p>
+
+<div class="pipeline">
+  <div class="step highlight">Set Inputs<br>&amp; States</div>
+  <div class="arrow">→</div>
+  <div class="step highlight">Get<br>Derivatives</div>
+  <div class="arrow">→</div>
+  <div class="step highlight">ODE Solver<br>Step</div>
+  <div class="arrow">→</div>
+  <div class="step highlight">Set New<br>States</div>
+  <div class="arrow">→</div>
+  <div class="step" style="background:#555">Repeat</div>
+</div>
+
+<h3>ME vs CS — When to Use Which</h3>
+<table>
+<tr><th>Aspect</th><th><span class="tag tag-cs">CS</span> Co-Simulation</th><th><span class="tag tag-me">ME</span> Model Exchange</th></tr>
+<tr><td><strong>Solver</strong></td><td>Suitable solver bundled with model</td><td>You provide it (or FMPy provides one)</td></tr>
+<tr><td><strong>Interface complexity</strong></td><td>⭐ Much simpler API</td><td>⭐⭐⭐ More complex (states, events, derivatives)</td></tr>
+<tr><td><strong>Step size control</strong></td><td>Communication points only</td><td>Full control (variable-step)</td></tr>
+<tr><td><strong>Accuracy</strong></td><td>Limited by communication step</td><td>Solver-controlled (error-based)</td></tr>
+<tr><td><strong>Coupled simulation</strong></td><td>Easy (each FMU is self-contained)</td><td>Requires combined state vector</td></tr>
+<tr><td><strong>Stiff systems</strong></td><td>FMU's internal solver handles it</td><td>You must use an implicit solver</td></tr>
+<tr><td><strong>Ease of use</strong></td><td>⭐⭐⭐ Simple</td><td>⭐⭐ More complex</td></tr>
+<tr><td><strong>Best for</strong></td><td>Tool coupling, black-box models</td><td>Custom integration, accuracy-critical</td></tr>
+</table>
+
+<h3>FMPy — Model Exchange Simulation</h3>
+<pre><code><span class="kw">from</span> fmpy <span class="kw">import</span> simulate_fmu
+
+<span class="cm"># FMPy automatically uses CVode solver for ME</span>
+result = <span class="fn">simulate_fmu</span>(
+    <span class="st">'HeatExchanger.fmu'</span>,
+    fmi_type=<span class="st">'ModelExchange'</span>,     <span class="cm"># default is 'CoSimulation'</span>
+    stop_time=<span class="nr">10.0</span>,
+    output_interval=<span class="nr">0.01</span>,
+    solver=<span class="st">'CVode'</span>,                <span class="cm"># CVode (default), Euler</span>
+    start_values={<span class="st">'k'</span>: <span class="nr">750.0</span>},
+    output=[<span class="st">'T_outlet'</span>],
+)</code></pre>
+
+<h3>Low-Level ME API (Manual Solver Loop)</h3>
+<pre><code><span class="kw">from</span> fmpy.fmi3 <span class="kw">import</span> FMU3ModelExchange
+
+<span class="cm"># ... (instantiate, extract as before)</span>
+fmu = <span class="ty">FMU3ModelExchange</span>(...)
+fmu.<span class="fn">instantiate</span>()
+fmu.<span class="fn">enterInitializationMode</span>()
+fmu.<span class="fn">exitInitializationMode</span>()
+fmu.<span class="fn">enterContinuousTimeMode</span>()
+
+<span class="cm"># Get initial states</span>
+n_states = md.numberOfContinuousStates
+n_events = md.numberOfEventIndicators
+x = fmu.<span class="fn">getContinuousStates</span>()
+
+<span class="cm"># Simple forward Euler (for illustration — use CVode in practice!)</span>
+time, dt = <span class="nr">0.0</span>, <span class="nr">1e-3</span>
+<span class="kw">while</span> time &lt; <span class="nr">10.0</span>:
+    fmu.<span class="fn">setTime</span>(time)
+    fmu.<span class="fn">setContinuousStates</span>(x)
+
+    <span class="cm"># Check for events</span>
+    event_indicators = fmu.<span class="fn">getEventIndicators</span>()
+
+    <span class="cm"># Get derivatives: dx/dt = f(x, u, t)</span>
+    dx = fmu.<span class="fn">getDerivatives</span>()
+
+    <span class="cm"># Euler step</span>
+    x = [x[i] + dt * dx[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n_states)]
+    time += dt
+
+fmu.<span class="fn">terminate</span>()
+fmu.<span class="fn">freeInstance</span>()</code></pre>
+
+<div class="box box-warn">
+  <div class="box-title">⚠️ ME Event Handling</div>
+  <p>In Model Exchange, you must handle <strong>state events</strong> (zero-crossings of event indicators) and <strong>time events</strong>
+  (reported by <code>getNextEventTime</code>). When an event occurs:</p>
+  <ol>
+    <li>Enter Event Mode: <code>fmu.enterEventMode()</code></li>
+    <li>Call <code>fmu.updateDiscreteStates()</code> until <code>newDiscreteStatesNeeded = false</code></li>
+    <li>Re-enter Continuous-Time Mode: <code>fmu.enterContinuousTimeMode()</code></li>
+    <li>Get new states: <code>x = fmu.getContinuousStates()</code></li>
+  </ol>
+  <p><strong>FMPy's <code>simulate_fmu()</code> handles all of this automatically.</strong></p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 5 — FMPy PRACTICAL REFERENCE
+     ═══════════════════════════════════════════════════════ -->
+<section id="sec-fmpy">
+<h2>5. FMPy Practical Reference <span class="tag tag-fmpy">FMPy</span></h2>
+
+<h3>Installation</h3>
+<pre><code><span class="cm"># Install FMPy as tool</span>
+uv tool install fmpy[complete]
+
+<code><span class="cm"># In virtual environment</span>
+<code><span class="cm"># Minimal dependencies install of FMPy</span>
+uv add fmpy
+
+<span class="cm"># With optional dependencies (plotting, GUI)</span>
+uv add fmpy[complete]
+
+<span class="cm"># Verify installation</span>
+python -c <span class="st">"import fmpy; print(fmpy.__version__)"</span>
+
+<span class="cm"># Command-line tools</span>
+fmpy --help
+fmpy info HeatExchanger.fmu      <span class="cm"># dump model description</span>
+fmpy validate HeatExchanger.fmu  <span class="cm"># check FMU compliance</span>
+fmpy simulate HeatExchanger.fmu  <span class="cm"># run from command line</span>
+fmpy gui                         <span class="cm"># launch graphical interface</span></code></pre>
+
+<h3>Key Functions</h3>
+<table>
+<tr><th>Function</th><th>Purpose</th><th>Returns</th></tr>
+<tr><td><code>fmpy.dump(fmu_path)</code></td><td>Print FMU summary to console</td><td>None (prints)</td></tr>
+<tr><td><code>fmpy.read_model_description(fmu_path)</code></td><td>Parse modelDescription.xml</td><td><code>ModelDescription</code> object</td></tr>
+<tr><td><code>fmpy.simulate_fmu(fmu_path, ...)</code></td><td>High-level simulation (CS or ME)</td><td>NumPy structured array</td></tr>
+<tr><td><code>fmpy.extract(fmu_path)</code></td><td>Extract FMU zip to temp dir</td><td>Path to extracted directory</td></tr>
+<tr><td><code>fmpy.instantiate_fmu(unzipdir, md, fmi_type)</code></td><td>Create FMU instance for low-level API</td><td>FMU instance object</td></tr>
+<tr><td><code>fmpy.util.plot_result(result)</code></td><td>Plot simulation results</td><td>Plotly figure</td></tr>
+<tr><td><code>fmpy.util.read_csv(path)</code></td><td>Read input signal CSV</td><td>NumPy structured array</td></tr>
+<tr><td><code>fmpy.util.write_csv(path, result)</code></td><td>Write results to CSV</td><td>None</td></tr>
+<tr><td><code>fmpy.validation.validate_fmu(fmu_path)</code></td><td>Validate FMU compliance</td><td>List of issues</td></tr>
+</table>
+
+<h3><code>simulate_fmu()</code> — Full Parameter Reference</h3>
+<pre><code>result = <span class="fn">simulate_fmu</span>(
+    filename,                     <span class="cm"># path to .fmu file</span>
+    fmi_type=<span class="st">'CoSimulation'</span>,      <span class="cm"># 'CoSimulation' or 'ModelExchange'</span>
+    start_time=<span class="nr">0.0</span>,              <span class="cm"># simulation start time</span>
+    stop_time=<span class="nr">1.0</span>,               <span class="cm"># simulation end time</span>
+    step_size=<span class="nr">None</span>,              <span class="cm"># CS communication step (None = auto)</span>
+    output_interval=<span class="nr">None</span>,        <span class="cm"># recording interval (None = step_size)</span>
+    solver=<span class="st">'CVode'</span>,              <span class="cm"># ME solver: 'CVode' or 'Euler'</span>
+    relative_tolerance=<span class="nr">None</span>,     <span class="cm"># solver tolerance (ME)</span>
+    start_values={},             <span class="cm"># dict: variable_name → value</span>
+    input=<span class="nr">None</span>,                  <span class="cm"># input signals (NumPy array or CSV path)</span>
+    output=<span class="nr">None</span>,                 <span class="cm"># list of variable names to record (None = all)</span>
+    timeout=<span class="nr">None</span>,                <span class="cm"># max simulation time in seconds</span>
+    fmu_instance=<span class="nr">None</span>,           <span class="cm"># re-use existing FMU instance</span>
+    validate=<span class="nr">True</span>,               <span class="cm"># validate FMU before simulation</span>
+    debug_logging=<span class="nr">False</span>,         <span class="cm"># enable FMU debug output</span>
+    set_input_derivatives=<span class="nr">False</span>, <span class="cm"># enable input interpolation (CS)</span>
+)</code></pre>
+
+<h3>Batch Simulation / Parameter Sweeps</h3>
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">from</span> fmpy <span class="kw">import</span> simulate_fmu
+
+<span class="cm"># Parameter sweep over heat transfer coefficient</span>
+k_values = [<span class="nr">100</span>, <span class="nr">500</span>, <span class="nr">1000</span>, <span class="nr">2000</span>, <span class="nr">5000</span>]
+results = {}
+
+<span class="kw">for</span> k <span class="kw">in</span> k_values:
+    results[k] = <span class="fn">simulate_fmu</span>(
+        <span class="st">'HeatExchanger.fmu'</span>,
+        stop_time=<span class="nr">60.0</span>,
+        start_values={<span class="st">'k'</span>: k},
+        output=[<span class="st">'T_outlet'</span>],
+    )
+
+<span class="cm"># Plot comparison</span>
+fig, ax = plt.<span class="fn">subplots</span>()
+<span class="kw">for</span> k, r <span class="kw">in</span> results.items():
+    ax.<span class="fn">plot</span>(r[<span class="st">'time'</span>], r[<span class="st">'T_outlet'</span>], label=f<span class="st">'k={k}'</span>)
+ax.<span class="fn">legend</span>(); ax.<span class="fn">set_xlabel</span>(<span class="st">'Time [s]'</span>); ax.<span class="fn">set_ylabel</span>(<span class="st">'T_outlet [K]'</span>)
+plt.<span class="fn">show</span>()</code></pre>
+
+<h3>Saving &amp; Loading Results</h3>
+<pre><code><span class="kw">from</span> fmpy.util <span class="kw">import</span> write_csv, read_csv
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="cm"># Save to CSV</span>
+<span class="fn">write_csv</span>(<span class="st">'results.csv'</span>, result)
+
+<span class="cm"># Or convert to pandas DataFrame for analysis</span>
+df = pd.<span class="fn">DataFrame</span>(result)
+df.<span class="fn">to_csv</span>(<span class="st">'results.csv'</span>, index=<span class="nr">False</span>)
+
+<span class="cm"># Load back</span>
+df = pd.<span class="fn">read_csv</span>(<span class="st">'results.csv'</span>)</code></pre>
+
+<h3>FMPy GUI</h3>
+<div class="box box-info">
+  <div class="box-title">🔍 FMPy Graphical Interface</div>
+  <p>FMPy includes a Qt-based GUI for interactive FMU exploration:</p>
+  <p>You can inspect variables, configure a run, and view the resulting plot in one place.</p>
+  <ul>
+    <li><code>fmpy gui</code> — launch empty GUI, open FMU via File menu</li>
+    <li><code>fmpy gui HeatExchanger.fmu</code> — open specific FMU directly</li>
+    <li>Features: variable browser, parameter editing, simulation, result plotting</li>
+    <li>Requires: <code>pip install fmpy[complete]</code> (installs PyQt)</li>
+    <li>Limitation: only supports one FMU at a time</li>
+  </ul>
+  <div class="image-grid">
+    <div class="image-card">
+      <img src="resources/images/fmpy_gui_loaded.png" alt="FMPy GUI showing model information, variables, and simulation settings">
+      <div class="image-caption">Open an FMU, browse variables, and configure the simulation.</div>
+    </div>
+    <div class="image-card">
+      <img src="resources/images/fmpy_gui_result.png" alt="FMPy GUI showing a simulation result plot">
+      <div class="image-caption">Select a variable to plot and inspect the result directly in the GUI.</div>
+    </div>
+  </div>
+</div>
+
+<h3>Containers — Nested / Composite FMUs</h3>
+<div class="box box-info">
+  <div class="box-title">📦 FMPy Containers (Nested FMUs)</div>
+  <p>FMPy supports <strong>containers</strong> — packaging multiple FMUs into a single composite FMU. This allows you to:</p>
+  <ul>
+    <li>Combine several FMUs into one redistributable <code>.fmu</code> file</li>
+    <li>Define internal connections between sub-FMUs</li>
+    <li>Expose selected inputs/outputs to the outside</li>
+    <li>Simplify deployment — ship one FMU instead of many</li>
+  </ul>
+  <p style="margin-top:0.4rem">Create a container FMU via the FMPy GUI or programmatically.
+  See <code>fmpy.container</code> module and <a href="https://github.com/CATIA-Systems/FMPy" style="color:#01579b">FMPy documentation</a> for details.</p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 6 — TROUBLESHOOTING
+     ═══════════════════════════════════════════════════════ -->
+<section id="sec-troubleshoot">
+<h2>6. Troubleshooting &amp; Best Practices</h2>
+
+<h3>Debugging Decision Tree</h3>
+<div class="tree">
+  <div class="tree-node question">📋 What kind of FMU problem do you have?</div>
+
+  <div class="tree-connector"></div>
+  <div class="tree-node answer-yes"><span class="tree-label yes">A</span> FMU won't load / import</div>
+  <div class="tree-node action">→ Check platform: does the FMU contain binaries for your OS+arch? (unzip and check <code>binaries/</code>)</div>
+  <div class="tree-node action">→ Validate: <code>fmpy validate model.fmu</code> — reports structural issues</div>
+  <div class="tree-node action">→ Check FMI version: are you using FMI 2.0 API for a 3.0 FMU or vice versa?</div>
+  <div class="tree-node action">→ Missing dependencies: the FMU's DLL/SO may need external libraries (check with <code>ldd</code> / <code>otool -L</code> / Dependency Walker)</div>
+
+  <div class="tree-connector"></div>
+  <div class="tree-node answer-yes"><span class="tree-label yes">B</span> Initialization fails</div>
+  <div class="tree-node action">→ Set all required <code>start</code> values via <code>start_values={...}</code></div>
+  <div class="tree-node action">→ Check that input variables have values before initialization</div>
+  <div class="tree-node action">→ Enable debug logging: <code>simulate_fmu(..., debug_logging=True)</code></div>
+  <div class="tree-node action">→ Check parameter ranges — values outside the model's valid domain cause init failure</div>
+
+  <div class="tree-connector"></div>
+  <div class="tree-node answer-yes"><span class="tree-label yes">C</span> Simulation crashes or gives wrong results</div>
+  <div class="tree-node action">→ Reduce step size: <code>step_size=1e-4</code> (CS) or tighten <code>relative_tolerance</code> (ME)</div>
+  <div class="tree-node action">→ Check input signal timing: are step changes aligned with communication points?</div>
+  <div class="tree-node action">→ Enable input derivatives: <code>set_input_derivatives=True</code> for smoother interpolation</div>
+  <div class="tree-node action">→ Try ME instead of CS (or vice versa) to isolate solver vs. model issues</div>
+
+  <div class="tree-connector"></div>
+  <div class="tree-node answer-yes"><span class="tree-label yes">D</span> Performance is poor</div>
+  <div class="tree-node action">→ Increase step size (CS): largest step that gives acceptable accuracy</div>
+  <div class="tree-node action">→ Reduce output variables: <code>output=['var1', 'var2']</code> instead of recording everything</div>
+  <div class="tree-node action">→ Increase output interval: <code>output_interval=0.1</code> (less disk I/O)</div>
+  <div class="tree-node action">→ For batch runs: reuse FMU instance with <code>fmu_instance=</code> parameter</div>
+
+  <div class="tree-connector"></div>
+  <div class="tree-node answer-no"><span class="tree-label no">E</span> Cross-platform issues</div>
+  <div class="tree-node action">→ Check that the FMU has binaries for your target: <code>x86_64-linux</code>, <code>x86_64-windows</code>, <code>aarch64-darwin</code> (Apple Silicon)</div>
+  <div class="tree-node action">→ For source-code FMUs: compile locally with <code>fmpy compile model.fmu</code></div>
+  <div class="tree-node action">→ Watch for path separators: FMU resource paths should use <code>/</code>, not <code>\</code></div>
+</div>
+
+<h3>Common Error Messages</h3>
+<table>
+<tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+<tr>
+  <td><code>"No binary for platform..."</code></td>
+  <td>FMU lacks binary for your OS/architecture</td>
+  <td>Request FMU with correct platform; or use source-code FMU and compile</td>
+</tr>
+<tr>
+  <td><code>"fmi3EnterInitializationMode failed"</code></td>
+  <td>Missing required start values or invalid parameter ranges</td>
+  <td>Set all inputs/parameters via <code>start_values</code>; check valid ranges</td>
+</tr>
+<tr>
+  <td><code>"fmi3DoStep returned Error"</code></td>
+  <td>Internal solver failure during step</td>
+  <td>Reduce step size; check input continuity; enable debug logging</td>
+</tr>
+<tr>
+  <td><code>"fmi3DoStep returned Discard"</code></td>
+  <td>FMU rejected the step (e.g., step too large)</td>
+  <td>Reduce step size; handle early return; retry with smaller step</td>
+</tr>
+<tr>
+  <td><code>"Illegal call sequence"</code></td>
+  <td>API function called in wrong state (e.g., <code>doStep</code> before init)</td>
+  <td>Follow correct lifecycle: instantiate → configure → init → step → terminate</td>
+</tr>
+<tr>
+  <td><code>"Cannot set variable in this mode"</code></td>
+  <td>Trying to set a parameter after initialization</td>
+  <td>Set parameters before <code>exitInitializationMode()</code>; tunable params only in Event Mode</td>
+</tr>
+<tr>
+  <td><code>"Unsupported FMI version"</code></td>
+  <td>Tool/library doesn't support the FMU's FMI version</td>
+  <td>Update FMPy (<code>pip install --upgrade fmpy</code>); check FMI version compatibility</td>
+</tr>
+<tr>
+  <td><code>ImportError: DLL load failed</code></td>
+  <td>Missing C runtime or dependency DLLs</td>
+  <td>Install Visual C++ Redistributable (Windows); check <code>ldd</code> output (Linux)</td>
+</tr>
+</table>
+
+<h3>Best Practices</h3>
+<div class="cols">
+<div>
+<div class="box box-success" style="margin-top:0">
+  <div class="box-title">✅ Do</div>
+  <ul>
+    <li>Always validate FMUs before first use: <code>fmpy validate</code></li>
+    <li>Set explicit <code>start_values</code> for all parameters — don't rely on defaults</li>
+    <li>Use <code>dump()</code> to understand an unfamiliar FMU before simulating</li>
+    <li>Start with large step sizes, then refine until results converge</li>
+    <li>Save results to CSV for post-processing with pandas/Excel</li>
+    <li>Test with a short simulation before running long sweeps</li>
+    <li>Pin FMPy version in <code>requirements.txt</code> for reproducibility</li>
+  </ul>
+</div>
+</div>
+<div>
+<div class="box box-danger" style="margin-top:0">
+  <div class="box-title">❌ Don't</div>
+  <ul>
+    <li>Don't assume FMI 2.0 and 3.0 FMUs are interchangeable (different API)</li>
+    <li>Don't use explicit Euler for stiff ME models (use CVode)</li>
+    <li>Don't set inputs/parameters in the wrong lifecycle state</li>
+    <li>Don't ignore <code>Discard</code> return status from <code>doStep</code> — it means the step failed</li>
+    <li>Don't hard-code <code>valueReference</code> numbers — look them up from model description</li>
+    <li>Don't forget to call <code>terminate()</code> and <code>freeInstance()</code> in low-level API</li>
+    <li>Don't extract FMUs to shared temp dirs — use unique directories per instance</li>
+  </ul>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 7 — REFERENCE TABLES
+     ═══════════════════════════════════════════════════════ -->
+<section id="sec-tables">
+<h2>7. Quick-Reference Tables</h2>
+
+<h3>FMI 3.0 API Functions Overview</h3>
+<table>
+<tr><th>Function</th><th><span class="tag tag-cs">CS</span></th><th><span class="tag tag-me">ME</span></th><th>Purpose</th></tr>
+<tr><td><code>fmi3InstantiateCoSimulation</code></td><td>✅</td><td></td><td>Create CS instance</td></tr>
+<tr><td><code>fmi3InstantiateModelExchange</code></td><td></td><td>✅</td><td>Create ME instance</td></tr>
+<tr><td><code>fmi3EnterInitializationMode</code></td><td>✅</td><td>✅</td><td>Enter init mode (set params/inputs)</td></tr>
+<tr><td><code>fmi3ExitInitializationMode</code></td><td>✅</td><td>✅</td><td>Exit init mode → ready to simulate</td></tr>
+<tr><td><code>fmi3EnterEventMode</code></td><td>✅</td><td>✅</td><td>Handle events</td></tr>
+<tr><td><code>fmi3EnterContinuousTimeMode</code></td><td></td><td>✅</td><td>Resume continuous integration (ME)</td></tr>
+<tr><td><code>fmi3EnterStepMode</code></td><td>✅</td><td></td><td>Resume stepping (CS, after event)</td></tr>
+<tr><td><code>fmi3SetFloat64 / getFloat64</code></td><td>✅</td><td>✅</td><td>Set/get variable values</td></tr>
+<tr><td><code>fmi3DoStep</code></td><td>✅</td><td></td><td>Advance CS simulation by Δt</td></tr>
+<tr><td><code>fmi3SetTime</code></td><td></td><td>✅</td><td>Set current time (ME)</td></tr>
+<tr><td><code>fmi3SetContinuousStates</code></td><td></td><td>✅</td><td>Set state vector (ME)</td></tr>
+<tr><td><code>fmi3GetContinuousStates</code></td><td></td><td>✅</td><td>Get state vector (ME)</td></tr>
+<tr><td><code>fmi3GetDerivatives</code></td><td></td><td>✅</td><td>Get dx/dt (ME)</td></tr>
+<tr><td><code>fmi3GetEventIndicators</code></td><td></td><td>✅</td><td>Get zero-crossing functions (ME)</td></tr>
+<tr><td><code>fmi3UpdateDiscreteStates</code></td><td>✅</td><td>✅</td><td>Process events, update discrete vars</td></tr>
+<tr><td><code>fmi3GetClock / fmi3SetClock</code></td><td>✅</td><td>✅</td><td>Get/set clock states (hybrid co-sim)</td></tr>
+<tr><td><code>fmi3Terminate</code></td><td>✅</td><td>✅</td><td>End simulation</td></tr>
+<tr><td><code>fmi3FreeInstance</code></td><td>✅</td><td>✅</td><td>Release memory</td></tr>
+<tr><td><code>fmi3GetFMUState / fmi3SetFMUState</code></td><td>✅</td><td>✅</td><td>Save/restore FMU state (checkpoint)</td></tr>
+<tr><td><code>fmi3SerializeFMUState</code></td><td>✅</td><td>✅</td><td>Serialize state to byte array</td></tr>
+<tr><td><code>fmi3GetDirectionalDerivative</code></td><td>✅</td><td>✅</td><td>Partial derivatives (Jacobian elements)</td></tr>
+<tr><td><code>fmi3GetAdjointDerivative</code></td><td>✅</td><td>✅</td><td><span class="tag tag-new">3.0</span> Adjoint derivatives (for optimization)</td></tr>
+</table>
+
+<h3>FMI 3.0 Data Types</h3>
+<table>
+<tr><th>XML Element</th><th>C Type</th><th>Python (NumPy)</th><th>Notes</th></tr>
+<tr><td><code>&lt;Float64&gt;</code></td><td><code>fmi3Float64</code></td><td><code>np.float64</code></td><td>Main numeric type (was <code>Real</code> in FMI 2.0)</td></tr>
+<tr><td><code>&lt;Float32&gt;</code></td><td><code>fmi3Float32</code></td><td><code>np.float32</code></td><td><span class="tag tag-new">3.0</span> Single precision</td></tr>
+<tr><td><code>&lt;Int64&gt;</code></td><td><code>fmi3Int64</code></td><td><code>np.int64</code></td><td><span class="tag tag-new">3.0</span></td></tr>
+<tr><td><code>&lt;Int32&gt;</code></td><td><code>fmi3Int32</code></td><td><code>np.int32</code></td><td>Was <code>Integer</code> in FMI 2.0</td></tr>
+<tr><td><code>&lt;Int16&gt;</code> / <code>&lt;Int8&gt;</code></td><td><code>fmi3Int16</code> / <code>fmi3Int8</code></td><td><code>np.int16</code> / <code>np.int8</code></td><td><span class="tag tag-new">3.0</span></td></tr>
+<tr><td><code>&lt;UInt64&gt;</code> ... <code>&lt;UInt8&gt;</code></td><td><code>fmi3UInt*</code></td><td><code>np.uint*</code></td><td><span class="tag tag-new">3.0</span> Unsigned variants</td></tr>
+<tr><td><code>&lt;Boolean&gt;</code></td><td><code>fmi3Boolean</code></td><td><code>np.bool_</code></td><td></td></tr>
+<tr><td><code>&lt;String&gt;</code></td><td><code>fmi3String</code></td><td><code>str</code></td><td></td></tr>
+<tr><td><code>&lt;Binary&gt;</code></td><td><code>fmi3Binary</code></td><td><code>bytes</code></td><td><span class="tag tag-new">3.0</span> Raw byte data</td></tr>
+<tr><td><code>&lt;Enumeration&gt;</code></td><td><code>fmi3Int64</code></td><td><code>np.int64</code></td><td>Maps to integer values</td></tr>
+<tr><td><code>&lt;Clock&gt;</code></td><td><code>fmi3Clock</code></td><td><code>np.bool_</code></td><td><span class="tag tag-new">3.0</span> Synchronous clocks</td></tr>
+</table>
+
+<h3>FMI 3.0 Status Codes</h3>
+<table>
+<tr><th>Status</th><th>Value</th><th>Meaning</th><th>Action</th></tr>
+<tr><td><code>fmi3OK</code></td><td>0</td><td>Success</td><td>Continue normally</td></tr>
+<tr><td><code>fmi3Warning</code></td><td>1</td><td>Success, but something is not ideal</td><td>Continue; check log for details</td></tr>
+<tr><td><code>fmi3Discard</code></td><td>2</td><td>Operation not fully completed (CS: step rejected)</td><td>Reduce step size; retry; check <code>lastSuccessfulTime</code></td></tr>
+<tr><td><code>fmi3Error</code></td><td>3</td><td>Recoverable error</td><td>Can try to recover (e.g., reset); check log</td></tr>
+<tr><td><code>fmi3Fatal</code></td><td>4</td><td>Unrecoverable error — FMU is in invalid state</td><td>Must call <code>freeInstance()</code>; cannot continue</td></tr>
+</table>
+
+<h3>Variable Causality × Variability (Valid Combinations)</h3>
+<table>
+<tr>
+  <th></th>
+  <th>constant</th>
+  <th>fixed</th>
+  <th>tunable</th>
+  <th>discrete</th>
+  <th>continuous</th>
+</tr>
+<tr>
+  <td><strong>parameter</strong></td>
+  <td>—</td>
+  <td>✅</td>
+  <td>✅</td>
+  <td>—</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><strong>calculatedParameter</strong></td>
+  <td>—</td>
+  <td>✅</td>
+  <td>✅</td>
+  <td>—</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><strong>input</strong></td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>✅</td>
+  <td>✅</td>
+</tr>
+<tr>
+  <td><strong>output</strong></td>
+  <td>✅</td>
+  <td>—</td>
+  <td>—</td>
+  <td>✅</td>
+  <td>✅</td>
+</tr>
+<tr>
+  <td><strong>local</strong></td>
+  <td>✅</td>
+  <td>✅</td>
+  <td>✅</td>
+  <td>✅</td>
+  <td>✅</td>
+</tr>
+<tr>
+  <td><strong>independent</strong></td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>✅</td>
+</tr>
+<tr>
+  <td><strong>structuralParameter</strong> <span class="tag tag-new">3.0</span></td>
+  <td>—</td>
+  <td>✅</td>
+  <td>✅</td>
+  <td>—</td>
+  <td>—</td>
+</tr>
+</table>
+
+<h3>FMPy Command-Line Reference</h3>
+<table>
+<tr><th>Command</th><th>Purpose</th><th>Example</th></tr>
+<tr><td><code>fmpy info &lt;fmu&gt;</code></td><td>Display model description summary</td><td><code>fmpy info Boiler.fmu</code></td></tr>
+<tr><td><code>fmpy validate &lt;fmu&gt;</code></td><td>Validate FMU compliance</td><td><code>fmpy validate Boiler.fmu</code></td></tr>
+<tr><td><code>fmpy simulate &lt;fmu&gt;</code></td><td>Simulate and plot results</td><td><code>fmpy simulate Boiler.fmu --stop-time 10</code></td></tr>
+<tr><td><code>fmpy gui [fmu]</code></td><td>Launch graphical interface</td><td><code>fmpy gui Boiler.fmu</code></td></tr>
+<tr><td><code>fmpy compile &lt;fmu&gt;</code></td><td>Compile source-code FMU for current platform</td><td><code>fmpy compile Boiler.fmu</code></td></tr>
+<tr><td><code>fmpy create-cmake-project &lt;fmu&gt;</code></td><td>Generate CMake project from source FMU</td><td><code>fmpy create-cmake-project Boiler.fmu</code></td></tr>
+<tr><td><code>fmpy create-jupyter-notebook &lt;fmu&gt;</code></td><td>Generate Jupyter notebook for FMU</td><td><code>fmpy create-jupyter-notebook Boiler.fmu</code></td></tr>
+</table>
+
+<h3>Useful Links</h3>
+<table>
+<tr><th>Resource</th><th>URL</th></tr>
+<tr><td>FMI Standard (official)</td><td><code>https://fmi-standard.org</code></td></tr>
+<tr><td>FMI 3.0 Specification</td><td><code>https://fmi-standard.org/docs/3.0/</code></td></tr>
+<tr><td>FMPy Documentation</td><td><code>https://fmpy.readthedocs.io</code></td></tr>
+<tr><td>FMPy GitHub</td><td><code>https://github.com/CATIA-Systems/FMPy</code></td></tr>
+<tr><td>FMU validation helper</td><td><code>https://fmi-standard.org/validation/</code></td></tr>
+<tr><td>Reference FMUs (test models)</td><td><code>https://github.com/modelica/Reference-FMUs</code></td></tr>
+</table>
+
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<hr>
+<p class="small" style="text-align: center;">
+  Dr. Clément Coïc<br>
+  FMI 3.0 &amp; FMPy Cheatsheet · Version 1.0 · April 2026<br>
+  Covers: Co-Simulation · Model Exchange · FMPy Python API<br>
+  Standard: FMI 3.0 · Tool: FMPy · Intermediate level<br>
+  <em class="small">Scheduled Execution (SE) omitted — no practical tool support yet; use CS with clocks instead.</em><br>
+  <strong>Print tip:</strong> Use Ctrl+P / Cmd+P → Save as PDF for offline reference
+</p>
+
+</div><!-- /container -->
+</body>
+</html>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The basic structure of Modelica code – Modelica &amp; FMI</title>
+<title>FMI 3.0 &amp; FMPy Cheat Sheet – Modelica &amp; FMI</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./017-BasicCode.html">The basic structure of Modelica code</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./006-SpreadingWithFMI.html">FMI</a></li><li class="breadcrumb-item"><a href="./027-FMICheatSheet.html">FMI 3.0 &amp; FMPy Cheat Sheet</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -207,7 +207,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./017-BasicCode.html" class="sidebar-item-text sidebar-link active">
+  <a href="./017-BasicCode.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">The basic structure of Modelica code</span></a>
   </div>
 </li>
@@ -290,7 +290,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./027-FMICheatSheet.html" class="sidebar-item-text sidebar-link">
+  <a href="./027-FMICheatSheet.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">FMI 3.0 &amp; FMPy Cheat Sheet</span></a>
   </div>
 </li>
@@ -312,15 +312,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why-code" id="toc-why-code" class="nav-link active" data-scroll-target="#why-code">Why code?</a></li>
-  <li><a href="#the-basic-code-structure" id="toc-the-basic-code-structure" class="nav-link" data-scroll-target="#the-basic-code-structure">The basic code structure</a></li>
-  <li><a href="#lets-get-it-coded" id="toc-lets-get-it-coded" class="nav-link" data-scroll-target="#lets-get-it-coded">Let’s get it coded</a>
-  <ul class="collapse">
-  <li><a href="#the-mathematical-model" id="toc-the-mathematical-model" class="nav-link" data-scroll-target="#the-mathematical-model">The mathematical model</a></li>
-  <li><a href="#our-first-version-of-the-code" id="toc-our-first-version-of-the-code" class="nav-link" data-scroll-target="#our-first-version-of-the-code">Our first version of the code</a></li>
-  <li><a href="#adding-initial-conditions" id="toc-adding-initial-conditions" class="nav-link" data-scroll-target="#adding-initial-conditions">Adding initial conditions</a></li>
-  <li><a href="#quick-results-comparison" id="toc-quick-results-comparison" class="nav-link" data-scroll-target="#quick-results-comparison">Quick results comparison</a></li>
-  </ul></li>
+  <li><a href="#the-cheat-sheet" id="toc-the-cheat-sheet" class="nav-link active" data-scroll-target="#the-cheat-sheet">The Cheat Sheet 👇</a></li>
   <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
   </ul>
 </nav>
@@ -328,9 +320,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./017-BasicCode.html">The basic structure of Modelica code</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./006-SpreadingWithFMI.html">FMI</a></li><li class="breadcrumb-item"><a href="./027-FMICheatSheet.html">FMI 3.0 &amp; FMPy Cheat Sheet</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">The basic structure of Modelica code</h1>
+<h1 class="title">FMI 3.0 &amp; FMPy Cheat Sheet</h1>
 </div>
 
 
@@ -347,187 +339,18 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/017/01_header.png" class="img-fluid figure-img"></p>
-<figcaption>Let’s code our suspended mass model together!</figcaption>
-</figure>
-</div>
-<p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
-<p>📬 📰 <strong>Saturday editions</strong> - for having more time to read during the weekend! Let’s experiment for a few weeks. Let me know if this is not a convenient day (❓).</p>
-<p>Before we start, I will soon publish some Modelica videos on my <a href="https://www.youtube.com/@ClemsPlayground">YouTube channel: Clem’s Playground</a>. So far, I am publishing weekly some parts of Christian Bertsch’s interview - the FMI project leader -, giving unbiased insights about the FMI standard. And there is much more in the pipeline. So 🔔 subscribe to the channel, not to miss any! 😉</p>
-<p>It’s crazy. We are at the 17th article of this newsletter, and we discussed a lot of the main concepts of Modelica - and modeling and simulation in general. And we have seen almost no code.<br>
-Of course, this was intended so. And it is part of the beauty of Modelica: the duality between the code and the diagram interface.</p>
-<p>Today is the day we start writing some code!</p>
-<section id="why-code" class="level2">
-<h2 class="anchored" data-anchor-id="why-code">Why code?</h2>
-<p>That is a great question! Thanks for asking…</p>
-<p>Well, there are plenty of reasons NOT to use code. In many cases, you can just <a href="./003-FirstModel.html">drag and drop and connect components</a>, <a href="./005-ModelRefactoring.html">build submodels with interfaces</a>, <a href="./012-ReplaceableModels.html">use templates</a>… I would recommend that anytime it is possible! This is the way to build better models and avoid many typical errors (like sign convention).</p>
-<p>Yet, at some point, you might reach the limitation of this method:</p>
-<ul>
-<li>You might not have the models you need in the libraries that you have.</li>
-<li>You might prefer a different correlation than the one implemented.</li>
-<li>You might want to make a “back of the envelope” model - quick and dirty - to get some insights.</li>
-<li>You might need a different parametrization of some components.</li>
-<li>…</li>
-<li>(or you might just want to have some fun, coding!)</li>
-</ul>
-<p>The point is: having the choice between the graphical interface and coding is the key to flexibility.<br>
-The point is NOT to code the graphical connections. You could. It would be impractical though… better letting the tool (or AI) do that!</p>
-<p>So, let’s have a look at the basic code structure and code our first model together!</p>
-</section>
-<section id="the-basic-code-structure" class="level2">
-<h2 class="anchored" data-anchor-id="the-basic-code-structure">The basic code structure</h2>
-<p>Today we will focus on building a <code>model</code>. We don’t need to discuss in detail what it means now. Just keep in mind that it has an influence on what you can do inside. The basic structure of a <code>model</code> is roughly as follows:</p>
-<pre><code>model ModelName "Short description of the model"
-    /*
-    Multiple line description of the model if needed
-    */
-
-    // Imports, extends
-    // Constant, parameters and variable declaration
-    // Interfaces, submodel instances
-
-initial equation
-    // equations that are true only at initialization
-
-equation
-    // equations that are always true (also at initialization)
-    // connect statements are equations!
-
-    /*
-    annotation(
-        Icon(),
-        Diagram(),
-        Documentation(info="&lt;html&gt;Detailed documentation in html&lt;/html&gt;"));
-    */
-end ModelName;</code></pre>
-<blockquote class="blockquote">
-<p>I said this is “roughly” the structure. So if you feel you are missing something, feel free to mention it in comments 👇</p>
-</blockquote>
-<p>Let’s unwrap some key things in this pseudo-code structure:</p>
-<ul>
-<li>the model starts with <code>model</code>, then the name of the model - following the camelCase notation, but with an uppercase first letter. (The reason is that this is the object - remember we discussed it when talking about <a href="./012-ReplaceableModels.html">replaceable models</a> - and the lowercase is used for the instance.)</li>
-<li>the model ends with <code>end</code>, followed by the model name and a semicolon.</li>
-<li>What matters a lot is to have all declarations and instances before the <code>equation</code> part. We see that in practice.</li>
-<li>there are many ways to add information in your model: with <code>//</code> for single line comments or <code>/**/</code> for multiple line comments, or with strings <code>""</code> in specific locations like just after the model name or before closing a variable declaration or an equation.</li>
-<li>the model “for free” comes with its code layer (what is actually saved), an icon view, a diagram view and a detailed html documentation. This is very convenient as you get all of these in one place - not separated.</li>
-</ul>
-<blockquote class="blockquote">
-<p>At the very beginning I got confused between the diagram and icon layer. So let me emphasize the difference: the diagram layer is where you assemble your components and the icon is its outer shell. Remember <a href="./006-SpreadingWithFMI.html">our first FMU of the hands</a>? The diagram layer included the interfaces, several components and connections. The icon was just the hands with the exposed interfaces. So when you drag and drop a model into another model, the icon is displayed. If you look inside, you are in the diagram layer.</p>
-</blockquote>
-<p>Ok, this is getting boring. Even for me… let’s get our hands dirty! With a simple example, things should make more sense.</p>
-</section>
-<section id="lets-get-it-coded" class="level2">
-<h2 class="anchored" data-anchor-id="lets-get-it-coded">Let’s get it coded</h2>
-<blockquote class="blockquote">
-<p>Note: I am a big fan of doing something easy first. Doing something that you know, in a different way. The value is that you don’t need to put effort into understanding several things at once. You know the topic, then you just have to focus on the implementation. So we’ll code the famous suspended mass example, that was also discussed in <a href="./016-MEvsCS.html">the last article about FMI</a> - get back to it quickly if needed. I mean, this is typically a model that should be done by composition (drag&amp;drop) - all component models are available in the MSL. It is really just for the purpose of explaining code that we will use it here.</p>
-</blockquote>
-<section id="the-mathematical-model" class="level3">
-<h3 class="anchored" data-anchor-id="the-mathematical-model">The mathematical model</h3>
-<p>We remind here the model we need to implement:</p>
-<pre><code>a = -c/m * v -k/m * (x-L0) - g
-a = der(v)
-v = der(x)</code></pre>
-<p>Where <code>a</code> is the acceleration, <code>v</code> the speed, <code>x</code> the position and <code>m</code> the mass of the mass. The parameters <code>c</code>, <code>k</code>, and <code>L0</code> are respectively the viscous coefficient of the damper, the stiffness and initial elongation of the spring. The constant <code>g</code> is the acceleration of gravity. As expected :)</p>
-<p>See I made the difference between variables, parameters and constants. This was discussed in <a href="./007-AcausalityEquation.html">our first discussions about the Modelica code</a>. We also mentioned that we can use SI units to refine the type of the variable or parameter or constant, instead of just using <code>Real</code> which would be for a floating point number.</p>
-</section>
-<section id="our-first-version-of-the-code" class="level3">
-<h3 class="anchored" data-anchor-id="our-first-version-of-the-code">Our first version of the code</h3>
-<p>How does this look in Modelica? Like this:</p>
-<pre><code>model SuspendedMass "Suspended Mass on damped spring"
-    // Gravity
-    import Modelica.Constants.g_n "Gravitational acceleration";
-    
-    // Mass
-    parameter Modelica.Units.SI.Mass m = 10 "Mass of the mass";
-    Modelica.Units.SI.Position x "Position of the mass";
-    Modelica.Units.SI.Velocity v "Speed of the mass";
-    Modelica.Units.SI.Acceleration a "Acceleration of the mass";
-
-    // Spring
-    parameter Modelica.Units.SI.TranslationalSpringConstant k = 1000 "Spring stiffness constant";
-    parameter Modelica.Units.SI.Length L0 = 1 "Rest length of the spring";
-
-    // Damper
-    parameter Modelica.Units.SI.TranslationalDampingConstant c = 30 "Damping constant";
-
-equation
-    a = -c/m * v -k/m * (x-L0) - g_n "Second Newton's law";
-    a = der(v);
-    v = der(x);
-
-end SuspendedMass;</code></pre>
-<blockquote class="blockquote">
-<p>If you have followed <a href="./016-MEvsCS.html">last week article</a>, one question could come to mind: where does the solver live? Here we specified the derivative/integral relationships with the <code>der()</code> operator. The Modelica compiler will be able to see these and couple them with the tool’s solver. Pretty neat! No need to code the solver here. Back to our topic…</p>
-</blockquote>
-<p>First draft of our model. What do we expect from it? We want to observe the mass position oscillating with less and less energy until it reaches equilibrium. OK? Let’s see:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/017/02_firstSimulation.png" class="img-fluid figure-img"></p>
-<figcaption>Our first simulation shows a damped oscillation. Is it what we expected?</figcaption>
-</figure>
-</div>
-<p>Is it what we expected? Somehow yes! Somehow not…</p>
-<p>We never really specified from which position the mass should start. And by default, the position is initialized at zero. So it is expected if you know that. And as a first-time coder, you might be surprised.</p>
-</section>
-<section id="adding-initial-conditions" class="level3">
-<h3 class="anchored" data-anchor-id="adding-initial-conditions">Adding initial conditions</h3>
-<p>How could we specify the mass position at the start of the simulation? There are several ways, let’s just add an initial equation. And we’ll look at the compression of the spring due to the weight of the mass, from its rest position.</p>
-<pre><code>model SuspendedMassInitialized "Suspended Mass on damped spring"
-    
-    // Mass
-    parameter .Modelica.Units.SI.Mass m = 10 "Mass of the mass";
-    .Modelica.Units.SI.Position x "Position of the mass";
-    .Modelica.Units.SI.Velocity v "Speed of the mass";
-    .Modelica.Units.SI.Acceleration a "Acceleration of the mass";
-
-    // Spring
-    parameter .Modelica.Units.SI.TranslationalSpringConstant k = 1000 "Spring stiffness constant";
-    parameter .Modelica.Units.SI.Length L0 = 1 "Rest length of the spring";
-
-    // Damper
-    parameter .Modelica.Units.SI.TranslationalDampingConstant c = 30 "Damping constant";
-
-initial equation
-    x = L0 "The mass shall start at the position where the spring is at rest";
-
-equation
-    a = -c/m * v -k/m * (x-L0) - .Modelica.Constants.g_n "Second Newton's law";
-    a = der(v);
-    v = der(x);
-
-end SuspendedMassInitialized;</code></pre>
-<p>The added <code>initial equation</code> enforces the initial position of the mass, and this is clearly seen on the results:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/017/03_simulationInitialized.png" class="img-fluid figure-img"></p>
-<figcaption>Now the damped oscillation starts from L0 = 1m</figcaption>
-</figure>
-</div>
-<p>Nice!</p>
-</section>
-<section id="quick-results-comparison" class="level3">
-<h3 class="anchored" data-anchor-id="quick-results-comparison">Quick results comparison</h3>
-<p>How does the result compare? We can overlay both plots to compare them:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./assets/images/017/04_resultsComparison.png" class="img-fluid figure-img"></p>
-<figcaption>Comparing both results for analysis</figcaption>
-</figure>
-</div>
-<p>Of course, the mass ends at the same steady position at the end of each simulation. This should be expected.</p>
-<p>Is this position correct?</p>
-<p>… That is what we will discuss in the next article!</p>
-</section>
+<p>A quick-reference cheat sheet covering FMI 3.0 (Co-Simulation &amp; Model Exchange) and the FMPy Python library — all in one page.</p>
+<p>You can also <a href="./assets/cheatsheet/fmi_cheatsheet.html" target="_blank">open it in a new tab</a> or <a href="https://colab.research.google.com/github/Dr-ClementCoic/fmi-cheat-sheet/blob/main/fmpy_cheatsheet_notebook.ipynb" target="_blank">run the examples in Google Colab</a>.</p>
+<section id="the-cheat-sheet" class="level2">
+<h2 class="anchored" data-anchor-id="the-cheat-sheet">The Cheat Sheet 👇</h2>
+<iframe src="./assets/cheatsheet/fmi_cheatsheet.html" style="width: 100%; height: 85vh; border: 1px solid #ddd; border-radius: 6px;" title="FMI 3.0 &amp; FMPy Cheat Sheet" loading="lazy">
+</iframe>
 </section>
 <section id="the-end-for-today" class="level2">
 <h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
-<p>Enough for today. Setting the ground for learning the code can be annoying with text. (I hope it wasn’t…) Therefore, I am cutting the article here and keep some more for next time. While still basic, we will have some more fun and show some nice capabilities (and add documentation - which might not be fun 😅).</p>
-<p>Let me know if it was a nice and useful read! I can steer more towards code or towards system-level models based on the needs.</p>
 <p><em>Break is over, go back to what you were doing.</em></p>
 <p>Clem</p>
-<p><a href="./018-CodeEnhancement.html">Next</a> -&gt;</p>
+<p><a href="./about.html">Next</a> -&gt;</p>
 
 
 </section>
