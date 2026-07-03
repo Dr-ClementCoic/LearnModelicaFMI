@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Equation versus algorithm in Modelica</title>
+  <desc id="desc">Side-by-side illustration contrasting a declarative equation section with a step-by-step algorithm section for a spring force example.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8f4ea"/>
+      <stop offset="100%" stop-color="#eef5fb"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bg)"/>
+  <text x="600" y="72" text-anchor="middle" font-family="Georgia, serif" font-size="38" fill="#243238">Same intent. Different thinking style.</text>
+  <rect x="80" y="120" width="470" height="520" rx="28" fill="#fff9ef" stroke="#37474f" stroke-width="4"/>
+  <rect x="650" y="120" width="470" height="520" rx="28" fill="#f8fbff" stroke="#37474f" stroke-width="4"/>
+  <text x="120" y="180" font-family="Georgia, serif" font-size="34" fill="#37474f">equation</text>
+  <text x="690" y="180" font-family="Georgia, serif" font-size="34" fill="#37474f">algorithm</text>
+  <text x="120" y="235" font-family="Courier New, monospace" font-size="26" fill="#263238">equation</text>
+  <text x="120" y="285" font-family="Courier New, monospace" font-size="26" fill="#263238">  F = k * x;</text>
+  <text x="120" y="335" font-family="Courier New, monospace" font-size="26" fill="#263238">  m * der(v) = F;</text>
+  <text x="120" y="430" font-family="Georgia, serif" font-size="24" fill="#6d4c41">Describe relations</text>
+  <text x="120" y="470" font-family="Georgia, serif" font-size="24" fill="#6d4c41">The tool decides the solving order</text>
+  <text x="120" y="510" font-family="Georgia, serif" font-size="24" fill="#6d4c41">Best fit for physics</text>
+  <text x="690" y="235" font-family="Courier New, monospace" font-size="26" fill="#263238">algorithm</text>
+  <text x="690" y="285" font-family="Courier New, monospace" font-size="26" fill="#263238">  F := k * x;</text>
+  <text x="690" y="335" font-family="Courier New, monospace" font-size="26" fill="#263238">  a := F / m;</text>
+  <text x="690" y="385" font-family="Courier New, monospace" font-size="26" fill="#263238">  v := v0 + a * dt;</text>
+  <text x="690" y="430" font-family="Georgia, serif" font-size="24" fill="#1565c0">Describe steps</text>
+  <text x="690" y="470" font-family="Georgia, serif" font-size="24" fill="#1565c0">You decide the execution order</text>
+  <text x="690" y="510" font-family="Georgia, serif" font-size="24" fill="#1565c0">Best fit for procedures</text>
+  <line x1="600" y1="150" x2="600" y2="610" stroke="#90a4ae" stroke-width="3" stroke-dasharray="10 10"/>
+  <text x="600" y="700" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#243238">Modelica has both on purpose.</text>
+  <text x="600" y="735" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#546e7a">One for relations. One for procedures.</text>
+</svg>

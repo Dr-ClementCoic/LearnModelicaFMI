@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>The Unit Conversion Cookbook – Modelica &amp; FMI</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7b1b06e26e1e2798ccde3208f86b5bbd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./030-UnitConversionCookbook.html">The Unit Conversion Cookbook</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Modelica &amp; FMI</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./001-Commitment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A bit of context</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Modelica</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./002-Modelica101.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Modelica 101</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./003-FirstModel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./004-FirstSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./005-ModelRefactoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model refactoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./007-AcausalityEquation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acausality, the secret service of Modelica</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./008-AcausalityModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">One model serves several purposes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./009-NeedForDynamicSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The need for dynamic simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Dynamic Simulation Does?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./011-LetsIntegrate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Understand your model: let’s integrate!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./012-ReplaceableModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing your Christmas gift!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./013-ConditionalModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Do you deserve a Christmas present?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./014-ModelVariants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A (technical) summary of model variants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./015-ModelUsage.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The different use of models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./017-BasicCode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The basic structure of Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./018-CodeEnhancement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing our first Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./020-WhatsInsideAConnector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What’s inside a connector?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./021-StreamConnectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Stream Connectors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./022-Initialization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initialization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./023-BuildingYourLibrary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Building Your Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./024-Annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Annotations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./025-Events.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Events</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./028-MultiDomainModeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multi-Domain Modeling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./029-UnitsAndQuantities.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Units &amp; Quantities</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./030-UnitConversionCookbook.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">The Unit Conversion Cookbook</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./032-TheUsefulIllusionOfCorrectness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The useful illusion of correctness</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./033-IVPvsBVP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initial vs Boundary Value Problems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./034-AlgorithmInModelica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Algorithm in Modelica</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">FMI</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./006-SpreadingWithFMI.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spreading the word with FMI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./016-MEvsCS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Exchange vs Co-Simulation FMUs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./019-fmpySimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating our FMU with FMPy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./026-EventsInFMUs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Events in FMUs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./027-FMICheatSheet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FMI 3.0 &amp; FMPy Cheat Sheet</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./031-UnitsInFMUs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Units in FMUs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-easy-way-displayunit-recap" id="toc-the-easy-way-displayunit-recap" class="nav-link active" data-scroll-target="#the-easy-way-displayunit-recap">The easy way: <code>displayUnit</code> (recap)</a></li>
+  <li><a href="#the-right-way-modelica.units.conversions" id="toc-the-right-way-modelica.units.conversions" class="nav-link" data-scroll-target="#the-right-way-modelica.units.conversions">The right way: <code>Modelica.Units.Conversions</code></a>
+  <ul class="collapse">
+  <li><a href="#whats-in-the-box" id="toc-whats-in-the-box" class="nav-link" data-scroll-target="#whats-in-the-box">What’s in the box?</a></li>
+  <li><a href="#but-wait-theres-also-nonsi" id="toc-but-wait-theres-also-nonsi" class="nav-link" data-scroll-target="#but-wait-theres-also-nonsi">But wait — there’s also <code>NonSI</code></a></li>
+  </ul></li>
+  <li><a href="#the-car-dashboard-a-full-example" id="toc-the-car-dashboard-a-full-example" class="nav-link" data-scroll-target="#the-car-dashboard-a-full-example">The car dashboard — a full example</a></li>
+  <li><a href="#the-custom-way-defining-your-own-types" id="toc-the-custom-way-defining-your-own-types" class="nav-link" data-scroll-target="#the-custom-way-defining-your-own-types">The custom way: defining your own types</a>
+  <ul class="collapse">
+  <li><a href="#packaging-them-up" id="toc-packaging-them-up" class="nav-link" data-scroll-target="#packaging-them-up">Packaging them up</a></li>
+  </ul></li>
+  <li><a href="#common-pitfalls" id="toc-common-pitfalls" class="nav-link" data-scroll-target="#common-pitfalls">🙋 Common pitfalls</a>
+  <ul class="collapse">
+  <li><a href="#pitfall-1-confusing-from_-and-to_" id="toc-pitfall-1-confusing-from_-and-to_" class="nav-link" data-scroll-target="#pitfall-1-confusing-from_-and-to_">Pitfall 1: Confusing <code>from_</code> and <code>to_</code></a></li>
+  <li><a href="#pitfall-2-thinking-displayunit-converts" id="toc-pitfall-2-thinking-displayunit-converts" class="nav-link" data-scroll-target="#pitfall-2-thinking-displayunit-converts">Pitfall 2: Thinking <code>displayUnit</code> converts</a></li>
+  <li><a href="#pitfall-3-forgetting-that-temperature-is-special" id="toc-pitfall-3-forgetting-that-temperature-is-special" class="nav-link" data-scroll-target="#pitfall-3-forgetting-that-temperature-is-special">Pitfall 3: Forgetting that temperature is special</a></li>
+  </ul></li>
+  <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./030-UnitConversionCookbook.html">The Unit Conversion Cookbook</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">The Unit Conversion Cookbook</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><em>(2/3) This one is the second of a series of three articles about SI units beyond SI. Part 1 was about <a href="./029-UnitsAndQuantities.html">units and quantities in Modelica</a>. Today: how to convert between the SI units that Modelica loves and the non-SI units that the real world loves.</em> 🍳</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/030/01_header.svg" class="img-fluid figure-img"></p>
+<figcaption>The Unit Conversion Cookbook: translating between the real world and SI</figcaption>
+</figure>
+</div>
+<p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
+<p>In the <a href="./029-UnitsAndQuantities.html">previous article</a>, we dressed our variables in proper SI types. Temperature in Kelvin, pressure in Pascal, velocity in m/s. Our models are now clean, self-documenting, and NASA-proof. 🚀</p>
+<p>And then your colleague sends you a datasheet. Temperature: 72°F. Pressure: 14.5 psi. Flow rate: 3.2 gallons per minute.</p>
+<p><em>Kevin who?</em> 😅</p>
+<p>The real world doesn’t speak SI. Engineers think in °C, bar, RPM, km/h. Sensor datasheets come in mA, psi, inches of mercury. Your American colleagues still use °F and wonder why you’re confused. 😅</p>
+<p>So how do you bridge the gap between “what Modelica wants” and “what (some) humans use”? That’s today’s menu. 🍳</p>
+<section id="the-easy-way-displayunit-recap" class="level2">
+<h2 class="anchored" data-anchor-id="the-easy-way-displayunit-recap">The easy way: <code>displayUnit</code> (recap)</h2>
+<p>Before we dive into the toolbox, let’s quickly revisit something from <a href="./029-UnitsAndQuantities.html">last time</a>. You already know <code>displayUnit</code>:</p>
+<pre class="modelica"><code>SI.Temperature T(displayUnit="degC") = 300 "Boiler temperature";</code></pre>
+<p>This tells your tool: “store and compute in Kelvin, but <em>show</em> me °C in plots and GUIs.” The value in the equation is still 300 K — <code>displayUnit</code> is purely cosmetic. It changes nothing in the math. 💅</p>
+<p>And that’s both its strength and its limit:</p>
+<ul>
+<li>✅ <strong>Great for</strong> viewing results in familiar units — your plots show °C, bar, RPM instead of K, Pa, rad/s</li>
+<li>❌ <strong>Not great when</strong> you actually <em>receive</em> data in non-SI units and need to convert it for the equations</li>
+</ul>
+<p>If your sensor sends you 2.5 bar and you write <code>p = 2.5</code>, that’s 2.5 Pascal. Your model won’t complain — it’ll just produce nonsense results. <code>displayUnit</code> doesn’t convert anything. You need an actual conversion function.</p>
+<p>Enter the <code>Conversions</code> package. 🧰</p>
+</section>
+<section id="the-right-way-modelica.units.conversions" class="level2">
+<h2 class="anchored" data-anchor-id="the-right-way-modelica.units.conversions">The right way: <code>Modelica.Units.Conversions</code></h2>
+<p>The Modelica Standard Library comes with a package specifically for this: <code>Modelica.Units.Conversions</code>. It contains a set of functions that convert <em>values</em> — not just display labels — between SI and common engineering units.</p>
+<p>The naming convention is simple:</p>
+<ul>
+<li><code>to_degC(T_in_kelvin)</code> → converts <strong>from SI to</strong> engineering unit</li>
+<li><code>from_degC(T_in_celsius)</code> → converts <strong>from engineering unit to SI</strong></li>
+</ul>
+<p>⚠️ Read that twice. <code>to_degC</code> takes <em>Kelvin in</em>, gives <em>°C out</em>. <code>from_degC</code> takes <em>°C in</em>, gives <em>Kelvin out</em>. The name describes the <strong>target</strong>, not the source. It trips people up.</p>
+<pre class="modelica"><code>import Modelica.Units.Conversions.*;
+import Modelica.Units.SI;
+
+SI.Temperature T_boiler = from_degC(95)  "95°C → 368.15 K";
+SI.Pressure    p_tank   = from_bar(2.5)  "2.5 bar → 250000 Pa";
+SI.Angle       tilt     = from_deg(15)   "15° → 0.2618 rad";</code></pre>
+<p>See what’s happening? The equations work in SI — Kelvin, Pascal, radians — but we <em>wrote</em> the values in the units we think in. No mental arithmetic. No “was that 273.15 or 273?” moments at 2am. 😅</p>
+<p>And when you need to go the other way — say, to log a result for a human-readable report:</p>
+<pre class="modelica"><code>Real T_display = to_degC(T_boiler)  "For logging: back to °C";
+Real p_display = to_bar(p_tank)     "For logging: back to bar";</code></pre>
+<section id="whats-in-the-box" class="level3">
+<h3 class="anchored" data-anchor-id="whats-in-the-box">What’s in the box?</h3>
+<p>Here are the conversion functions you’ll use most often:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>From SI → Engineering</th>
+<th>From Engineering → SI</th>
+<th>What it converts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>to_degC()</code></td>
+<td><code>from_degC()</code></td>
+<td>K ↔︎ °C</td>
+</tr>
+<tr class="even">
+<td><code>to_degF()</code></td>
+<td><code>from_degF()</code></td>
+<td>K ↔︎ °F</td>
+</tr>
+<tr class="odd">
+<td><code>to_degRk()</code></td>
+<td><code>from_degRk()</code></td>
+<td>K ↔︎ °Rankine</td>
+</tr>
+<tr class="even">
+<td><code>to_deg()</code></td>
+<td><code>from_deg()</code></td>
+<td>rad ↔︎ °</td>
+</tr>
+<tr class="odd">
+<td><code>to_rpm()</code></td>
+<td><code>from_rpm()</code></td>
+<td>rad/s ↔︎ RPM</td>
+</tr>
+<tr class="even">
+<td><code>to_kmh()</code></td>
+<td><code>from_kmh()</code></td>
+<td>m/s ↔︎ km/h</td>
+</tr>
+<tr class="odd">
+<td><code>to_bar()</code></td>
+<td><code>from_bar()</code></td>
+<td>Pa ↔︎ bar</td>
+</tr>
+<tr class="even">
+<td><code>to_kPa()</code></td>
+<td><code>from_kPa()</code></td>
+<td>Pa ↔︎ kPa</td>
+</tr>
+<tr class="odd">
+<td><code>to_hour()</code></td>
+<td><code>from_hour()</code></td>
+<td>s ↔︎ h</td>
+</tr>
+<tr class="even">
+<td><code>to_minute()</code></td>
+<td><code>from_minute()</code></td>
+<td>s ↔︎ min</td>
+</tr>
+<tr class="odd">
+<td><code>to_day()</code></td>
+<td><code>from_day()</code></td>
+<td>s ↔︎ days</td>
+</tr>
+<tr class="even">
+<td><code>to_litre()</code></td>
+<td><code>from_litre()</code></td>
+<td>m³ ↔︎ L</td>
+</tr>
+<tr class="odd">
+<td><code>to_kWh()</code></td>
+<td><code>from_kWh()</code></td>
+<td>J ↔︎ kWh</td>
+</tr>
+</tbody>
+</table>
+<p>Browse <code>Modelica.Units.Conversions</code> in your tool for the full list. 📦</p>
+</section>
+<section id="but-wait-theres-also-nonsi" class="level3">
+<h3 class="anchored" data-anchor-id="but-wait-theres-also-nonsi">But wait — there’s also <code>NonSI</code></h3>
+<p>You might have noticed a sibling package: <code>Modelica.Units.NonSI</code>. This one doesn’t contain <em>functions</em> — it contains <em>types</em>:</p>
+<pre class="modelica"><code>import Modelica.Units.NonSI;
+
+NonSI.Temperature_degC T_sensor = 72  "Sensor reading in °C";
+NonSI.Pressure_bar     p_gauge  = 3.5 "Gauge reading in bar";
+NonSI.Angle_deg        heading  = 45  "Heading in degrees";</code></pre>
+<p>These are <code>Real</code> types with the <code>unit</code> attribute set to the non-SI unit string (e.g., <code>unit="degC"</code>). They’re useful for <strong>declaring variables that genuinely live in non-SI units</strong> — for example, inputs from a sensor interface or parameters from a datasheet.</p>
+<p>But here’s the thing: if you use a <code>NonSI</code> type in an equation that expects SI, you still need a conversion function. The type tells the <em>tool</em> what unit the variable is in, but Modelica won’t auto-convert for you:</p>
+<pre class="modelica"><code>import Modelica.Units.Conversions.*;
+import Modelica.Units.NonSI;
+import Modelica.Units.SI;
+
+NonSI.Temperature_degC T_sensor = 72       "From the sensor, in °C";
+SI.Temperature         T_model  = from_degC(T_sensor) "Convert to K for equations";</code></pre>
+<p>Think of <code>NonSI</code> types as <em>labels</em> and <code>Conversions</code> functions as <em>translators</em>. You usually need both together.</p>
+</section>
+</section>
+<section id="the-car-dashboard-a-full-example" class="level2">
+<h2 class="anchored" data-anchor-id="the-car-dashboard-a-full-example">The car dashboard — a full example</h2>
+<p>Let’s put it all together with something everyone can relate to: a car dashboard. 🚗</p>
+<p>You’re driving in Germany — speed in km/h, temperature in °C, fuel consumption in L/100km. Your American colleague drives the same car in Texas — mph, °F, mpg. Same physics, different numbers on the display.</p>
+<p>Let’s model a simple dashboard that takes the “physics” (SI) and produces both displays:</p>
+<pre class="modelica"><code>model CarDashboard "Same car, two dashboards"
+  import Modelica.Units.SI;
+  import Modelica.Units.Conversions.*;
+
+  // The physics — always in SI
+  SI.Velocity        speed = 30     "Vehicle speed [m/s]";
+  SI.Temperature     T_outside = from_degC(22) "Outside temperature";
+  SI.VolumeFlowRate  fuel_rate(displayUnit="l/h") = 1.8e-6
+    "Fuel consumption rate [m3/s]";
+
+  // European dashboard 🇪🇺
+  Real speed_kmh  = to_kmh(speed)       "Speedometer [km/h]";
+  Real T_celsius   = to_degC(T_outside)  "Temperature [°C]";
+  Real L_per_100km = if speed &gt; 0 then
+    fuel_rate / speed * 1e8 else 0       "Fuel economy [L/100km]";
+
+  // American dashboard 🇺🇸
+  Real speed_mph   = speed * 3.6 / 1.609 "Speedometer [mph]";
+  Real T_fahrenheit = to_degF(T_outside)  "Temperature [°F]";
+  Real mpg = if fuel_rate &gt; 0 then
+    speed / fuel_rate * 2.352e-7 else 0   "Fuel economy [mpg]";
+
+end CarDashboard;</code></pre>
+<p>Let’s unpack what’s going on:</p>
+<ol type="1">
+<li><p><strong>The physics block</strong> uses SI exclusively. Speed is in m/s, temperature in K, fuel flow in m³/s. This is where the “real” model lives. The equations don’t care about dashboards.</p></li>
+<li><p><strong>The European dashboard</strong> uses <code>to_kmh()</code> and <code>to_degC()</code> — library conversion functions. Clean, readable, no magic numbers.</p></li>
+<li><p><strong>The American dashboard</strong> mixes approaches on purpose: <code>to_degF()</code> from the library for temperature, but manual conversion for speed and fuel economy. Notice how the manual version (<code>speed * 3.6 / 1.609</code>) is harder to read than <code>to_kmh(speed)</code>? That’s the point. Use the library functions when they exist. 😉</p></li>
+</ol>
+<blockquote class="blockquote">
+<p>⚠️ <strong>The L/100km and mpg conversions</strong> don’t have dedicated functions in the MSL — these are compound units that require a bit of arithmetic. This is where custom types and helper functions come in handy. Speaking of which…</p>
+</blockquote>
+</section>
+<section id="the-custom-way-defining-your-own-types" class="level2">
+<h2 class="anchored" data-anchor-id="the-custom-way-defining-your-own-types">The custom way: defining your own types</h2>
+<p>The MSL covers the most common units. But what about L/100km? Or mmHg (for blood pressure)? Or mL/h (for medical infusion pumps)? The library can’t anticipate every domain.</p>
+<p>Good news: creating your own unit type in Modelica is a one-liner. The <code>type</code> keyword lets you define a new type as a specialization of <code>Real</code> with custom attributes:</p>
+<pre class="modelica"><code>type FuelConsumption_L100km = Real(unit="l/(100km)", quantity="FuelConsumption");
+type Pressure_mmHg = Real(unit="mmHg", quantity="Pressure");
+type FlowRate_mLh = Real(unit="ml/h", quantity="VolumeFlowRate");</code></pre>
+<p>That’s it. You now have types you can use just like <code>SI.Temperature</code> or <code>NonSI.Pressure_bar</code>:</p>
+<pre class="modelica"><code>FuelConsumption_L100km consumption = 6.5  "My car on a good day";
+Pressure_mmHg         blood_p     = 120   "Systolic blood pressure";
+FlowRate_mLh          drip_rate   = 50    "Infusion pump setting";</code></pre>
+<section id="packaging-them-up" class="level3">
+<h3 class="anchored" data-anchor-id="packaging-them-up">Packaging them up</h3>
+<p>If you have several custom types for a domain, group them in a package — just like the MSL does with <code>Modelica.Units.SI</code>:</p>
+<pre class="modelica"><code>package AutomotiveUnits "Units for automotive dashboards"
+  type Speed_kmh = Real(unit="km/h", quantity="Velocity");
+  type Speed_mph = Real(unit="mi/h", quantity="Velocity");
+  type FuelConsumption_L100km = Real(unit="l/(100km)", quantity="FuelConsumption");
+  type FuelConsumption_mpg = Real(unit="mi/gal", quantity="FuelConsumption");
+end AutomotiveUnits;</code></pre>
+<p>Now your car dashboard model becomes even more self-documenting:</p>
+<pre class="modelica"><code>import AutomotiveUnits.*;
+
+Speed_kmh              speed_eu = to_kmh(speed)  "Speedometer [km/h]";
+FuelConsumption_L100km fuel_eu  = ...             "Fuel economy [L/100km]";</code></pre>
+<p>Remember when we <a href="./023-BuildingYourLibrary.html">built a library</a>? This is the same idea — except instead of packaging <em>models</em>, you’re packaging <em>types</em>. And the beauty is that these types carry their unit information with them, so your tool can still do unit checking on your custom units.</p>
+<blockquote class="blockquote">
+<p>💡 <strong>Tip:</strong> Even if the tool doesn’t <em>enforce</em> your custom unit string, the annotation is still valuable for documentation. A variable declared as <code>FlowRate_mLh</code> is infinitely more readable than <code>Real flow "Flow rate"</code>. Future-you will thank present-you.</p>
+</blockquote>
+</section>
+</section>
+<section id="common-pitfalls" class="level2">
+<h2 class="anchored" data-anchor-id="common-pitfalls">🙋 Common pitfalls</h2>
+<p>Before we wrap up, a quick survival guide. These are the traps I’ve seen people fall into — sometimes myself included. 😅</p>
+<section id="pitfall-1-confusing-from_-and-to_" class="level3">
+<h3 class="anchored" data-anchor-id="pitfall-1-confusing-from_-and-to_">Pitfall 1: Confusing <code>from_</code> and <code>to_</code></h3>
+<p>This is the classic. You want to set a temperature of 25°C, so you write:</p>
+<pre class="modelica"><code>SI.Temperature T = to_degC(25);  // ❌ WRONG — converts 25 K to °C!</code></pre>
+<p>That gives you −248.15. And assign it to a temperature variable in Kelvin! Not what you wanted. 🥶 and 🙅‍♂️ (below 0 K ??!! “No can do!”)</p>
+<p>The correct version:</p>
+<pre class="modelica"><code>SI.Temperature T = from_degC(25);  // ✅ Converts 25°C to 298.15 K</code></pre>
+<p>Remember: <code>from_degC</code> means “I’m giving you <em>°C</em>, convert it <em>from</em> °C <em>to</em> SI.” The name describes where the value comes <em>from</em>, not where it goes.</p>
+</section>
+<section id="pitfall-2-thinking-displayunit-converts" class="level3">
+<h3 class="anchored" data-anchor-id="pitfall-2-thinking-displayunit-converts">Pitfall 2: Thinking <code>displayUnit</code> converts</h3>
+<p>We covered this already, but it bears repeating:</p>
+<pre class="modelica"><code>SI.Pressure p(displayUnit="bar") = 2.5;  // This is 2.5 Pa, NOT 2.5 bar!</code></pre>
+<p>If you want 2.5 bar:</p>
+<pre class="modelica"><code>SI.Pressure p(displayUnit="bar") = from_bar(2.5);  // ✅ This is 250000 Pa, displayed as 2.5 bar</code></pre>
+<p><code>displayUnit</code> is the <em>lipstick</em>. <code>from_bar()</code> is the <em>surgery</em>. Don’t confuse cosmetics with the real thing. 💄</p>
+</section>
+<section id="pitfall-3-forgetting-that-temperature-is-special" class="level3">
+<h3 class="anchored" data-anchor-id="pitfall-3-forgetting-that-temperature-is-special">Pitfall 3: Forgetting that temperature is special</h3>
+<p>Most unit conversions are just multiplication: bar to Pa is ×100000, degrees to radians is ×π/180. Temperature is the exception — it has an <em>offset</em>:</p>
+<p><span class="math display">\[T_K = T_{°C} + 273.15\]</span></p>
+<p>This means you can’t just use a factor. And it means temperature <em>differences</em> convert differently than absolute temperatures. A difference of 10°C is also a difference of 10 K — no offset needed. But an absolute temperature of 10°C is 283.15 K. The <code>from_degC</code> function handles absolute temperatures. For differences, you don’t need it.</p>
+<blockquote class="blockquote">
+<p>💡 This is actually why Modelica has a <code>quantity</code> attribute: both <code>"ThermodynamicTemperature"</code> and <code>"TemperatureDifference"</code> use Kelvin as their unit, but they’re fundamentally different things. A good tool knows the difference.</p>
+</blockquote>
+</section>
+</section>
+<section id="the-end-for-today" class="level2">
+<h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
+<p>Enough for today. Between <a href="./029-UnitsAndQuantities.html">last article’s SI types</a> and today’s conversion cookbook, you’re now equipped to handle any unit that the real world throws at you. °F, bar, RPM, mmHg — bring it on.</p>
+<p>Next time: we follow these units on their journey <em>out</em> of Modelica and <em>into</em> an FMU. If you’ve read the <a href="./006-SpreadingWithFMI.html">FMI articles</a>, you know that FMUs are how models travel between tools. But how do tools know that your variable is in bar and not Pascal? That’s Part 3. 🤓</p>
+<p><em>Break is over, go back to what you were doing.</em></p>
+<p>Clem</p>
+<p><a href="./031-UnitsInFMUs.html">Next</a> -&gt;</p>
+
+
+</section>
+
+<p>© 2025-2026 Clément Coïc — Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">creative commons 4.0</a>. Non-commercial use only.</p></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

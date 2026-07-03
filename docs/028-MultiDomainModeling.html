@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Multi-Domain Modeling — When Heat Meets Electricity – Modelica &amp; FMI</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7b1b06e26e1e2798ccde3208f86b5bbd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./028-MultiDomainModeling.html">Multi-Domain Modeling</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Modelica &amp; FMI</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./001-Commitment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A bit of context</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Modelica</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./002-Modelica101.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Modelica 101</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./003-FirstModel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./004-FirstSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./005-ModelRefactoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model refactoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./007-AcausalityEquation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acausality, the secret service of Modelica</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./008-AcausalityModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">One model serves several purposes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./009-NeedForDynamicSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The need for dynamic simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Dynamic Simulation Does?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./011-LetsIntegrate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Understand your model: let’s integrate!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./012-ReplaceableModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing your Christmas gift!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./013-ConditionalModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Do you deserve a Christmas present?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./014-ModelVariants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A (technical) summary of model variants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./015-ModelUsage.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The different use of models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./017-BasicCode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The basic structure of Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./018-CodeEnhancement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing our first Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./020-WhatsInsideAConnector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What’s inside a connector?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./021-StreamConnectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Stream Connectors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./022-Initialization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initialization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./023-BuildingYourLibrary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Building Your Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./024-Annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Annotations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./025-Events.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Events</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./028-MultiDomainModeling.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Multi-Domain Modeling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./029-UnitsAndQuantities.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Units &amp; Quantities</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./030-UnitConversionCookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Unit Conversion Cookbook</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./032-TheUsefulIllusionOfCorrectness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The useful illusion of correctness</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./033-IVPvsBVP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initial vs Boundary Value Problems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./034-AlgorithmInModelica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Algorithm in Modelica</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">FMI</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./006-SpreadingWithFMI.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spreading the word with FMI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./016-MEvsCS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Exchange vs Co-Simulation FMUs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./019-fmpySimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating our FMU with FMPy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./026-EventsInFMUs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Events in FMUs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./027-FMICheatSheet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FMI 3.0 &amp; FMPy Cheat Sheet</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./031-UnitsInFMUs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Units in FMUs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#one-domain-is-nice-two-is-better" id="toc-one-domain-is-nice-two-is-better" class="nav-link active" data-scroll-target="#one-domain-is-nice-two-is-better">One Domain Is Nice, Two Is Better</a></li>
+  <li><a href="#building-the-multi-domain-model" id="toc-building-the-multi-domain-model" class="nav-link" data-scroll-target="#building-the-multi-domain-model">Building the Multi-Domain Model</a>
+  <ul class="collapse">
+  <li><a href="#the-electrical-circuit" id="toc-the-electrical-circuit" class="nav-link" data-scroll-target="#the-electrical-circuit">The electrical circuit</a></li>
+  <li><a href="#enter-modelicas-resistor" id="toc-enter-modelicas-resistor" class="nav-link" data-scroll-target="#enter-modelicas-resistor">Enter Modelica’s Resistor</a></li>
+  <li><a href="#whats-actually-inside-resistor" id="toc-whats-actually-inside-resistor" class="nav-link" data-scroll-target="#whats-actually-inside-resistor">What’s actually inside Resistor?</a></li>
+  </ul></li>
+  <li><a href="#why-this-just-works" id="toc-why-this-just-works" class="nav-link" data-scroll-target="#why-this-just-works">Why This “Just Works”</a>
+  <ul class="collapse">
+  <li><a href="#reason-1-connectors-carry-the-physics" id="toc-reason-1-connectors-carry-the-physics" class="nav-link" data-scroll-target="#reason-1-connectors-carry-the-physics">Reason 1: Connectors carry the physics</a></li>
+  <li><a href="#reason-2-acausality-handles-the-coupling" id="toc-reason-2-acausality-handles-the-coupling" class="nav-link" data-scroll-target="#reason-2-acausality-handles-the-coupling">Reason 2: Acausality handles the coupling</a></li>
+  <li><a href="#reason-3-components-are-self-contained" id="toc-reason-3-components-are-self-contained" class="nav-link" data-scroll-target="#reason-3-components-are-self-contained">Reason 3: Components are self-contained</a></li>
+  <li><a href="#the-bigger-picture" id="toc-the-bigger-picture" class="nav-link" data-scroll-target="#the-bigger-picture">The bigger picture</a></li>
+  </ul></li>
+  <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./028-MultiDomainModeling.html">Multi-Domain Modeling</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Multi-Domain Modeling — When Heat Meets Electricity</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/028/01_header.png" class="img-fluid figure-img"></p>
+<figcaption>Multi-domain modeling: one component, two physical worlds</figcaption>
+</figure>
+</div>
+<p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
+<p>Here’s something you’ve done a thousand times: you plug in a device, it gets warm. A phone charger. A laptop. A toaster. Electricity goes in, heat comes out. You don’t think twice about it.</p>
+<p>But if you had to <em>model</em> that — the electrical current flowing through a resistance AND the heat it generates AND the temperature rising — you’d be dealing with two completely different physical domains at once. Sounds complicated, right?</p>
+<p>Plot twist: in Modelica, it’s almost embarrassingly simple. 😅</p>
+<p>Today we’re going to build a model that spans two domains — electrical and thermal — and you’ll see why people call multi-domain modeling Modelica’s <em>killer feature</em>.</p>
+<section id="one-domain-is-nice-two-is-better" class="level2">
+<h2 class="anchored" data-anchor-id="one-domain-is-nice-two-is-better">One Domain Is Nice, Two Is Better</h2>
+<p>So what does it actually mean to model across two physical domains?</p>
+<p>Let’s take a concrete example. You have a simple electrical circuit: a voltage source pushes current through a resistor. Classic stuff — Ohm’s law, nothing exotic.</p>
+<p>But here’s the thing: that resistor <em>dissipates energy</em>. The electrical power <span class="math inline">\(P = R \cdot I^2\)</span> doesn’t just vanish — it turns into heat. The resistor gets warmer. And if the resistor is attached to something <em>(say, a chunk of metal)</em>, that something gets warmer too.</p>
+<p>So what started as a purely electrical problem is now also a thermal problem:</p>
+<ul>
+<li><strong>Electrical side:</strong> voltage, current, resistance → determines how much power is dissipated</li>
+<li><strong>Thermal side:</strong> heat flow, thermal mass, temperature → determines how hot things get</li>
+</ul>
+<p>These two sides are coupled. The electrical domain <em>produces</em> heat. The thermal domain <em>absorbs</em> it. You can’t fully understand one without the other.</p>
+<p>In a traditional modeling approach, you’d handle this by computing the power on the electrical side, then manually feeding it as an input signal to a separate thermal model. That works… but it’s fragile. You’re breaking the physics into disconnected pieces and gluing them together with signals. It’s like translating a conversation through Google Translate — the meaning gets through, but the nuance is lost. 😅</p>
+<blockquote class="blockquote">
+<p>Ok, I apologize, these tools are getting really good…</p>
+</blockquote>
+<p>What if, instead, the <em>model itself</em> knew how to be both electrical AND thermal at the same time?</p>
+<p>That’s exactly what Modelica does.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/028/01_two-domain-resistor.svg" class="img-fluid figure-img"></p>
+<figcaption>A Resistor component with electrical pins (left/right) and a heat port (top), bridging two physical domains</figcaption>
+</figure>
+</div>
+<p>The key insight is this: a single component can have <strong>connectors from different physical domains</strong>. Our resistor has electrical <code>Pin</code> connectors (voltage + current) on each side, AND a thermal <code>HeatPort</code> connector (temperature + heat flow) on top. One component, two domains, zero drama. 🎉</p>
+</section>
+<section id="building-the-multi-domain-model" class="level2">
+<h2 class="anchored" data-anchor-id="building-the-multi-domain-model">Building the Multi-Domain Model</h2>
+<p>Time to build this thing. We’ll go step by step — starting electrical, then adding thermal.</p>
+<section id="the-electrical-circuit" class="level3">
+<h3 class="anchored" data-anchor-id="the-electrical-circuit">The electrical circuit</h3>
+<p>Let’s start with a dead-simple electrical circuit: a DC voltage source pushes current through a resistor. Nothing thermal yet — just electrons doing their thing.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/028/02_electrical-circuit.svg" class="img-fluid figure-img"></p>
+<figcaption>Simple electrical circuit: voltage source, resistor, ground — where does the dissipated power go?</figcaption>
+</figure>
+</div>
+<p>We’ve got 12 volts, 100 ohms, so <span class="math inline">\(I = V/R = 0.12\,A\)</span> and the dissipated power is <span class="math inline">\(P = R \cdot I^2 = 1.44\,W\)</span>. That power has to go <em>somewhere</em>. But in this model, it just… disappears into the void. 🕳️</p>
+<p><em>(Thermodynamics is screaming right now.)</em></p>
+</section>
+<section id="enter-modelicas-resistor" class="level3">
+<h3 class="anchored" data-anchor-id="enter-modelicas-resistor">Enter Modelica’s Resistor</h3>
+<p>The Modelica Standard Library has a component that fixes this: <code>Modelica.Electrical.Analog.Basic.Resistor</code>. It’s just like a regular resistor, but with one extra connector sticking out — a <code>HeatPort</code> that you can activate (remember our <a href="./013-ConditionalModels.html">conditional models</a>?).</p>
+<p>That <code>HeatPort</code> is the bridge between domains. The electrical side computes the dissipated power, and instead of throwing it away, it pushes it out through the heat port as a heat flow <span class="math inline">\(\dot{Q}\)</span>.</p>
+<p>Let’s swap it in and connect it to a thermal mass:</p>
+<pre class="modelica"><code>model JouleHeating "Electrical resistor heating up a thermal mass"
+  // === Electrical components ===
+  Modelica.Electrical.Analog.Sources.ConstantVoltage source(V=12)
+    "12V DC source"
+    annotation(Placement(transformation(origin = {-70, -80}, extent={{-80,-10},{-60,10}}, rotation = -90)));
+  Modelica.Electrical.Analog.Basic.Resistor resistor(
+    R=100,
+    useHeatPort=true)
+    "100 Ohm resistor with heat port enabled"
+    annotation(Placement(transformation(origin = {-27.264, 0}, extent={{-10,-10},{10,10}}, rotation = -180)));
+  Modelica.Electrical.Analog.Basic.Ground ground
+    "Reference potential"
+    annotation(Placement(transformation(extent={{-80,-60},{-60,-40}})));
+
+  // === Thermal components ===
+  Modelica.Thermal.HeatTransfer.Components.HeatCapacitor mass(
+    C=500, T(start=293.15, fixed=true))
+    "Thermal mass: 500 J/K, starting at 20°C"
+    annotation(Placement(transformation(origin = {-57.288, -10}, extent={{20,30},{40,50}})));
+
+equation
+  // Electrical connections
+  connect(source.p, resistor.p)
+    annotation(Line(points={{-70, 0}, {-50, 0}, {-50, 0},{-17.264,0}}, color={0,0,255}));
+  connect(resistor.n, source.n)
+    annotation(Line(points={{4.84,0},{40,0},{40,-30},{-27.897,-30},{-27.897,-20}},
+                    color={0,0,255}, origin = {-42.103, 0}));
+  connect(source.n, ground.p)
+    annotation(Line(points={{-70,-20}, {-70, -20}, {-70, -20},{-70,-40}}, color={0,0,255}));
+
+  // ⭐ The multi-domain connection:
+  connect(resistor.heatPort, mass.port)
+    annotation(Line(points={{-27.264,10},{-27.264,20},{-27.288,20},{-27.288, 20}},
+                    color={191,0,0}));
+
+end JouleHeating;</code></pre>
+<p>Look at that last <code>connect</code> statement. That’s it. That’s the whole multi-domain coupling. One line. 🤯</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/028/03_joulesHeating.png" class="img-fluid figure-img"></p>
+<figcaption>The joules losses go into the thermal mass</figcaption>
+</figure>
+</div>
+<p>No manual computation of <span class="math inline">\(P = R \cdot I^2\)</span>. No signal routing. No unit conversion. The <code>Resistor</code> knows that it dissipates electrical energy as heat, and the <code>HeatPort</code> carries that heat to whatever is connected on the other side.</p>
+</section>
+<section id="whats-actually-inside-resistor" class="level3">
+<h3 class="anchored" data-anchor-id="whats-actually-inside-resistor">What’s actually inside Resistor?</h3>
+<p>You might be wondering: what makes <code>Resistor</code> special? Let’s peek inside <em>(simplified for clarity)</em>:</p>
+<pre class="modelica"><code>model Resistor
+  import Modelica.Units.SI;
+
+  // Electrical connectors
+  Modelica.Electrical.Analog.Interfaces.Pin p, n;
+  // Thermal connector
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heatPort;
+
+  parameter SI.Resistance R_ref "Resistance at reference temperature";
+  SI.Resistance R "Actual resistance";
+  SI.Voltage v "Voltage across resistor";
+  SI.Current i "Current through resistor";
+  SI.Power P "Dissipated power";
+
+equation
+  // Electrical equations
+  v = p.v - n.v;
+  i = p.i;
+  p.i + n.i = 0;
+  v = R * i;            // Ohm's law
+
+  // ⭐ The bridge between domains:
+  P = v * i;             // Electrical power
+  heatPort.Q_flow = -P;  // ...becomes heat flow
+
+  // Temperature-dependent resistance (bonus!)
+  R = R_ref * (1 + alpha * (heatPort.T - T_ref));
+
+end Resistor;</code></pre>
+<p>See the magic? The equation <code>heatPort.Q_flow = -P</code> is where electricity <em>becomes</em> heat. And notice the last equation — the resistance itself depends on <code>heatPort.T</code>, the temperature coming <em>back</em> from the thermal side. The two domains aren’t just connected — they’re <strong>coupled</strong>. The hotter it gets, the more the resistance changes, which changes the current, which changes how much heat is produced… 🔄</p>
+<p>That’s a feedback loop that emerged naturally from the equations. No one had to program it. Acausality + connectors = automatic coupling.</p>
+</section>
+</section>
+<section id="why-this-just-works" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-just-works">Why This “Just Works”</h2>
+<p>OK, let’s take a step back. We just connected an electrical circuit to a thermal mass with a single <code>connect</code> statement. No glue code, no manual signal wiring, no “compute power here, inject it there” gymnastics. Why does this work so naturally?</p>
+<p>Three reasons. And you already know all of them — you just haven’t seen them team up before. 🦸‍♂️🦸‍♀️🦸</p>
+<section id="reason-1-connectors-carry-the-physics" class="level3">
+<h3 class="anchored" data-anchor-id="reason-1-connectors-carry-the-physics">Reason 1: Connectors carry the physics</h3>
+<p>Remember <a href="./020-WhatsInsideAConnector.html">what’s inside a connector</a>? Every physical connector has an <strong>effort</strong> variable and a <strong>flow</strong> variable. The effort is equalized at connection points. The flows sum to zero.</p>
+<p>That principle is <em>domain-independent</em>. It works exactly the same way whether we’re talking about:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Domain</th>
+<th>Effort</th>
+<th>Flow</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Electrical</td>
+<td>Voltage (V)</td>
+<td>Current (A)</td>
+</tr>
+<tr class="even">
+<td>Thermal</td>
+<td>Temperature (K)</td>
+<td>Heat flow (W)</td>
+</tr>
+<tr class="odd">
+<td>Mechanical (translational)</td>
+<td>Position (m)</td>
+<td>Force (N)</td>
+</tr>
+<tr class="even">
+<td>Fluid</td>
+<td>Pressure (Pa)</td>
+<td>Mass flow rate (kg/s)</td>
+</tr>
+</tbody>
+</table>
+<p>Each domain has its own connector type with its own effort/flow pair. But the <em>rules</em> are the same everywhere. That’s why you can have a component with connectors from different domains — each connector just enforces its own domain’s conservation law. They don’t interfere with each other.</p>
+</section>
+<section id="reason-2-acausality-handles-the-coupling" class="level3">
+<h3 class="anchored" data-anchor-id="reason-2-acausality-handles-the-coupling">Reason 2: Acausality handles the coupling</h3>
+<p>In <a href="./007-AcausalityEquation.html">article 7</a>, we saw that Modelica equations don’t have a built-in direction. The compiler decides what to solve for.</p>
+<p>This is <em>critical</em> for multi-domain modeling. Inside our <code>HeatingResistor</code>, the equation <code>heatPort.Q_flow = -P</code> doesn’t say “compute P first, then assign Q_flow.” It just states a relationship. The compiler looks at the entire system — electrical AND thermal equations together — and figures out the solving order.</p>
+<p>That means the thermal feedback <em>(resistance changes with temperature)</em> is handled automatically. No iteration loops. No manual convergence. Just equations. ✨</p>
+</section>
+<section id="reason-3-components-are-self-contained" class="level3">
+<h3 class="anchored" data-anchor-id="reason-3-components-are-self-contained">Reason 3: Components are self-contained</h3>
+<p>Each component in our model knows its own physics and nothing else:</p>
+<ul>
+<li>The <code>ConstantVoltage</code> source knows it provides 12V. It doesn’t know what’s connected to it.</li>
+<li>The <code>Resistor</code> knows Ohm’s law and that dissipated power becomes heat. It doesn’t know where the heat goes.</li>
+<li>The <code>HeatCapacitor</code> knows it stores thermal energy. It doesn’t know where the heat comes from.</li>
+</ul>
+<p>They don’t need to know. The <code>connect</code> statements handle the rest. This is the beauty of <a href="./005-ModelRefactoring.html">component-based modeling</a> — and it scales beautifully across domains.</p>
+</section>
+<section id="the-bigger-picture" class="level3">
+<h3 class="anchored" data-anchor-id="the-bigger-picture">The bigger picture</h3>
+<p>This is why people get excited about Modelica. It’s not just “another simulation language.” It’s a language where you can grab an electrical motor from one library, a gearbox from another, and a thermal housing from a third — connect them together — and the physics <em>just works</em>. (At least most of the times 😅 if the models are well done and use compatible connectors!) Electric losses become heat. Mechanical friction warms things up. Thermal expansion changes geometry. All from <code>connect</code> statements.</p>
+<p>No middleware. No co-simulation bus. No “domain expert A sends a CSV to domain expert B.” One model, one solver, one truth. 💡</p>
+</section>
+</section>
+<section id="the-end-for-today" class="level2">
+<h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
+<p>Enough for today. If there’s one thing to take away, it’s this: multi-domain modeling isn’t a special feature you “activate.” It’s just what happens when you combine good connectors, acausal equations, and self-contained components. The physics couples itself.</p>
+<p><em>Break is over, go back to what you were doing.</em></p>
+<p>Clem</p>
+<p><a href="./029-UnitsAndQuantities.html">Next</a> -&gt;</p>
+
+
+</section>
+
+<p>© 2025-2026 Clément Coïc — Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">creative commons 4.0</a>. Non-commercial use only.</p></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

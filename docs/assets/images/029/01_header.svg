@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" role="img" aria-label="Units and Quantities, the Silent Guardian">
+  <defs>
+    <!-- Background gradient: deep space to twilight -->
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#0b1026"/>
+      <stop offset="55%"  stop-color="#141a3a"/>
+      <stop offset="100%" stop-color="#1f2a52"/>
+    </linearGradient>
+
+    <!-- Soft glow for the shield -->
+    <radialGradient id="shieldGlow" cx="50%" cy="50%" r="55%">
+      <stop offset="0%"  stop-color="#4fd1c5" stop-opacity="0.55"/>
+      <stop offset="60%" stop-color="#4fd1c5" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#4fd1c5" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Shield body gradient -->
+    <linearGradient id="shieldBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#20e3b2"/>
+      <stop offset="100%" stop-color="#0f9d8c"/>
+    </linearGradient>
+
+    <!-- Warning glow (red) -->
+    <radialGradient id="warnGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#ff4d6d" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#ff4d6d" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Grid pattern -->
+    <pattern id="grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#ffffff" stroke-width="0.6" stroke-opacity="0.05"/>
+    </pattern>
+
+    <!-- Unit badge filter (subtle shadow) -->
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+      <feOffset dx="0" dy="3"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Reusable unit badge -->
+    <symbol id="unitBadge" overflow="visible">
+      <rect x="-60" y="-34" width="120" height="68" rx="14" ry="14"
+            fill="#1b2552" stroke="#4fd1c5" stroke-width="2" stroke-opacity="0.7"/>
+    </symbol>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+
+  <!-- Subtle starfield -->
+  <g fill="#ffffff" fill-opacity="0.55">
+    <circle cx="120"  cy="140" r="1.4"/>
+    <circle cx="260"  cy="90"  r="1"/>
+    <circle cx="420"  cy="220" r="1.6"/>
+    <circle cx="580"  cy="70"  r="1"/>
+    <circle cx="760"  cy="180" r="1.2"/>
+    <circle cx="1020" cy="90"  r="1.5"/>
+    <circle cx="1240" cy="210" r="1"/>
+    <circle cx="1400" cy="110" r="1.8"/>
+    <circle cx="1600" cy="60"  r="1.1"/>
+    <circle cx="1760" cy="200" r="1.3"/>
+    <circle cx="1840" cy="320" r="1"/>
+    <circle cx="150"  cy="520" r="1"/>
+    <circle cx="90"   cy="820" r="1.4"/>
+    <circle cx="1810" cy="880" r="1.2"/>
+    <circle cx="1700" cy="1000" r="1"/>
+    <circle cx="340"  cy="980" r="1.3"/>
+  </g>
+
+  <!-- ===================== LEFT: the "bad" side ===================== -->
+  <!-- Warning glow behind the naked Real -->
+  <circle cx="460" cy="560" r="320" fill="url(#warnGlow)"/>
+
+  <!-- Code snippet card (naked Real) -->
+  <g transform="translate(190,420)">
+    <rect width="560" height="300" rx="18" ry="18"
+          fill="#12162e" stroke="#ff4d6d" stroke-width="2.5" stroke-opacity="0.85" filter="url(#softShadow)"/>
+    <!-- Card header bar -->
+    <rect width="560" height="44" rx="18" ry="18" fill="#1a1f3d"/>
+    <rect y="30" width="560" height="14" fill="#1a1f3d"/>
+    <circle cx="26" cy="22" r="7" fill="#ff5f56"/>
+    <circle cx="50" cy="22" r="7" fill="#ffbd2e"/>
+    <circle cx="74" cy="22" r="7" fill="#27c93f"/>
+    <text x="530" y="28" text-anchor="end" font-family="Menlo, Consolas, monospace"
+          font-size="18" fill="#8892b0">naked.mo</text>
+
+    <!-- Code -->
+    <g font-family="Menlo, Consolas, monospace" font-size="34" fill="#e6edf3">
+      <text x="36" y="110"><tspan fill="#c792ea">Real</tspan> T = <tspan fill="#f78c6c">300</tspan>;</text>
+      <text x="36" y="170" fill="#8892b0" font-size="22">// Kelvin? Celsius? Fahrenheit?</text>
+      <text x="36" y="210" fill="#8892b0" font-size="22">// Rankine? Who knows. 🤷</text>
+    </g>
+
+    <!-- Danger tag -->
+    <g transform="translate(440,236)">
+      <rect x="-80" y="-26" width="160" height="52" rx="12" ry="12"
+            fill="#ff4d6d" fill-opacity="0.15" stroke="#ff4d6d" stroke-width="2"/>
+      <text x="0" y="8" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif"
+            font-size="22" font-weight="700" fill="#ff4d6d">UNSAFE ⚠</text>
+    </g>
+  </g>
+
+  <!-- Arrow from bad to shield -->
+  <g stroke="#4fd1c5" stroke-width="4" fill="none" opacity="0.85">
+    <path d="M 770 570 C 830 570, 860 540, 900 540" stroke-linecap="round"/>
+    <polygon points="900,528 924,540 900,552" fill="#4fd1c5" stroke="none"/>
+  </g>
+
+  <!-- ===================== CENTER: the shield ===================== -->
+  <g transform="translate(960,560)">
+    <!-- Glow halo -->
+    <circle cx="0" cy="0" r="300" fill="url(#shieldGlow)"/>
+
+    <!-- Shield shape -->
+    <path d="M 0,-220
+             C 120,-220 200,-180 220,-160
+             L 220,40
+             C 220,160 130,220 0,260
+             C -130,220 -220,160 -220,40
+             L -220,-160
+             C -200,-180 -120,-220 0,-220 Z"
+          fill="url(#shieldBody)" stroke="#ffffff" stroke-width="3" stroke-opacity="0.25"/>
+
+    <!-- Inner bevel -->
+    <path d="M 0,-190
+             C 110,-190 180,-155 200,-140
+             L 200,30
+             C 200,140 120,195 0,230
+             C -120,195 -200,140 -200,30
+             L -200,-140
+             C -180,-155 -110,-190 0,-190 Z"
+          fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.45"/>
+
+    <!-- "SI" monogram -->
+    <text x="0" y="30" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif"
+          font-size="180" font-weight="800" fill="#0b1026" letter-spacing="-4">SI</text>
+
+    <!-- Small caption on shield -->
+    <text x="0" y="130" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif"
+          font-size="30" font-weight="600" fill="#0b1026" opacity="0.75">Modelica.Units</text>
+  </g>
+
+  <!-- Arrow from shield to good -->
+  <g stroke="#4fd1c5" stroke-width="4" fill="none" opacity="0.85">
+    <path d="M 1200 540 C 1240 540, 1270 570, 1300 570" stroke-linecap="round"/>
+    <polygon points="1296,558 1320,570 1296,582" fill="#4fd1c5" stroke="none"/>
+  </g>
+
+  <!-- ===================== RIGHT: the "good" side ===================== -->
+  <g transform="translate(1330,420)">
+    <rect width="560" height="300" rx="18" ry="18"
+          fill="#12162e" stroke="#4fd1c5" stroke-width="2.5" stroke-opacity="0.85" filter="url(#softShadow)"/>
+    <!-- Card header bar -->
+    <rect width="560" height="44" rx="18" ry="18" fill="#1a1f3d"/>
+    <rect y="30" width="560" height="14" fill="#1a1f3d"/>
+    <circle cx="26" cy="22" r="7" fill="#ff5f56"/>
+    <circle cx="50" cy="22" r="7" fill="#ffbd2e"/>
+    <circle cx="74" cy="22" r="7" fill="#27c93f"/>
+    <text x="530" y="28" text-anchor="end" font-family="Menlo, Consolas, monospace"
+          font-size="18" fill="#8892b0">typed.mo</text>
+
+    <!-- Code -->
+    <g font-family="Menlo, Consolas, monospace" font-size="30" fill="#e6edf3">
+      <text x="30" y="108"><tspan fill="#c792ea">SI.Temperature</tspan> T;</text>
+      <text x="30" y="158"><tspan fill="#8892b0" font-size="22">// unit = "K",</tspan></text>
+      <text x="30" y="194"><tspan fill="#8892b0" font-size="22">// quantity = "ThermodynamicTemperature"</tspan></text>
+      <text x="30" y="230"><tspan fill="#8892b0" font-size="22">// displayUnit = "degC"</tspan></text>
+    </g>
+
+    <!-- Safe tag -->
+    <g transform="translate(440,236)">
+      <rect x="-80" y="-26" width="160" height="52" rx="12" ry="12"
+            fill="#4fd1c5" fill-opacity="0.18" stroke="#4fd1c5" stroke-width="2"/>
+      <text x="0" y="8" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif"
+            font-size="22" font-weight="700" fill="#4fd1c5">SAFE ✓</text>
+    </g>
+  </g>
+
+  <!-- ===================== TITLE ===================== -->
+  <g transform="translate(960,180)">
+    <text x="0" y="0" text-anchor="middle"
+          font-family="Inter, Helvetica, Arial, sans-serif"
+          font-size="96" font-weight="800" fill="#ffffff" letter-spacing="-2">
+      Units &amp; Quantities
+    </text>
+    <text x="0" y="70" text-anchor="middle"
+          font-family="Inter, Helvetica, Arial, sans-serif"
+          font-size="42" font-weight="500" fill="#4fd1c5" letter-spacing="2">
+      — the silent guardian of your model —
+    </text>
+  </g>
+
+  <!-- ===================== FOOTER: floating unit badges ===================== -->
+  <g font-family="Menlo, Consolas, monospace" font-size="28" font-weight="700" fill="#e6edf3"
+     text-anchor="middle">
+    <use href="#unitBadge" x="260"  y="900"/><text x="260"  y="910">K</text>
+    <use href="#unitBadge" x="480"  y="930"/><text x="480"  y="940">m/s</text>
+    <use href="#unitBadge" x="700"  y="900"/><text x="700"  y="910">N</text>
+    <use href="#unitBadge" x="920"  y="930"/><text x="920"  y="940">kg</text>
+    <use href="#unitBadge" x="1140" y="900"/><text x="1140" y="910">Pa</text>
+    <use href="#unitBadge" x="1360" y="930"/><text x="1360" y="940">rad</text>
+    <use href="#unitBadge" x="1580" y="900"/><text x="1580" y="910">J</text>
+  </g>
+
+  <!-- Mars Climate Orbiter Easter egg: subtle red curve (the doomed trajectory) -->
+  <g opacity="0.35">
+    <path d="M 0,1020 C 480,980 960,960 1920,1060"
+          fill="none" stroke="#ff4d6d" stroke-width="2" stroke-dasharray="8 10"/>
+    <text x="1540" y="1000" font-family="Inter, Helvetica, Arial, sans-serif"
+          font-size="18" font-style="italic" fill="#ff4d6d" opacity="0.7">
+      ...Mars Climate Orbiter, 1999
+    </text>
+  </g>
+</svg>

@@ -61,6 +61,18 @@ website:
             href: 024-Annotations.qmd
           - text: "Events"
             href: 025-Events.qmd
+          - text: "Multi-Domain Modeling"
+            href: 028-MultiDomainModeling.qmd
+          - text: "Units & Quantities"
+            href: 029-UnitsAndQuantities.qmd
+          - text: "The Unit Conversion Cookbook"
+            href: 030-UnitConversionCookbook.qmd
+          - text: "The useful illusion of correctness"
+            href: 032-TheUsefulIllusionOfCorrectness.qmd
+          - text: "Initial vs Boundary Value Problems"
+            href: 033-IVPvsBVP.qmd
+          - text: "Algorithm in Modelica"
+            href: 034-AlgorithmInModelica.qmd
 
       - section: "FMI"
         contents:
@@ -74,6 +86,8 @@ website:
             href: 026-EventsInFMUs.qmd
           - text: "FMI 3.0 & FMPy Cheat Sheet"
             href: 027-FMICheatSheet.qmd
+          - text: "Units in FMUs"
+            href: 031-UnitsInFMUs.qmd
       - text: "About"
         href: about.qmd
 

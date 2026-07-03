@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Algorithm in Modelica — a procedural path through an equation world</title>
+  <desc id="desc">A stylised header showing a cloud of floating equation relations on one side and an ordered numbered sequence of algorithm steps flowing to the right, illustrating declarative versus procedural thinking.</desc>
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f2027"/>
+      <stop offset="55%" stop-color="#203a43"/>
+      <stop offset="100%" stop-color="#2c5364"/>
+    </linearGradient>
+    <linearGradient id="step" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd166"/>
+      <stop offset="100%" stop-color="#f4a259"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg2)"/>
+
+  <!-- Left side: floating, orderless equation relations -->
+  <g font-family="Courier New, monospace" fill="#9fd8df" opacity="0.9">
+    <text x="70" y="150" font-size="30" fill="#8fd3e8" transform="rotate(-8 70 150)">F = k * x</text>
+    <text x="210" y="250" font-size="26" fill="#77c7e0" transform="rotate(6 210 250)">m·der(v) = F</text>
+    <text x="90" y="360" font-size="24" fill="#a7e0ef" transform="rotate(-4 90 360)">v = der(x)</text>
+    <text x="240" y="450" font-size="22" fill="#6fbcd6" transform="rotate(9 240 450)">Q = h·ΔT</text>
+    <text x="120" y="520" font-size="20" fill="#8fd3e8" transform="rotate(-6 120 520)">P = U·I</text>
+  </g>
+  <text x="70" y="595" font-family="Georgia, serif" font-size="24" fill="#cfe9f2">equations float — the tool orders them</text>
+
+  <!-- Divider -->
+  <line x1="560" y1="90" x2="560" y2="540" stroke="#5b7c8a" stroke-width="2" stroke-dasharray="6 10"/>
+
+  <!-- Right side: ordered algorithm steps flowing -->
+  <g filter="url(#soft)">
+    <circle cx="680" cy="170" r="40" fill="url(#step)"/>
+    <circle cx="820" cy="280" r="40" fill="url(#step)"/>
+    <circle cx="960" cy="390" r="40" fill="url(#step)"/>
+    <circle cx="1100" cy="470" r="40" fill="url(#step)"/>
+  </g>
+  <g font-family="Georgia, serif" font-size="34" fill="#21323a" text-anchor="middle" font-weight="bold">
+    <text x="680" y="182">1</text>
+    <text x="820" y="292">2</text>
+    <text x="960" y="402">3</text>
+    <text x="1100" y="482">4</text>
+  </g>
+
+  <!-- Flow arrows between steps -->
+  <g stroke="#ffd166" stroke-width="5" fill="none" opacity="0.85">
+    <path d="M712 198 C 760 225, 780 240, 792 254" marker-end="url(#arrow)"/>
+    <path d="M852 308 C 900 335, 920 350, 932 364" marker-end="url(#arrow)"/>
+    <path d="M992 418 C 1040 440, 1060 452, 1072 460" marker-end="url(#arrow)"/>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto">
+      <path d="M0 0 L12 6 L0 12 Z" fill="#ffd166"/>
+    </marker>
+  </defs>
+
+  <g font-family="Courier New, monospace" font-size="20" fill="#ffe6b3">
+    <text x="640" y="120">a := 1;</text>
+    <text x="850" y="230">b := a + 2;</text>
+    <text x="990" y="345">c := b * b;</text>
+    <text x="1180" y="410" text-anchor="end">c := 2*c;</text>
+  </g>
+  <text x="1130" y="565" text-anchor="end" font-family="Georgia, serif" font-size="24" fill="#ffe6b3">algorithm flows — you set the order</text>
+
+  <!-- Title -->
+  <text x="600" y="55" text-anchor="middle" font-family="Georgia, serif" font-size="40" fill="#ffffff" font-weight="bold">Algorithm in Modelica</text>
+</svg>

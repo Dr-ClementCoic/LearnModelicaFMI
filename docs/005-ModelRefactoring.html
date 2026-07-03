@@ -253,6 +253,42 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Events</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./028-MultiDomainModeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multi-Domain Modeling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./029-UnitsAndQuantities.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Units &amp; Quantities</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./030-UnitConversionCookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Unit Conversion Cookbook</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./032-TheUsefulIllusionOfCorrectness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The useful illusion of correctness</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./033-IVPvsBVP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initial vs Boundary Value Problems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./034-AlgorithmInModelica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Algorithm in Modelica</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -292,6 +328,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="./027-FMICheatSheet.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FMI 3.0 &amp; FMPy Cheat Sheet</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./031-UnitsInFMUs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Units in FMUs</span></a>
   </div>
 </li>
       </ul>
@@ -365,12 +407,24 @@ ul.task-list li input[type="checkbox"] {
 <p><em>Getting off-script for a second: did you notice how I focused on the interfaces? In <a href="./003-FirstModel.html">the first article of this series</a>, I insisted on the need to perform “purpose-driven” modeling (term brought to you by <a href="https://www.linkedin.com/in/edo-drenth/">Edo Drenth</a></em> 🙌 <em>I’ll get back to it in its full form (purpose-driven fidelity) in another article). We need to answer several questions when doing a model and interfaces are one of these, a very important one. And submodels are models! Back on track now</em> 👉</p>
 <p>There is no unique decomposition, as you can expect. You might have stopped a second at the first point and wondered why the mug is not one model and the beverage a second model. The mug would have an inner and outer wall (interfaces again) and the beverage might keep its single interface or have several (depending on whether we want to model conductance within the beverage - at the moment, it is just an energy storage). I just chose simplicity for now. Feel free to do chose something else.</p>
 <p>And even if there is no unique decomposition, I would recommend you keep it always physical. (Hence the heading of this section!)</p>
-<p><img src="./assets/images/005/02_mugSteamHands.png" class="img-fluid" alt="Refactoring of the model, adopting a component-based approach"> (Not that much of a) Pro-tip: Now, we have not change anything from our previous model. We have only restructured it and made its components available for reuse. That means that the first thing to do is to re-simulate and make sure that the results are unchanged!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/005/02_mugSteamHands.png" class="img-fluid figure-img"></p>
+<figcaption>Refactoring of the model, adopting a component-based approach</figcaption>
+</figure>
+</div>
+<p>(Not that much of a) Pro-tip: Now, we have not change anything from our previous model. We have only restructured it and made its components available for reuse. That means that the first thing to do is to re-simulate and make sure that the results are unchanged!</p>
 </section>
 <section id="getting-hands-on" class="level2">
 <h2 class="anchored" data-anchor-id="getting-hands-on">Getting hands-on</h2>
 <p>I like to warm my hands with my mug. That also keeps the coffee warmer for a longer period of time… at least I believe… Is it true? Let’s model, simulate and get the answer!</p>
-<p><img src="./assets/images/005/03_mugSimulation.png" class="img-fluid" alt="Comparison of the double espresso temperature, on the table or in my hands"> So I wasn’t all wrong! The hands “keep the espresso warm”. The hand temperature being much warmer than the air, the heat transfer (despite a higher conduction than the air convection and radiation) leads to a lower heat transfer, resulting in a warmer coffee, for a longer period of time!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/005/03_mugSimulation.png" class="img-fluid figure-img"></p>
+<figcaption>Comparison of the double espresso temperature, on the table or in my hands</figcaption>
+</figure>
+</div>
+<p>So I wasn’t all wrong! The hands “keep the espresso warm”. The hand temperature being much warmer than the air, the heat transfer (despite a higher conduction than the air convection and radiation) leads to a lower heat transfer, resulting in a warmer coffee, for a longer period of time!</p>
 <p><em>Note for clarity: getting your hands on the coffee might actually in some cases lead to a faster cooling at the beginning and yet the hand temperature would at the end make the coffee stay warmer after a given period (the hand temperature being warmer than the air).</em></p>
 </section>
 <section id="the-teaspoon-effect" class="level2">

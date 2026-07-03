@@ -36,12 +36,14 @@ There is no unique decomposition, as you can expect. You might have stopped a se
 And even if there is no unique decomposition, I would recommend you keep it always physical. (Hence the heading of this section!)
 
 ![Refactoring of the model, adopting a component-based approach](./assets/images/005/02_mugSteamHands.png)
+
 (Not that much of a) Pro-tip: Now, we have not change anything from our previous model. We have only restructured it and made its components available for reuse. That means that the first thing to do is to re-simulate and make sure that the results are unchanged!
 
 ## Getting hands-on
 I like to warm my hands with my mug. That also keeps the coffee warmer for a longer period of time... at least I believe... Is it true? Let's model, simulate and get the answer!
 
 ![Comparison of the double espresso temperature, on the table or in my hands](./assets/images/005/03_mugSimulation.png)
+
 So I wasn't all wrong! The hands "keep the espresso warm". The hand temperature being much warmer than the air, the heat transfer (despite a higher conduction than the air convection and radiation) leads to a lower heat transfer, resulting in a warmer coffee, for a longer period of time!
 
 *Note for clarity: getting your hands on the coffee might actually in some cases lead to a faster cooling at the beginning and yet the hand temperature would at the end make the coffee stay warmer after a given period (the hand temperature being warmer than the air).*

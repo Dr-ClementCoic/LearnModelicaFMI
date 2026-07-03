@@ -251,4 +251,4 @@ Next time: **packages and libraries**. We've been writing loose models floating 
 Clem
 
 
-<!-- [Next](./023-BuildingYourLibrary.qmd) -> -->
+[Next](./023-BuildingYourLibrary.qmd) ->

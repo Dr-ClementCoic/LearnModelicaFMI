@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>The useful illusion of correctness – Modelica &amp; FMI</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7b1b06e26e1e2798ccde3208f86b5bbd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./032-TheUsefulIllusionOfCorrectness.html">The useful illusion of correctness</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Modelica &amp; FMI</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./001-Commitment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A bit of context</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Modelica</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./002-Modelica101.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Modelica 101</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./003-FirstModel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./004-FirstSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./005-ModelRefactoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model refactoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./007-AcausalityEquation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acausality, the secret service of Modelica</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./008-AcausalityModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">One model serves several purposes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./009-NeedForDynamicSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The need for dynamic simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Dynamic Simulation Does?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./011-LetsIntegrate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Understand your model: let’s integrate!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./012-ReplaceableModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing your Christmas gift!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./013-ConditionalModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Do you deserve a Christmas present?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./014-ModelVariants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A (technical) summary of model variants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./015-ModelUsage.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The different use of models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./017-BasicCode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The basic structure of Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./018-CodeEnhancement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing our first Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./020-WhatsInsideAConnector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What’s inside a connector?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./021-StreamConnectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Stream Connectors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./022-Initialization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initialization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./023-BuildingYourLibrary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Building Your Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./024-Annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Annotations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./025-Events.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Events</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./028-MultiDomainModeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multi-Domain Modeling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./029-UnitsAndQuantities.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Units &amp; Quantities</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./030-UnitConversionCookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Unit Conversion Cookbook</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./032-TheUsefulIllusionOfCorrectness.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">The useful illusion of correctness</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./033-IVPvsBVP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initial vs Boundary Value Problems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./034-AlgorithmInModelica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Algorithm in Modelica</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">FMI</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./006-SpreadingWithFMI.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spreading the word with FMI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./016-MEvsCS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Exchange vs Co-Simulation FMUs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./019-fmpySimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating our FMU with FMPy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./026-EventsInFMUs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Events in FMUs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./027-FMICheatSheet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FMI 3.0 &amp; FMPy Cheat Sheet</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./031-UnitsInFMUs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Units in FMUs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#not-todays-topic" id="toc-not-todays-topic" class="nav-link active" data-scroll-target="#not-todays-topic">Not today’s topic</a></li>
+  <li><a href="#the-non-unicity-of-models" id="toc-the-non-unicity-of-models" class="nav-link" data-scroll-target="#the-non-unicity-of-models">The non-unicity of models</a></li>
+  <li><a href="#why-are-we-talking-about-this" id="toc-why-are-we-talking-about-this" class="nav-link" data-scroll-target="#why-are-we-talking-about-this">Why are we talking about this?</a></li>
+  <li><a href="#when-is-the-illusion-of-correctness-useful" id="toc-when-is-the-illusion-of-correctness-useful" class="nav-link" data-scroll-target="#when-is-the-illusion-of-correctness-useful">When is the illusion of correctness useful?</a></li>
+  <li><a href="#more-philosophical-thoughts" id="toc-more-philosophical-thoughts" class="nav-link" data-scroll-target="#more-philosophical-thoughts">More philosophical thoughts</a></li>
+  <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./032-TheUsefulIllusionOfCorrectness.html">The useful illusion of correctness</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">The useful illusion of correctness</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/032/01_header.png" class="img-fluid figure-img"></p>
+<figcaption>Different models can be true, while being fundamentally different. Neither will be the truth.</figcaption>
+</figure>
+</div>
+<p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
+<p>What if your model is wrong and still gives you the right answer? Today, we go technico-philosophical. (Yes, I just made that word up. 😎)</p>
+<p>There won’t be any Modelica in this one. Yet the content applies 100% to Modelica modeling. And to any other modeling language, for that matter (Simulink/Simscape, Amesim, Dyad, Python, C++, Fortran, etc. … even EXCEL!) - whatever you use!</p>
+<p>And the TL;DR is “It’s OK, as long as you know it.” (And you should know it.)</p>
+<p>Let’s dig in.</p>
+<section id="not-todays-topic" class="level2">
+<h2 class="anchored" data-anchor-id="not-todays-topic">Not today’s topic</h2>
+<blockquote class="blockquote">
+<p>“All models are wrong, but some are useful” — George Box</p>
+</blockquote>
+<p>Hard to start this article without quoting George Box. He was a statistician, and he said this in 1976. And it is still true today. What it usually boils down to is that all models are simplifications of reality. And simplifications are always wrong. But some simplifications are useful, and some are not.</p>
+<p>In Fluid Power modeling, gravity is often neglected. In most multibody models, the bodies are assumed to be rigid or elastic - and not plastically deformable or fracturable. In electrical modeling, magnetism is often ignored. And so on.</p>
+<p>This is the ART of modeling: to know what to neglect and what not to neglect. And to know the consequences of your choices.</p>
+<p>This is NOT the topic of this article.<br>
+This article is about something else: you decided to model something, and you did it. You ran your simulation, and you got a result. And the result is correct. But your model is “wrong”. How can that be?</p>
+</section>
+<section id="the-non-unicity-of-models" class="level2">
+<h2 class="anchored" data-anchor-id="the-non-unicity-of-models">The non-unicity of models</h2>
+<p>Richard Feynman used to say something along the lines of: we don’t know the rules of the world. We observe the world, and we try to find rules that explain what we observe. As long as the rule isn’t contradicted by any observation, it is a valid rule. (My words, his idea.)</p>
+<p>There is this image on the internet that isn’t usually linked to Feynman and still represents very well this idea.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/032/02_TrueVsTruth.jpeg" class="img-fluid figure-img"></p>
+<figcaption>True vs truth</figcaption>
+</figure>
+</div>
+<p>Think about each light (orange and blue here) as an angle for your observation. And the shadow is the observation you make. The truth is the object that casts the shadow. The shadows are “true”, they are what you observe - a projection of the truth. But it is not the truth itself. And there are many ways to project the truth into a shadow. We might never be able to observe the truth without any projection.</p>
+<p>Why is this relevant to modeling? Because it sets a different angle to the “All models are wrong, but some are useful” quote. It is not only about simplifications - what we model or not -, it is also about the fact that we are trying to project the truth into a mathematical framing. And mathematics is a tool, made by humans, only one of many… (and it has many fields.)</p>
+<p>And even if we stick to “only” a mathematical projection of the truth, in practice, we use many different modeling approaches to model the same phenomenon, component or (sub)system. Think about it:</p>
+<ul>
+<li>a turbine is often modeled with a polynomial or with a look-up table (map), but it can also be modeled with a neural network, or with a set of differential equations, or with a set of algebraic equations, or with a combination of all of the above.</li>
+<li>fluid models exist as polynomials, look-up tables, log-log relations, etc.</li>
+</ul>
+<p>Same turbine, same fluid, different models. Which one is correct? All of them. None of them. They are all valid models, and they are all wrong. But they are all useful, as long as you know their limitations and their domain of validity.</p>
+<p>“Sure but some of these are physical relations and others are approximations.” Bla bla bla.<br>
+I am being mean here 😉.<br>
+Remember first that the physical relations are rules that we created based on observations (until it is contradicted by new observations). And second, much more subtle: maths is a tool of our creation, that is not unique!</p>
+<p>Take the alternative current electrical domain. You can model it with a full wave representation, a phasor representation, a frequency domain representation, a Laplace transform representation, etc.</p>
+<p>Models are just not unique. By definition.</p>
+</section>
+<section id="why-are-we-talking-about-this" class="level2">
+<h2 class="anchored" data-anchor-id="why-are-we-talking-about-this">Why are we talking about this?</h2>
+<p>I recently ran into a well known “fact” in Machine Learning. Activation functions are a “tuning parameter” of neural networks. You can select one or the other, train your networks, and see how well the model matches the data. And the “fact” is that the choice of activation function is not unique. Obviously.</p>
+<p>Without entering into the details of neural networks (NN) - this is for another day -, let’s just state that NN is a collection of interconnected neurons and that each neuron produces a linear relationship that is then passed to an “activation function”, typically a non-linear function (tanh, ReLU, sigmoid, etc.) and can also be just the identity function if you don’t want to introduce non-linearity.</p>
+<p>So, here I was, training a neural network with a hyperbolic tangent activation function, and I was getting a very good match to the data. And I was a bit surprised… because the missing physics - I had manually removed from my model to create the synthetic data I using to train the ML model - was a linear relationship! And yet, the NN supposed to replace this relationship was highly non-linear, based on many <code>tanh()</code>. 🤯</p>
+<p>It didn’t took me long to remind myself that the hyperbolic tangent is almost linear in the center and thus the scaling of the <code>tanh()</code> - due to the NN training - just exposed this part of the activation function to the domain I was training the model on. And thus, the NN was able to reproduce a linear relationship with a non-linear activation function. And it did it very well.</p>
+<p>Let’s have a look at it:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/032/03_tanhVsIdentity.jpeg" class="img-fluid figure-img"></p>
+<figcaption>Scaled correctly, tanh() is almost linear within a given domain</figcaption>
+</figure>
+</div>
+<p>What are you seeing here?<br>
+The orange curve is a <code>tanh(x)</code> function. The blue curve is a linear function <code>y=x</code>. The green curve is the <code>tanh(x)</code> function scaled to match the linear function in the domain [-1, 1]. This scaling can happen automatically from tuning the neural network parameters. And the scaled <code>tanh(x)</code> does match the identity very well. In fact, it is almost impossible to distinguish the two curves in this domain.</p>
+<p>Below you see two horizontal lines that mark the domain for which <code>tanh(x)</code> (dashed orange) and its scaled variant (dashed green) are each within 5% accuracy of the identity function. The scaled version is within 5% accuracy for a domain of slightly larger than [-1, 1] while the unscaled version is only within 5% accuracy for a domain of about [-0.3, 0.3].</p>
+<p>So the important part: the scaled <code>tanh()</code> is a non-linear function that can reproduce quite accurately a linear relationship within a given domain. And the NN training process can find this scaling automatically, leading to a non-linear model that reproduces a linear relationship. And this is a case of the “illusion of correctness” I am talking about.</p>
+</section>
+<section id="when-is-the-illusion-of-correctness-useful" class="level2">
+<h2 class="anchored" data-anchor-id="when-is-the-illusion-of-correctness-useful">When is the illusion of correctness useful?</h2>
+<p>Simply put: when you know it is an illusion. And when you know the domain of validity of your model.</p>
+<p>From the case above, it is clear that using an identity activation function would have been a better choice, would lead to a faster convergence on the training and would be a more accurate representation of the underlying linear relationship - especially for a broader domain. Yet, if you know that the domain of your model is limited to [-1, 1], then the scaled <code>tanh()</code> is a valid model. It is not the best model, not the simplest… it is still a valid and USEFUL model.</p>
+<p>Having a look at another example, the following figure - pardon my French, literally… I am reusing a figure from a previous work - shows a polynomial fitting a set of data points, to model the kinematic viscosity of an oil as a function of temperature. The known data points are in red, for temperatures between 0°C and 100°C. The polynomial is in green, and it is a good fit to the data points. But outside of this domain, the polynomial diverges from the physical reality of the kinematic viscosity of the oil (in blue).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/032/04_FluidModel.png" class="img-fluid figure-img"></p>
+<figcaption>Polynomial fitting of kinematic viscosity of an oil as a function of temperature</figcaption>
+</figure>
+</div>
+<p>I am not a fan of polynomial fitting of physical properties, but this is a common practice in the industry. And it is a good example of the useful illusion of correctness: the polynomial is a valid model for the domain of the data points, just don’t use it outside of this domain. And we don’t care whether I am a big fan or not of polynomial fitting…</p>
+</section>
+<section id="more-philosophical-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="more-philosophical-thoughts">More philosophical thoughts</h2>
+<p>Now, we covered a few ideas:</p>
+<ul>
+<li>Observations are projections of the truth, and there are many ways to project the truth. Each of them might be true.</li>
+<li>Models are trying to reproduce the observations (not the truth!).</li>
+<li>We usually chose a given framework to model a phenomenon, and this framework is not unique.</li>
+<li>As long as the model reproduces the observations within a given domain, it is a valid and useful model within this domain. It might not be the best model, it might not be the simplest model, but it is a valid model.</li>
+</ul>
+<p>This brings us to the two following consequences:</p>
+<ol type="1">
+<li>Don’t ever say your model is the truth. Don’t even say your model is correct without specifying the domain of validity.</li>
+<li>Don’t ever say this method, technique, framework, etc. is the wrong. You might not have found its usefulness yet for the illusion of correctness you are trying to achieve ( - like the scaled <code>tanh()</code> isn’t wrong to model a linear relationship within a given domain).</li>
+</ol>
+<p>Bonus: don’t ever say your tool is the best tool, or this tool is bad… I save you the philosophical debate on that one 😊</p>
+</section>
+<section id="the-end-for-today" class="level2">
+<h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
+<p>Enough for today.</p>
+<p>As a conclusion, you get my broader statement:</p>
+<blockquote class="blockquote">
+<p>The useful illusion of correctness: all models are true in their domain of validity, and they will never be the truth.</p>
+</blockquote>
+<p>I felt this was a useful clarification for many, a reminder for some, and a philosophical debate for others. For a few, it might be too provocative… and I am OK with that 😉</p>
+<p>(I still don’t like polynomial fitting of physical properties, but I am OK with that too. 😅 I know it can still be useful.)</p>
+<p>I hope you enjoyed it.</p>
+<p><em>Break is over, go back to what you were doing.</em></p>
+<p>Clem</p>
+<p><a href="./033-IVPvsBVP.html">Next</a> -&gt;</p>
+
+
+</section>
+
+<p>© 2025-2026 Clément Coïc — Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">creative commons 4.0</a>. Non-commercial use only.</p></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
