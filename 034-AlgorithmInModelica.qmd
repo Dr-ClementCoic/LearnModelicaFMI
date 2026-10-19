@@ -116,4 +116,4 @@ Another time, we might compare a few mini-examples that are elegant in `equation
 Clem
 
 
-[Next](./about.qmd) ->
+[Next](./035-EquationVsAlgorithmDuels.qmd) ->

@@ -73,6 +73,16 @@ website:
             href: 033-IVPvsBVP.qmd
           - text: "Algorithm in Modelica"
             href: 034-AlgorithmInModelica.qmd
+          - text: "Equation vs Algorithm: five mini-duels"
+            href: 035-EquationVsAlgorithmDuels.qmd
+          - text: "Functions with superpowers"
+            href: 036-FunctionsWithSuperpowers.qmd
+          - text: "One model, fifteen dancers: vectorizing components"
+            href: 037-VectorizingComponents.qmd
+          - text: "5 quick ways to make your Modelica tool yell at you: demystifying variable variability"
+            href: 038-VariabilityIssues.qmd
+          - text: "The diode that couldn't choose: 5 attempts to meet s"
+            href: 039-IdealDiodeSVariable.qmd
 
       - section: "FMI"
         contents:

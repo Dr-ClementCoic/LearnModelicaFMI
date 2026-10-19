@@ -50,6 +50,238 @@
     ]
   },
   {
+    "objectID": "040-Assert.html",
+    "href": "040-Assert.html",
+    "title": "Make your Modelica model complain usefully: assert",
+    "section": "",
+    "text": "A Modelica assertion acting as a guardrail around a spring–mass model\n(1/4) This is the first of four connected articles about making Modelica models clearer and easier to share and use.\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nRemember how we talked about developing a model for a purpose—and for a given experimental frame, or domain of validity? A model can be useful within that frame and misleading - or even wrong! - outside it. So how do we stop someone (including future-you) from using it in a way it was never meant to be used? Modelica gives us several ways to put guardrails around some of those assumptions. One of them is assert. Let’s dig in!\n© 2025-2026 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only."
+  },
+  {
+    "objectID": "040-Assert.html#a-guardrail-not-a-force-field",
+    "href": "040-Assert.html#a-guardrail-not-a-force-field",
+    "title": "Make your Modelica model complain usefully: assert",
+    "section": "A guardrail, not a force field",
+    "text": "A guardrail, not a force field\nIn article 032, we talked about how a model is useful for a purpose and within its domain of validity. But that knowledge often lives in the model author’s head—or, if we’re lucky, in a comment or, better, in the model documentation. Share the model with a colleague, and those assumptions don’t necessarily make the trip. What if the model could check some of them for us?\nThat’s where Modelica’s assert comes in. It checks a Boolean condition; if the condition is true, everything carries on. If it’s false, the model raises an assertion with a message explaining what assumption was violated. The default level is AssertionLevel.error: the current evaluation is aborted. A solver may retry—for example, with a smaller integration step—but if the failure cannot be resolved, the simulation fails. For a fixed invalid parameter, retrying is obviously useless. 😉\ninitial equation\n  assert(m &gt; 0, \"Mass m must be positive.\");\nHere, the assertion spells out a simple rule: this component only makes sense for a positive mass. The message matters—assert(false, \"Nope\") may technically stop a run, but it doesn’t help anyone understand why. (Future-you deserves better.)\nBut stopping isn’t always what we want. The optional third argument, level, can be set to AssertionLevel.warning: when the condition is false, the tool reports a warning without aborting the evaluation, so the simulation can continue. Use an error for a hard limit of the model, and a warning when continuing is still meaningful but the user should know they have left a recommended operating range. We’ll try that on the oscillator below.\nAn assertion is a guardrail, not a proof that the model is correct. It can check selected assumptions we choose to encode; it can’t establish that every result is physically valid across the model’s entire domain. Let’s put that guardrail on a small component and see what happens with sensible and nonsensical parameter values."
+  },
+  {
+    "objectID": "040-Assert.html#add-guardrails-to-a-small-component",
+    "href": "040-Assert.html#add-guardrails-to-a-small-component",
+    "title": "Make your Modelica model complain usefully: assert",
+    "section": "Add guardrails to a small component",
+    "text": "Add guardrails to a small component\nLet’s bring back the SuspendedMass model we coded in article 017 and later included in our library: a mass suspended on a damped spring, under gravity. No need to invent another oscillator (we have enough of those already 😅). We want to hand this one over to a colleague, and we’ll keep it as our travelling companion through the four articles, improving how someone else can configure and use it.\nWe keep its equations, parameter names and default values. We specify the initial position at the spring’s rest length and zero initial velocity, then add checks for positive mass and stiffness, and nonnegative damping. Here, k is the spring stiffness and c is the damping constant.\n\nNote that for parameters, a cleaner way would be to work with the min and max attributes directly in the parameter declaration, rather than using assertions. However, many tools might not check these consistently and here we want to make sure that these conditions are enforced at runtime.\n\nmodel SuspendedMass \"Suspended mass on a damped spring\"\n  import Modelica.Units.SI;\n  import Modelica.Constants.g_n;\n\n  parameter SI.Mass m = 10 \"Mass of the suspended body\";\n  parameter SI.TranslationalSpringConstant k = 1000 \"Spring stiffness\";\n  parameter SI.Length L0 = 1 \"Rest length of the spring\";\n  parameter SI.TranslationalDampingConstant c = 30 \"Damping constant\";\n\n  SI.Position x \"Position of the mass\";\n  SI.Velocity v \"Velocity of the mass\";\n  SI.Acceleration a \"Acceleration of the mass\";\ninitial equation\n  x = L0;\n  v = 0;\n  assert(m &gt; 0, \"Mass m must be positive.\");\n  assert(k &gt; 0, \"Spring stiffness k must be positive.\");\n  assert(c &gt;= 0, \"Damping constant c must be nonnegative.\");\nequation\n  a = -c/m * v - k/m * (x - L0) - g_n;\n  a = der(v);\n  v = der(x);\nend SuspendedMass;\nThe equations describe the same suspended mass; the assertions don’t change its physics. They make our assumptions explicit: m and k must be strictly positive, and c must be nonnegative. Zero damping is allowed—it gives us the undamped case. If someone sets a parameter to a value that violates these assumptions, the model reports which assumption was broken instead of leaving them to infer it from a later failure.\n\nNotice where I put the checks: in initial equation, not the regular equation section. Since these parameters stay fixed during a simulation, I recommend checking their validity during initialization rather than asking for ongoing checks. That makes the intent clear; it doesn’t mean “exactly one evaluation,” because initialization itself may involve iterations. A tool may also optimize parameter-only assertions placed in equation, so this is a recommendation about placement, not a guaranteed speedup.\n\nWe’ve now made the rules visible. Next, let’s try the model once with valid parameters and then deliberately break a rule to see the difference in the diagnostic."
+  },
+  {
+    "objectID": "040-Assert.html#try-a-valid-caseand-then-break-a-rule",
+    "href": "040-Assert.html#try-a-valid-caseand-then-break-a-rule",
+    "title": "Make your Modelica model complain usefully: assert",
+    "section": "Try a valid case—and then break a rule",
+    "text": "Try a valid case—and then break a rule\nWith the default parameters, SuspendedMass has a positive mass and stiffness, and nonnegative damping, so the assertions pass and the oscillator can be simulated as usual. We can also make the valid setup explicit at the point where we instantiate the component:\nmodel ValidExample\n  SuspendedMass oscillator(m = 10, k = 1000, L0 = 1, c = 30);\nend ValidExample;\nNow let’s give it a negative mass:\nmodel InvalidExample\n  SuspendedMass oscillator(m = -10, k = 1000, L0 = 1, c = 30);\nend InvalidExample;\nThe equations may still describe a mathematical system, but not the ordinary physical spring–mass component we intended. The assert(m &gt; 0, ...) catches that violated assumption, and the tool reports the message instead of presenting the resulting simulation as if it were meaningful. The exact diagnostic formatting can vary by Modelica tool, but the useful part is that the message points straight to the assumption we encoded.\nThat’s the practical win: assertions can catch an invalid setup even when it isn’t an obvious syntax error or a dramatic solver crash."
+  },
+  {
+    "objectID": "040-Assert.html#what-if-the-boundary-can-be-crossed-during-simulation",
+    "href": "040-Assert.html#what-if-the-boundary-can-be-crossed-during-simulation",
+    "title": "Make your Modelica model complain usefully: assert",
+    "section": "What if the boundary can be crossed during simulation?",
+    "text": "What if the boundary can be crossed during simulation?\nAssertions aren’t limited to parameters. You can also check a variable that changes over time—such as our oscillator’s position x. Suppose the colleague using this model has a recommended excursion range, measured from the spring’s rest position L0. The ideal spring equations still work beyond it, but we want to flag that the intended operating range has been exceeded.\nAdd a parameter to SuspendedMass to describe that range:\nparameter SI.Length xWarning = 0.2\n  \"Recommended maximum absolute displacement from the spring rest position\";\nThen add the following checks to its respective sections:\ninitial equation\n  assert(xWarning &gt; 0, \"Displacement warning limit xWarning must be positive.\");\nequation\n  assert(abs(x - L0) &lt;= xWarning,\n    \"Oscillator displacement is outside the recommended operating range.\",\n    level = AssertionLevel.warning);\nThe limit itself is a parameter, so its positivity check belongs in initial equation. But x changes during the simulation: its range check belongs in equation, so it remains active beyond initialization. Putting that check only in initial equation would tell us whether the starting position is acceptable—not whether the oscillator crosses the limit later.\nThe mass starts at x = L0, so the displacement we check is initially zero. Gravity then pulls the mass downward. As we calculated in article 018, the equilibrium is x = L0 - m*g_n/k: with our defaults, about 0.098 m below the spring’s rest position.\nWith the default xWarning = 0.2 (in meters), this simulation stays within the recommended range. To deliberately trigger the warning, change xWarning to 0.08 (in meters). The mass starts within that range, but gravity pulls it beyond the limit during simulation. The assertion then warns without stopping the run. The warning is about the chosen operating range, not a claim that the spring equations suddenly become mathematically invalid (maybe the spring is just being stretched more than recommended and a linear approximation is no longer accurate).\nThere is a simulation-time trade-off. Checks on time-varying variables may need repeated evaluation, and many checks—or expensive conditions—can add significant overhead. A simple comparison is not automatically expensive, and the actual cost depends on the model and the tool.\n\nMy recommendation: check the “usual suspects”: if a user provides a negative mass I would be worried about much more than just a model misuse… 😅 on the other hand, if you have a hydraulic model for which the oil model is only verified between 2 and 80 degrees Celsius, make sure to assert that the temperature stays within that range. Then keep to a minimum the checks that must remain active during simulation in the equation section or place them within a if-statement that only triggers under specific conditions (e.g. a debug mode).\n\nKeep the useful guardrails, but don’t make the solver carry a whole motorway barrier around. 😅"
+  },
+  {
+    "objectID": "040-Assert.html#guardrails-are-usefulbut-they-are-not-the-whole-fence",
+    "href": "040-Assert.html#guardrails-are-usefulbut-they-are-not-the-whole-fence",
+    "title": "Make your Modelica model complain usefully: assert",
+    "section": "Guardrails are useful—but they are not the whole fence",
+    "text": "Guardrails are useful—but they are not the whole fence\nOur checks cover a few explicit assumptions and a recommended operating range. Real models have limits that can depend on much more: the intended experiment, the input range, the data used to fit a component, or physics that the equations deliberately leave out. A few assert statements cannot certify that every output is valid throughout that entire domain.\nSo where should you use them? Put an assertion close to the component that owns the assumption, and make its message tell the user what needs to change. A message like “Mass m must be positive” is much more actionable than “Invalid parameter” (which is technically true, but about as helpful as a smoke alarm that only says “something is wrong”).\nAnd keep the distinction clear: an assertion checks a condition you have chosen to encode; it does not replace the equations, careful parameterization, or validation against the experiment the model is meant to represent. Think of it as a guardrail at a known boundary—not a certificate that the road goes everywhere. Assertions do not count toward the equation balance—remember that we need a square system of equations?"
+  },
+  {
+    "objectID": "040-Assert.html#a-quick-checklist-before-you-add-one",
+    "href": "040-Assert.html#a-quick-checklist-before-you-add-one",
+    "title": "Make your Modelica model complain usefully: assert",
+    "section": "A quick checklist before you add one",
+    "text": "A quick checklist before you add one\nBefore writing an assert, ask yourself:\n\nWhat assumption does this component truly rely on? Check that—not every preference you can think of.\nCan the model evaluate the condition clearly? Keep it focused on a definite Boolean rule, such as m &gt; 0.\nWill the message help someone fix the setup? Name the parameter or condition, and say what is expected.\nShould a violation stop the run or warn the user? Keep the default error level for hard limits; use AssertionLevel.warning when continuing is still meaningful.\nWhen does the condition need checking? Use initial equation for fixed parameter assumptions and equation for conditions that must hold throughout the simulation.\nIs this really a validity boundary? Don’t reject a legitimate operating case just because it is unusual.\n\nFor our suspended mass, positive mass and stiffness, and nonnegative damping, are clear assumptions, so they make useful guardrails. (Yet, honestly, I would not write these asserts on the model because they are so obvious.) The broader domain of validity still comes from the purpose of the model and how we validate it—not from a handful of assertions."
+  },
+  {
+    "objectID": "040-Assert.html#the-end-for-today",
+    "href": "040-Assert.html#the-end-for-today",
+    "title": "Make your Modelica model complain usefully: assert",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. Pick one component you use often and ask: what assumptions does it quietly make? Could one clear assert help the next person use it safely?\nNext time, we’ll share this oscillator as an FMU. Our colleague wants to configure it and read its motion—but what interface did we actually give them? We’ll inspect the FMU’s metadata to find out.\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;"
+  },
+  {
+    "objectID": "038-VariabilityIssues.html",
+    "href": "038-VariabilityIssues.html",
+    "title": "5 quick ways to make your Modelica tool yell at you: demystifying variable variability",
+    "section": "",
+    "text": "The four tiers of Modelica variable variability: constant &lt; parameter &lt; discrete &lt; continuous\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nHave you ever written what felt like perfectly logical Modelica code, clicked Check Model or Simulate, and been greeted by a wall of red compiler error text? 😅\nModelica is a physical modeling language. To generate efficient simulation code, analyze continuous equations, and maintain structural consistency, your Modelica tool needs to know when every variable is allowed to change.\nToday we are talking about variable variability — the hidden hierarchy that governs every variable in your model, and 5 classic ways to break the rules…\nLet’s dig in.\n© 2025-2026 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "5 quick ways to make your Modelica tool yell at you: demystifying variable variability"
+    ]
+  },
+  {
+    "objectID": "038-VariabilityIssues.html#the-4-tiers-of-variability",
+    "href": "038-VariabilityIssues.html#the-4-tiers-of-variability",
+    "title": "5 quick ways to make your Modelica tool yell at you: demystifying variable variability",
+    "section": "The 4 Tiers of Variability",
+    "text": "The 4 Tiers of Variability\nIn Modelica, every variable belongs to one of four variability levels. Think of them as a hierarchy ordered by how frequently a value is allowed to change over time:\n\nconstant: Values known at compile time. Fixed forever before the model is elaborated or compiled (e.g., Modelica’s Modelica.Constants.pi).\nparameter: Values fixed at run-time initialization. They stay constant throughout a single simulation run, but you can tune them between runs without recompiling your model (just like the mass \\(m\\) or spring stiffness \\(c\\) we vectorized back in vectorizing components).\ndiscrete: Variables that change value only at specific event instants (like inside a when clause or discrete clock tick, as we saw in events), remaining strictly constant between events.\ncontinuous (Real): Continuous-time variables that vary smoothly with time \\(t\\) according to differential and algebraic equations (like position \\(x(t)\\) or velocity \\(v(t)\\)).",
+    "crumbs": [
+      "Modelica",
+      "5 quick ways to make your Modelica tool yell at you: demystifying variable variability"
+    ]
+  },
+  {
+    "objectID": "038-VariabilityIssues.html#the-golden-rule-v_textexpr-le-v_textvar",
+    "href": "038-VariabilityIssues.html#the-golden-rule-v_textexpr-le-v_textvar",
+    "title": "5 quick ways to make your Modelica tool yell at you: demystifying variable variability",
+    "section": "The Golden Rule: \\(V_{\\text{expr}} \\le V_{\\text{var}}\\)",
+    "text": "The Golden Rule: \\(V_{\\text{expr}} \\le V_{\\text{var}}\\)\nModelica enforces one fundamental rule when assigning values, binding variables, or forming equations:\n\\[\\text{constant} &lt; \\text{parameter} &lt; \\text{discrete} &lt; \\text{continuous}\\]\n\nAn expression assigned to a variable must have a variability equal to or lower than the variable’s declared variability:\n\\[V_{\\text{expr}} \\le V_{\\text{var}}\\]\n\nYou can always assign a constant or parameter to a continuous variable, but you can never assign a continuous variable to a parameter or constant.\nGet this hierarchy backwards, and your Modelica tool will stop you dead in your tracks. Let’s look at 5 ways to trigger those compiler complaints!",
+    "crumbs": [
+      "Modelica",
+      "5 quick ways to make your Modelica tool yell at you: demystifying variable variability"
+    ]
+  },
+  {
+    "objectID": "038-VariabilityIssues.html#trap-1-continuous-rightarrow-parameter-mismatch",
+    "href": "038-VariabilityIssues.html#trap-1-continuous-rightarrow-parameter-mismatch",
+    "title": "5 quick ways to make your Modelica tool yell at you: demystifying variable variability",
+    "section": "Trap 1 — Continuous \\(\\rightarrow\\) Parameter Mismatch",
+    "text": "Trap 1 — Continuous \\(\\rightarrow\\) Parameter Mismatch\nYou want a parameter p to take the initial or current value of a continuous state variable x:\nmodel Trap1_ContinuousToParameter\n  Real x;\n  parameter Real p = x; // ❌ Illegal: x is continuous, p is a parameter\nequation\n  der(x) = -x;\nend Trap1_ContinuousToParameter;\n(You can view the full asset model here: Trap1_ContinuousToParameter.mo)\n\nWhy your Modelica tool complains:\np is declared as a parameter, meaning its value must be finalized during model initialization. However, x is a continuous-time variable whose value evolves during simulation time integration.\nDiagnostic from your Modelica tool: &gt; Incompatible variability. x is non-discrete-time but the expected variability is parametric.\n\nNote that the error message is clear… once you know what the variability hierarchy is! If you don’t, it can be confusing. 😅 I feel you…",
+    "crumbs": [
+      "Modelica",
+      "5 quick ways to make your Modelica tool yell at you: demystifying variable variability"
+    ]
+  },
+  {
+    "objectID": "038-VariabilityIssues.html#trap-2-parameter-rightarrow-constant-mismatch",
+    "href": "038-VariabilityIssues.html#trap-2-parameter-rightarrow-constant-mismatch",
+    "title": "5 quick ways to make your Modelica tool yell at you: demystifying variable variability",
+    "section": "Trap 2 — Parameter \\(\\rightarrow\\) Constant Mismatch",
+    "text": "Trap 2 — Parameter \\(\\rightarrow\\) Constant Mismatch\nYou declare a parameter p and try to use it to initialize a constant c:\nmodel Trap2_ParameterToConstant\n  parameter Real p = 5.0;\n  constant Real c = p; // ❌ Illegal: p is a parameter, c is a constant\nend Trap2_ParameterToConstant;\n(You can view the full asset model here: Trap2_ParameterToConstant.mo)\n\nWhy your Modelica tool complains:\nA constant expression must be evaluated during structural elaboration — long before the simulation executable ever starts or reads user parameters. Because p can be changed by a user at runtime right before initialization, your Modelica tool cannot treat p as a compile-time constant.\nDiagnostic from your Modelica tool: &gt; Incompatible variability. p is parametric but the expected variability is constant.\n\nNote: why a parameter can change during initialization? You might remember that we can use Modelica acausality to actually compute a parameter value from other variables during the initialization… we did it with the runner in the article 007. This requires being able to change the parameter value during initialization, which is why parameter variability is higher than the one of a constant.",
+    "crumbs": [
+      "Modelica",
+      "5 quick ways to make your Modelica tool yell at you: demystifying variable variability"
+    ]
+  },
+  {
+    "objectID": "038-VariabilityIssues.html#trap-3-modifying-a-parameter-at-event-instants",
+    "href": "038-VariabilityIssues.html#trap-3-modifying-a-parameter-at-event-instants",
+    "title": "5 quick ways to make your Modelica tool yell at you: demystifying variable variability",
+    "section": "Trap 3 — Modifying a Parameter at Event Instants",
+    "text": "Trap 3 — Modifying a Parameter at Event Instants\nYou want to update a parameter dynamically when a discrete event fires (for instance, inside a when clause):\nmodel Trap3_ModifyParameterAtEvent\n  parameter Real p = 1.0;\nequation\n  when sample(0, 1) then\n    p = 2.0; // ❌ Illegal: parameters cannot be assigned in equations!\n  end when;\nend Trap3_ModifyParameterAtEvent;\n(You can view the full asset model here: Trap3_ModifyParameterAtEvent.mo)\n\nWhy your Modelica tool complains:\nA parameter is strictly invariant during time integration. If a value changes at an event instant, it is by definition a discrete variable, not a parameter!\nDiagnostic from your Modelica tool: &gt; Invalid equation. One side of this equation must have a variability greater than parametric, but the left-hand side is parametric and the right-hand side is parametric.\n\nNote: you can actually NOT set a parameter value in an equation section :)",
+    "crumbs": [
+      "Modelica",
+      "5 quick ways to make your Modelica tool yell at you: demystifying variable variability"
+    ]
+  },
+  {
+    "objectID": "038-VariabilityIssues.html#trap-4-continuous-expression-assigned-to-discrete-outside-events",
+    "href": "038-VariabilityIssues.html#trap-4-continuous-expression-assigned-to-discrete-outside-events",
+    "title": "5 quick ways to make your Modelica tool yell at you: demystifying variable variability",
+    "section": "Trap 4 — Continuous Expression assigned to Discrete outside Events",
+    "text": "Trap 4 — Continuous Expression assigned to Discrete outside Events\nYou declare a variable as discrete, but set it equal to a continuous expression outside an event clause:\nmodel Trap4_ContinuousToDiscrete\n  discrete Real d;\nequation\n  d = sin(time); // ❌ Illegal: continuous expression assigned to discrete\nend Trap4_ContinuousToDiscrete;\n(You can view the full asset model here: Trap4_ContinuousToDiscrete.mo)\n\nWhy your Modelica tool complains:\nBecause time evolves continuously, sin(time) is a continuous-time expression. Assigning it directly to d in a standard equation means d would have to vary continuously, which breaks d’s discrete declaration. Because d is discrete, the continuous equation solver cannot solve continuous equations for it.\nDiagnostic from your Modelica tool: &gt; Variables not solvable in any equation: d\n&gt; Equation has no unknown variables to solve for: d = sin(time)",
+    "crumbs": [
+      "Modelica",
+      "5 quick ways to make your Modelica tool yell at you: demystifying variable variability"
+    ]
+  },
+  {
+    "objectID": "038-VariabilityIssues.html#trap-5-dimensioning-vectorized-components-with-continuous-variables",
+    "href": "038-VariabilityIssues.html#trap-5-dimensioning-vectorized-components-with-continuous-variables",
+    "title": "5 quick ways to make your Modelica tool yell at you: demystifying variable variability",
+    "section": "Trap 5 — Dimensioning Vectorized Components with Continuous Variables",
+    "text": "Trap 5 — Dimensioning Vectorized Components with Continuous Variables\nBuilding on what we learned in vectorizing components, you try to compute an array dimension n using a continuous variable x:\nmodel Trap5_DynamicVectorDimension\n  import Modelica.Mechanics.Translational.Components.Mass;\n\n  Real x;\n  parameter Integer n = integer(x); // ❌ Illegal: x is continuous\n  Mass masses[n];\nequation\n  der(x) = 1;\nend Trap5_DynamicVectorDimension;\n(You can view the full asset model here: Trap5_DynamicVectorDimension.mo)\n\nWhy your Modelica tool complains:\nComponent array dimensions (like masses[n]) define the static topological structure of the model — the number of equations, states, and elements in the system matrix. They must be known parameter expressions before simulation begins. If n depended on continuous variable x, the model would be adding or removing components mid-simulation! 🤯\nDiagnostic from your Modelica tool: &gt; Incompatible variability. .integer(x) is discrete-time but the expected variability is parametric.",
+    "crumbs": [
+      "Modelica",
+      "5 quick ways to make your Modelica tool yell at you: demystifying variable variability"
+    ]
+  },
+  {
+    "objectID": "038-VariabilityIssues.html#summary-cheat-sheet",
+    "href": "038-VariabilityIssues.html#summary-cheat-sheet",
+    "title": "5 quick ways to make your Modelica tool yell at you: demystifying variable variability",
+    "section": "Summary Cheat Sheet",
+    "text": "Summary Cheat Sheet\n\n\n\n\n\n\n\n\n\nVariability Keyword\nEvaluated At\nCan Change During Simulation Run?\nPermitted Expression Source (\\(V_{\\text{expr}}\\))\n\n\n\n\nconstant\nCompile time\n❌ No\nConstants, literals\n\n\nparameter\nInitialization\n❌ No\nConstants, parameters, literals\n\n\ndiscrete\nEvent instants\n⚠️ Only at when events\nConstants, parameters, discrete expressions\n\n\ncontinuous (Real)\nIntegration step\n✅ Continuously\nAnything (\\(V_{\\text{expr}} \\le \\text{continuous}\\))",
+    "crumbs": [
+      "Modelica",
+      "5 quick ways to make your Modelica tool yell at you: demystifying variable variability"
+    ]
+  },
+  {
+    "objectID": "038-VariabilityIssues.html#the-end-for-today",
+    "href": "038-VariabilityIssues.html#the-end-for-today",
+    "title": "5 quick ways to make your Modelica tool yell at you: demystifying variable variability",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today! Keep the variability rule \\(V_{\\text{expr}} \\le V_{\\text{var}}\\) in mind next time your Modelica tool gives you compiler warnings or errors during model checks. 😊\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "5 quick ways to make your Modelica tool yell at you: demystifying variable variability"
+    ]
+  },
+  {
+    "objectID": "036-FunctionsWithSuperpowers.html",
+    "href": "036-FunctionsWithSuperpowers.html",
+    "title": "Functions with superpowers: teaching the tool your smoothness and derivative",
+    "section": "",
+    "text": "Functions with superpowers — smoothness and derivatives as annotations\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nLast week I left you with a promise: encapsulate your algorithms in functions, and let the tool know things about them — like their smoothness, or their derivatives. 😉\nSo let me show you why you’d bother with a little horror story.\nYou build a cooling fan that switches between two speed curves depending on a measured temperature. You pick between them with a quick if on that temperature. You hit simulate — and because the temperature keeps wobbling around your switch point, the solver starts… chattering. Tiny steps. Events firing like popcorn 🍿 as it crosses the threshold back and forth. The result is technically correct and practically miserable.\nThe culprit? A transition that is not smooth. Today we fix it — properly.\n© 2025-2026 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "Functions with superpowers"
+    ]
+  },
+  {
+    "objectID": "036-FunctionsWithSuperpowers.html#the-naïve-blend-and-why-it-snags",
+    "href": "036-FunctionsWithSuperpowers.html#the-naïve-blend-and-why-it-snags",
+    "title": "Functions with superpowers: teaching the tool your smoothness and derivative",
+    "section": "The naïve blend (and why it snags)",
+    "text": "The naïve blend (and why it snags)\nLet’s make the horror story concrete. Two curves, and we want to cross from one to the other as some signal u moves through an interval — here u is the measured temperature. The laziest possible blend:\n// somewhere inside a model — u is a state or measured signal\ny = if u &lt; u0 then yA\n    elseif u &gt; u1 then yB\n    else yA + (yB - yA) * (u - u0) / (u1 - u0);   // straight-line ramp\nIt works. Sort of. The value is continuous — no jumps. But look at the corners at u0 and u1: the slope changes instantly. The curve has kinks. 📐\nTwo things bite here. First, each branch boundary is a switch the solver has to catch: because u is a state that can drift back and forth across u0 (or u1), the tool fires a state event on every crossing — and if u lingers near the threshold, those events keep coming. That’s our popcorn. 🍿 Second, even away from that, a kink is a discontinuous derivative, so the moment anything differentiates y the slope jump propagates and the integrator is forced into tiny, cautious steps.\n(Had the switch been on time instead, you’d get off lighter — just two scheduled time events, each crossed once. The real chattering is a state-condition specialty. But the kink still hurts any derivative that depends on y, whichever variable drives it.)\nBefore we make it smooth, let’s do the other thing I promised in 035: give this logic a proper home. Right now it’s inline, and if we need the same blend in three places we’d copy-paste it three times. Instead, we wrap it in a function:\nfunction linearBlend\n  input Real u;              // the transition variable (e.g. time, temperature)\n  input Real u0, u1;         // start and end of the transition\n  input Real yA, yB;         // the two values to blend between\n  output Real y;\nalgorithm\n  if u &lt; u0 then\n    y := yA;\n  elseif u &gt; u1 then\n    y := yB;\n  else\n    y := yA + (yB - yA) * (u - u0) / (u1 - u0);\n  end if;\nend linearBlend;\nSame behaviour, now reusable and named. Remember mySqrt from 034? Same move — an algorithm, boxed up so you can call it anywhere.\nAnd calling it is a one-liner. Back in the model, our fan blends its two speed curves as the temperature T sweeps from 300 to 320:\n// somewhere in an equation section\ny = linearBlend(u = T, u0 = 300, u1 = 320, yA = curveA, yB = curveB);\nOne readable line, and the blending logic lives in exactly one place.\nBut naming it didn’t remove the kinks. The function is still only C⁰ — continuous in value, not in slope. To smooth the seam, we need a better recipe inside the box. Enter the cubic spline. 👉",
+    "crumbs": [
+      "Modelica",
+      "Functions with superpowers"
+    ]
+  },
+  {
+    "objectID": "036-FunctionsWithSuperpowers.html#building-the-cubic-spline",
+    "href": "036-FunctionsWithSuperpowers.html#building-the-cubic-spline",
+    "title": "Functions with superpowers: teaching the tool your smoothness and derivative",
+    "section": "Building the cubic spline",
+    "text": "Building the cubic spline\nWe want a blend that arrives and departs gently — no kinks. The classic tool for this is a cubic Hermite segment: a cubic polynomial pinned by four conditions at the two ends.\nNormalise the transition to a parameter \\(s \\in [0, 1]\\):\n\\[s = \\frac{u - u_0}{u_1 - u_0}\\]\nNow we ask the cubic to satisfy four things — value and slope at each end:\n\nat \\(s = 0\\): value is yA, slope is \\(0\\)\nat \\(s = 1\\): value is yB, slope is \\(0\\)\n\nThose zero slopes are the whole trick: they make the spline join each curve flat, so the seam disappears. The polynomial that does this is built from the smoothstep basis:\n\\[h(s) = 3s^2 - 2s^3\\]\nwhich glides from \\(0\\) to \\(1\\) with zero slope at both ends. The blend is then simply:\n\\[y = y_A + (y_B - y_A)\\,h(s)\\]\nIn a function:\nfunction cubicBlend\n  input Real u;              // transition variable (e.g. time)\n  input Real u0, u1;         // start and end of the transition\n  input Real yA, yB;         // the two values to blend between\n  output Real y;\nprotected\n  Real s;\nalgorithm\n  if u &lt; u0 then\n    y := yA;\n  elseif u &gt; u1 then\n    y := yB;\n  else\n    s := (u - u0) / (u1 - u0);\n    y := yA + (yB - yA) * (3*s^2 - 2*s^3);   // smoothstep\n  end if;\nend cubicBlend;\nSame shape as linearBlend, one line different — but that one line changes everything. The value is continuous, the slope is continuous, and the slope is even zero right at the joins. The seam is gone. ✨\nAnd notice the payoff of having boxed the logic up: the two functions share the exact same signature, so switching the whole model from a ramp to a smooth blend is a one-word edit at the call site — linearBlend becomes cubicBlend, nothing else moves:\ny = cubicBlend(u = T, u0 = 300, u1 = 320, yA = curveA, yB = curveB);\nIf you can already smell where this is going: when two functions agree on their signature like this, you can make the blend a replaceable function and swap the recipe from outside the model — no editing the internals at all. That is exactly the trick from replaceable models, applied to functions. 💡\n\n\n\nLinear ramp vs cubic blend — the kinks disappear\n\n\nThere’s a subtlety worth naming, though. A function is a black box — the tool can’t see inside it to look for zero-crossings or branch boundaries. So it doesn’t track them as events at all. That’s actually the same behaviour as wrapping the whole thing in noEvent(...). 😬\nFor linearBlend, that would have been quietly catastrophic: the kinks are still there, but now they’re invisible to the event machinery. Instead of chattering events, you’d get large error estimates as the solver stumbles across undetected slope jumps — kinks in the derivative are much harder to locate than zero-crossings, because event detection is specifically designed to bracket a crossing, not sniff out a sudden change in slope. (In other words: the chattering from inline if was annoying but at least the tool knew something was happening. A kink inside a function is an ambush. 🪤)\nFor cubicBlend this is less dramatic — the function actually is smooth, so there’s no hidden discontinuity to trip over. But the solver still doesn’t know that. It just sees a black box and proceeds cautiously. To give it real confidence, we have to say so explicitly. That’s what smoothOrder is for. 🔧",
+    "crumbs": [
+      "Modelica",
+      "Functions with superpowers"
+    ]
+  },
+  {
+    "objectID": "036-FunctionsWithSuperpowers.html#smoothorder-promising-continuity",
+    "href": "036-FunctionsWithSuperpowers.html#smoothorder-promising-continuity",
+    "title": "Functions with superpowers: teaching the tool your smoothness and derivative",
+    "section": "smoothOrder: promising continuity",
+    "text": "smoothOrder: promising continuity\nHere’s how we give the solver that confidence. One line of annotation:\nfunction cubicBlend\n  input Real u;\n  input Real u0, u1;\n  input Real yA, yB;\n  output Real y;\nprotected\n  Real s;\nalgorithm\n  ...\n  annotation(smoothOrder = 1);          // 👈 \"trust me, I'm C¹\"\nend cubicBlend;\nsmoothOrder = N is a promise to the compiler: this function is continuously differentiable up to order N with respect to its inputs. For our smoothstep cubic, 1 is honest — the value and the first derivative are continuous, but the second derivative jumps discontinuously at the transition boundaries (where we switch between the three branches).\nWhat does the tool do with that promise?\n\nIt stops treating the branch boundaries as potential events. No more popcorn. 🍿➡️🧈\nIt’s free to differentiate the function symbolically when it needs der(y), and to inline the call during index reduction.\nThe solver can take big, confident steps across the transition instead of tiptoeing.\n\nThat’s the before/after, on the same model:\n\n\n\nSolver steps: jagged with events vs smooth with smoothOrder\n\n\n⚠️ One serious caveat: smoothOrder is a promise the tool believes without checking. If you claim smoothOrder = 2 on a function that actually has a kink, you won’t get an error — you’ll get silently wrong or unstable results. Only promise smoothness you actually have. (This is a cousin of the trap from article 032: the tool trusts your declaration, not reality.)\nSo smoothOrder tells the tool it’s safe to differentiate. And once it knows that, it can use automatic differentiation to work out the derivative expression itself — no ambiguity, no numerical errors.\nBut wait — there’s an older annotation called derivative that does something related, and you’ll see it in old code. Let’s clear that up. 👉",
+    "crumbs": [
+      "Modelica",
+      "Functions with superpowers"
+    ]
+  },
+  {
+    "objectID": "036-FunctionsWithSuperpowers.html#derivative-for-external-functions-and-legacy",
+    "href": "036-FunctionsWithSuperpowers.html#derivative-for-external-functions-and-legacy",
+    "title": "Functions with superpowers: teaching the tool your smoothness and derivative",
+    "section": "derivative: for external functions and legacy",
+    "text": "derivative: for external functions and legacy\nderivative was Modelica’s original way to hand over a derivative function. You write cubicBlend_der that computes the time-derivative:\nfunction cubicBlend\n  input Real u;\n  input Real u0, u1;\n  input Real yA, yB;\n  output Real y;\n\nprotected\n  Real s;\nalgorithm\n  ...\n  annotation(derivative = cubicBlend_der);   // 👈 here's the gradient\nend cubicBlend;\n\nfunction cubicBlend_der\n  input Real u;\n  input Real u0, u1;\n  input Real yA, yB;\n  input Real u_der;                          // derivative of each input, in order...\n  input Real u0_der, u1_der;\n  input Real yA_der, yB_der;\n  output Real y_der;\nprotected\n  Real s;\nalgorithm\n  if u &lt; u0 or u &gt; u1 then\n    y_der := 0;                              // flat outside the transition\n  else\n    s := (u - u0) / (u1 - u0);\n    // d/dt [ yA + (yB - yA)*(3 s^2 - 2 s^3) ], with s a function of u\n    y_der := (yB - yA) * (6*s - 6*s^2) * u_der / (u1 - u0);\n  end if;\nend cubicBlend_der;\nThe rule: take all the original inputs, then append a derivative input for each one, in the same order, and return the derivative of each output.\nWhy would you need this? Two main reasons:\n\nExternal functions. If your function is written in C and the compiler can’t see inside it, automatic differentiation is impossible. derivative is the only way to give it a gradient. 🔧\nLegacy. This annotation predates smoothOrder. Old code has it; new code rarely needs it.\n\nFor your own Modelica functions that are smooth, smoothOrder is now the better way. 👉",
+    "crumbs": [
+      "Modelica",
+      "Functions with superpowers"
+    ]
+  },
+  {
+    "objectID": "036-FunctionsWithSuperpowers.html#the-end-for-today",
+    "href": "036-FunctionsWithSuperpowers.html#the-end-for-today",
+    "title": "Functions with superpowers: teaching the tool your smoothness and derivative",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. smoothOrder and derivative are two of the annotations that turn a plain function into a well-behaved one — but they’re not the only tricks in the box.\nNext time, we’ll meet a couple of their siblings — like telling the tool the inverse of your function, or plugging in code written in C. Same idea: teach the tool what it can’t figure out alone. 🔧\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "Functions with superpowers"
+    ]
+  },
+  {
     "objectID": "034-AlgorithmInModelica.html",
     "href": "034-AlgorithmInModelica.html",
     "title": "Algorithm in Modelica: when equations are not enough",
@@ -2472,6 +2704,336 @@
     "crumbs": [
       "Modelica",
       "Initial vs Boundary Value Problems"
+    ]
+  },
+  {
+    "objectID": "035-EquationVsAlgorithmDuels.html",
+    "href": "035-EquationVsAlgorithmDuels.html",
+    "title": "Equation vs Algorithm: five mini-duels",
+    "section": "",
+    "text": "Equation vs Algorithm — five tiny duels\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nEquations and algorithms are not enemies. But today, I am going to make them fight anyway. 🥊\nFive rounds. Each round, the same small problem steps into the ring, and we solve it both ways. Some rounds equations win in a landslide. Some rounds algorithms walk it. And one round… ends in an honest draw.\n(I promised some examples at the end of article 034 — a promise is a promise. 😉)\n© 2025-2026 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "Equation vs Algorithm: five mini-duels"
+    ]
+  },
+  {
+    "objectID": "035-EquationVsAlgorithmDuels.html#the-ground-rules",
+    "href": "035-EquationVsAlgorithmDuels.html#the-ground-rules",
+    "title": "Equation vs Algorithm: five mini-duels",
+    "section": "The ground rules",
+    "text": "The ground rules\nQuick reminder before the bell rings, in case you skipped the previous article:\n\nequation is for relations that are true — you declare, the tool solves\nalgorithm is for computations done step by step — you assign, in order\n\nThat is the whole scoring system. Now let’s fight.",
+    "crumbs": [
+      "Modelica",
+      "Equation vs Algorithm: five mini-duels"
+    ]
+  },
+  {
+    "objectID": "035-EquationVsAlgorithmDuels.html#round-1-spring-force",
+    "href": "035-EquationVsAlgorithmDuels.html#round-1-spring-force",
+    "title": "Equation vs Algorithm: five mini-duels",
+    "section": "Round 1 — Spring force 🌱",
+    "text": "Round 1 — Spring force 🌱\nA spring: force is stiffness times displacement.\nEquation corner:\nequation\n  F = k * x;\nOne line. A relation. And here is the magic: if the tool knows F, it can find x. If it knows x, it can find F. Same equation, both directions.\nAlgorithm corner:\nalgorithm\n  F := k * x;\nLooks almost identical, right? But that := quietly picked a winner: now F is computed from x, and never the other way around. You just threw away half of what the equation could do.\nVerdict: 🟩 Equation wins. For a physical relation, the acausal version is strictly more useful. (Remember acausality? This is it, in one line.)",
+    "crumbs": [
+      "Modelica",
+      "Equation vs Algorithm: five mini-duels"
+    ]
+  },
+  {
+    "objectID": "035-EquationVsAlgorithmDuels.html#round-2-finding-a-root-by-bisection",
+    "href": "035-EquationVsAlgorithmDuels.html#round-2-finding-a-root-by-bisection",
+    "title": "Equation vs Algorithm: five mini-duels",
+    "section": "Round 2 — Finding a root by bisection 🎯",
+    "text": "Round 2 — Finding a root by bisection 🎯\nNow find where a function crosses zero, f(x) = 0, using a specific recipe: bracket the root between two points, then keep halving the interval until it is small enough.\nEquation corner:\nequation\n  f(x) = 0;\nHonestly? If you just want a solution and f is well-behaved, this is lovely — let the tool solve it. But it does not let you say how to search. There is no single relation that means “halve the bracket until it is tiny.”\nAlgorithm corner:\nalgorithm\n  a := lo;\n  b := hi;                         // f(a) and f(b) must have opposite signs\n  while (b - a) &gt; 1e-9 loop\n    m := 0.5 * (a + b);\n    if f(a) * f(m) &lt;= 0 then\n      b := m;                       // root is in [a, m]\n    else\n      a := m;                       // root is in [m, b]\n    end if;\n  end while;\n  root := 0.5 * (a + b);\nThe order and the repetition are the point. A recipe, not a relation.\nVerdict: 🟦 Algorithm wins — the moment you need a particular numerical procedure, with your own convergence criterion, step-by-step is the only honest way to write it.\n\nAnd there is a subtlety here… I won’t say it now 😅 Just read more and you’ll have it.",
+    "crumbs": [
+      "Modelica",
+      "Equation vs Algorithm: five mini-duels"
+    ]
+  },
+  {
+    "objectID": "035-EquationVsAlgorithmDuels.html#round-3-a-running-total",
+    "href": "035-EquationVsAlgorithmDuels.html#round-3-a-running-total",
+    "title": "Equation vs Algorithm: five mini-duels",
+    "section": "Round 3 — A running total ➕",
+    "text": "Round 3 — A running total ➕\nSum the elements of a vector, but only the ones above a threshold. A little bookkeeping.\nAlgorithm corner:\nfunction sumAbove\n  input Real v[:];\n  input Real threshold;\n  output Real s;\nalgorithm\n  s := 0;\n  for i in 1:size(v, 1) loop\n    if v[i] &gt; threshold then\n      s := s + v[i];               // accumulate\n    end if;\n  end for;\nend sumAbove;\nClear, obvious, and it reads exactly like the sentence I just wrote.\nEquation corner:\nYou could lean on built-ins and array tricks, but the moment the rule gets slightly custom (“skip these, weight those, reset here”), the equation version turns into a puzzle. Accumulation is inherently a sequence of updates.\nVerdict: 🟦 Algorithm wins. Bookkeeping and aggregation are its natural home.",
+    "crumbs": [
+      "Modelica",
+      "Equation vs Algorithm: five mini-duels"
+    ]
+  },
+  {
+    "objectID": "035-EquationVsAlgorithmDuels.html#round-4-a-little-circuit",
+    "href": "035-EquationVsAlgorithmDuels.html#round-4-a-little-circuit",
+    "title": "Equation vs Algorithm: five mini-duels",
+    "section": "Round 4 — A little circuit ⚡",
+    "text": "Round 4 — A little circuit ⚡\nTwo resistors, one shared voltage, currents that must add up. Several unknowns, all tangled together.\nEquation corner:\nequation\n  v = R1 * i1;\n  v = R2 * i2;\n  i = i1 + i2;\nThree relations, three unknowns. Notice I never said which one to solve first. I just stated what is true, and the tool untangles the simultaneous system for me. (Sorting equations for you is one of the compiler’s superpowers 💡.)\nAlgorithm corner:\nalgorithm\n  // first I have to solve the system on paper myself...\n  i1 := v / R1;\n  i2 := v / R2;\n  i  := i1 + i2;\nSee the problem? I had to do the algebra by hand before I could even write the assignments. And if v were the unknown instead of i, I would have to rearrange everything again. And there is another point here: we would not necessarily have to write i = i1 + i2. In an object-oriented model, i could be a connector variable that the tool computes automatically, from the two resistors would be connected in parallel. But in an algorithm, I have to explicitly compute it.\nVerdict: 🟩 Equation wins, decisively. Coupled systems are exactly what the tool loves to solve.",
+    "crumbs": [
+      "Modelica",
+      "Equation vs Algorithm: five mini-duels"
+    ]
+  },
+  {
+    "objectID": "035-EquationVsAlgorithmDuels.html#round-5-saturation-the-honest-draw",
+    "href": "035-EquationVsAlgorithmDuels.html#round-5-saturation-the-honest-draw",
+    "title": "Equation vs Algorithm: five mini-duels",
+    "section": "Round 5 — Saturation (the honest draw) 🌗",
+    "text": "Round 5 — Saturation (the honest draw) 🌗\nClamp a signal between a minimum and a maximum. Simple enough — and this time, both corners look good.\nEquation corner:\nequation\n  y = if u &gt; uMax then uMax\n      elseif u &lt; uMin then uMin\n      else u;\nAlgorithm corner:\nalgorithm\n  if u &gt; uMax then\n    y := uMax;\n  elseif u &lt; uMin then\n    y := uMin;\n  else\n    y := u;\n  end if;\nBoth are perfectly readable. The equation version is compact and declarative. The algorithm version is arguably easier to extend if the logic grows more branchy. Neither one embarrasses itself.\nVerdict: 🤝 Draw. And that is a feature, not a bug — plenty of small logic sits comfortably in either camp. Pick the one your future self will read more easily. It also depends on how much this saturation is intrinsically connected with the rest of your model. (And remember: branchy conditions can create events, whichever style you choose.)\n\n\n\nThe scoreboard — who wins which round and why",
+    "crumbs": [
+      "Modelica",
+      "Equation vs Algorithm: five mini-duels"
+    ]
+  },
+  {
+    "objectID": "035-EquationVsAlgorithmDuels.html#the-scoreboard",
+    "href": "035-EquationVsAlgorithmDuels.html#the-scoreboard",
+    "title": "Equation vs Algorithm: five mini-duels",
+    "section": "The scoreboard",
+    "text": "The scoreboard\n\n\n\n\n\n\n\n\n\nRound\nProblem\nWinner\nWhy\n\n\n\n\n1\nSpring force\n🟩 Equation\nRelation works both directions\n\n\n2\nBisection root\n🟦 Algorithm\nA converging search is a recipe\n\n\n3\nFiltered sum\n🟦 Algorithm\nAccumulation is a sequence\n\n\n4\nLittle circuit\n🟩 Equation\nTool solves the coupled system\n\n\n5\nSaturation\n🤝 Draw\nSmall logic reads fine either way\n\n\n\nAnd here is the one-line heuristic to take home:\n\nIf you are describing what is physically true, reach for equation. If you are describing what to do, in order, reach for algorithm. If you cannot decide — it is probably a draw, so optimize for readability. 😉",
+    "crumbs": [
+      "Modelica",
+      "Equation vs Algorithm: five mini-duels"
+    ]
+  },
+  {
+    "objectID": "035-EquationVsAlgorithmDuels.html#the-subtlety",
+    "href": "035-EquationVsAlgorithmDuels.html#the-subtlety",
+    "title": "Equation vs Algorithm: five mini-duels",
+    "section": "The subtlety",
+    "text": "The subtlety\nI mentioned a subtlety in Round 2, and here it is: not everything has to be part of your model or your code. This bisection example is a numerical method that is most likely very well implemented in the tool you are using. When you write the equation f(x) = 0, the compiler will most likely just call it, and you don’t have to worry about the details.\nSo one could argue that this is not a good example. However, this is actually a point I wanted to make and here was a mean to do it 😅\nAnother point I want to hint towards to is that often algorithms are pieces of code that you might use in several locations. It is a good idea to encapsulate them in a function, so that you can call it from different places. This is also a good way to make your code more readable and maintainable, and to add additional insights on your algorithms - such as smoothness degree, its derivatives, etc. And that is for another time, another article.",
+    "crumbs": [
+      "Modelica",
+      "Equation vs Algorithm: five mini-duels"
+    ]
+  },
+  {
+    "objectID": "035-EquationVsAlgorithmDuels.html#the-end-for-today",
+    "href": "035-EquationVsAlgorithmDuels.html#the-end-for-today",
+    "title": "Equation vs Algorithm: five mini-duels",
+    "section": "The END for today",
+    "text": "The END for today\nFive rounds, and no knockout of one style over the other. That was the point: equation and algorithm are teammates who each shine on different problems. Knowing which is the actual skill.\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "Equation vs Algorithm: five mini-duels"
+    ]
+  },
+  {
+    "objectID": "037-VectorizingComponents.html",
+    "href": "037-VectorizingComponents.html",
+    "title": "One model, fifteen dancers: vectorizing components",
+    "section": "",
+    "text": "One spring-mass model, vectorized into a whole row of tuned oscillators\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nYou’ve seen the video. A row of pendulums — or in our case, springs and balls — released together. For a moment they move as one, then they drift apart into a travelling wave, split into little counter-marching packs, tie themselves in a knot, form (the illusion of) a double-helix… and then, as if nothing happened, snap back into a single line. 🌊\nI wanted that in Modelica. Fifteen little spring-mass channels, each tuned to a slightly different frequency, dancing together. And here’s the question that decides whether your afternoon is pleasant or miserable:\nare you going to build that model fifteen times?\nPlease say no. Today we build it once, then let Modelica make fifteen copies for us — with fifteen different masses — in a single declaration. That trick is called vectorizing components, and once you have it, you’ll reach for it constantly.\nLet’s dig in.\n© 2025-2026 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "One model, fifteen dancers: vectorizing components"
+    ]
+  },
+  {
+    "objectID": "037-VectorizingComponents.html#step-1-build-one-thing-and-build-it-well",
+    "href": "037-VectorizingComponents.html#step-1-build-one-thing-and-build-it-well",
+    "title": "One model, fifteen dancers: vectorizing components",
+    "section": "Step 1 — build one thing, and build it well",
+    "text": "Step 1 — build one thing, and build it well\nBefore you can have many, you need one. So we build a single channel: a spring, a mass, a guide rail to keep it moving vertically. Nothing fancy. Here’s the skeleton of our Oscillator (I’ve trimmed the animation cosmetics):\nmodel Oscillator \"A single vertical spring-mass channel\"\n  import Modelica.Mechanics.MultiBody;\n  import Modelica.Constants.pi;\n\n  parameter Modelica.Units.SI.Mass m = 0.5                    \"Oscillating mass\";\n  parameter Modelica.Units.SI.TranslationalSpringConstant c = 10 \"Spring stiffness\";\n  parameter Modelica.Units.SI.Length springLength = 0.5       \"Rest height\";\n  parameter Modelica.Units.SI.Length amplitude = 0.15         \"Initial lift\";\n  parameter Modelica.Units.SI.Position x = 0                  \"Lateral position\";\n\n  final parameter Modelica.Units.SI.Time T_period = 2*pi*sqrt(m/c)\n    \"Natural period — 2π√(m/c)\";\n\n  MultiBody.Parts.Fixed        anchor(r = {x, 0, 0});\n  MultiBody.Joints.Prismatic   prismatic(n = {0, -1, 0}, ...);\n  MultiBody.Forces.Spring      spring(c = c, s_unstretched = springLength, ...);\n  MultiBody.Parts.Body         ball(m = m, ...);\nequation\n  connect(anchor.frame_b, prismatic.frame_a);\n  connect(prismatic.frame_b, ball.frame_a);\n  connect(anchor.frame_b, spring.frame_a);\n  connect(spring.frame_b, ball.frame_a);\nend Oscillator;\nOpened in System Modeler’s diagram view, those four parts and their connections lay themselves out as one tidy channel — a fixed anchor up top, the prismatic guide, the coil spring, and the ball hanging at the bottom:\n\n\n\nThe Oscillator component in System Modeler’s diagram view — anchor, prismatic guide, spring and ball\n\n\nTwo things I want you to notice, because they’re what make the vectorization work later:\n\nEverything that could differ from each variant is a parameter. The mass m, the stiffness c, the lateral position x, the colours… all knobs on the outside. No magic numbers hiding in the equations.\nThere is no inner World inside. Oscillator is a component, not a top-level experiment. It doesn’t set up gravity or a coordinate origin — it just describes one channel and waits to be dropped into something bigger. (That’s the same “component vs. system” distinction we drew back in model refactoring. 😉)\n\nDesign your one thing so that every difference is a parameter, and future-you gets to be lazy. Which is the whole point.\n\nHey, we never talked about what “inner” means! Well, we won’t discuss it here — it’s a topic for another day. For now, just know that inner/outer is how you share one object with many components.",
+    "crumbs": [
+      "Modelica",
+      "One model, fifteen dancers: vectorizing components"
+    ]
+  },
+  {
+    "objectID": "037-VectorizingComponents.html#step-2-the-copy-paste-trap",
+    "href": "037-VectorizingComponents.html#step-2-the-copy-paste-trap",
+    "title": "One model, fifteen dancers: vectorizing components",
+    "section": "Step 2 — the copy-paste trap",
+    "text": "Step 2 — the copy-paste trap\nNow the naïve instinct. You need fifteen of them, so… you type fifteen of them:\nOscillator oscillator1(m = 0.47, x = 0.00, ballColor = {...});\nOscillator oscillator2(m = 0.49, x = 0.18, ballColor = {...});\nOscillator oscillator3(m = 0.51, x = 0.36, ballColor = {...});\n// ... and so on, until your will to live runs out ...\nOscillator oscillator15(m = 1.01, x = 2.52, ballColor = {...});\nIt works. It’s also fifteen places to make a typo, fifteen lines to touch when you want sixteen channels, and a connect statement graveyard to match. Want to change the stiffness for each spring? Fifteen edits. Want n = 50 for a fancier wave? Enjoy. 🙃\nWhen you find yourself numbering variables foo1, foo2, foo3…, something is wrong… and Modelica is quietly waving at you: there’s an array for that.",
+    "crumbs": [
+      "Modelica",
+      "One model, fifteen dancers: vectorizing components"
+    ]
+  },
+  {
+    "objectID": "037-VectorizingComponents.html#step-3-vectorize-it",
+    "href": "037-VectorizingComponents.html#step-3-vectorize-it",
+    "title": "One model, fifteen dancers: vectorizing components",
+    "section": "Step 3 — vectorize it",
+    "text": "Step 3 — vectorize it\nHere’s the entire graveyard, replaced by one line:\nparameter Integer n = 15 \"Number of oscillators\";\n\nOscillator oscillator[n];\nThat [n] is the whole idea. oscillator is now an array of components — fifteen full Oscillator instances, each with its own spring, ball, joint and equations, all created from one declaration. Change n, and the count changes with it. One number. 🎉\nAnd here’s the lovely part — open the model’s diagram in System Modeler and the whole array is a single icon. That one boxed component (top-right - yes I could have build a better icon… 😅) is all fifteen oscillators. It floats there unconnected because each channel is self-contained; the world, rail and floor on the left are the only shared scenery.\n\n\n\nThe MercuryWave diagram in System Modeler — the single boxed component (top-right) is the array of fifteen oscillators\n\n\nYou reach into the array exactly like you’d expect, with a one-based index:\noscillator[1].prismatic.s     // position of the first channel\noscillator[15].ball.frame_a   // the connector of the last one\nBut an array of identical oscillators just gives you fifteen balls doing the exact same thing — a boring, synchronized bounce. The magic of the mercury wave is that each channel is tuned differently. So how do we hand fifteen different masses to fifteen instances in one go?",
+    "crumbs": [
+      "Modelica",
+      "One model, fifteen dancers: vectorizing components"
+    ]
+  },
+  {
+    "objectID": "037-VectorizingComponents.html#step-4-each-the-one-keyword-that-makes-it-click",
+    "href": "037-VectorizingComponents.html#step-4-each-the-one-keyword-that-makes-it-click",
+    "title": "One model, fifteen dancers: vectorizing components",
+    "section": "Step 4 — each: the one keyword that makes it click",
+    "text": "Step 4 — each: the one keyword that makes it click\nWhen you modify an array of components, every parameter you set has to answer one question: “same for everyone, or one value per instance?”\nModelica makes you say which, and the magic word is each:\nOscillator oscillator[n](\n    m                 = masses,        // ARRAY of n → one mass per channel\n    springLength      = springLengths, // ARRAY of n → one length per channel\n    x                 = x,             // ARRAY of n → one position per channel\n    ballColor         = ballColors,    // ARRAY of n colours → one per channel\n    each c            = c,             // SCALAR → broadcast: same stiffness for all\n    each amplitude    = amplitude,     // SCALAR → same initial lift for all\n    each ballDiameter = ballDiameter); // SCALAR → same size for all\nRead that block slowly, because it’s the heart of the whole technique:\n\neach c = c says “give this one scalar value to every element.” The stiffness is shared, so we broadcast it. Without each, Modelica would expect c to be an array of n values and complain that a scalar doesn’t fit.\nm = masses (no each) says “here’s an array of n values — hand element i to instance i.” Channel 1 gets masses[1], channel 2 gets masses[2], and so on.\n\nSo each = “same for all”, and a plain array = “one apiece”. 💡 That single distinction is what turns a boring row of clones into a tuned instrument. Get it wrong and the compiler tells you immediately — a scalar where it wanted an array, or vice versa — so it’s a friendly mistake to make.\n\n\n\neach broadcasts one scalar to every instance; a plain array feeds one value per instance",
+    "crumbs": [
+      "Modelica",
+      "One model, fifteen dancers: vectorizing components"
+    ]
+  },
+  {
+    "objectID": "037-VectorizingComponents.html#step-5-where-do-the-arrays-come-from",
+    "href": "037-VectorizingComponents.html#step-5-where-do-the-arrays-come-from",
+    "title": "One model, fifteen dancers: vectorizing components",
+    "section": "Step 5 — where do the arrays come from?",
+    "text": "Step 5 — where do the arrays come from?\nAs we mentioned before, masses, x, springLengths… these are arrays of n values, and you can either type them out by hand — it can be needed if the values are not following a pattern… - or instead we compute them, with an array constructor (a little for living inside braces):\nfinal parameter Real cycles[n] = {X + (n - i) for i in 1:n}\n  \"How many oscillations channel i does in the cycle time T\";\n\nfinal parameter Modelica.Units.SI.Mass masses[n] =\n  {c*(T/(2*pi*cycles[i]))^2 for i in 1:n}\n  \"Mass of channel i, inverted from T_i = 2π√(mᵢ/c)\";\n\nfinal parameter Modelica.Units.SI.Position x[n] =\n  {(i - 1)*dx for i in 1:n}\n  \"Lateral position: line them up dx apart\";\nRead {expr for i in 1:n} as “build a list, letting i run from 1 to n.” It’s the same comprehension idea you might know from Python. The physics — heavier balls swing slower, T = 2π√(m/c) — lives in one expression, evaluated n times. Change the tuning law in one place and all fifteen channels follow.\nEven the colours come from a function that returns an n × 3 matrix, so channel i gets its own hue:\nfinal parameter MultiBody.Types.Color ballColors[n] =\n  HarmonicMotion.Utilities.rainbowColors(n);\nAnd why do we see the wave. Here’s an interesting 2D view, the eight of each fifteen balls at a few instants: at t = 0 every ball is released together (flat blue line), and as the tuned frequencies drift apart the row folds into travelling-wave shapes. 🌊\n\n\n\nVertical displacement across the row of balls at t = 0, 3, 6, 9, 12 s — a System Modeler simulation of MercuryWave\n\n\n\nSo each ball position over time is on a vertical line, and the same colour curves are the different balls at the same time.",
+    "crumbs": [
+      "Modelica",
+      "One model, fifteen dancers: vectorizing components"
+    ]
+  },
+  {
+    "objectID": "037-VectorizingComponents.html#step-6-the-tiny-bit-of-plumbing",
+    "href": "037-VectorizingComponents.html#step-6-the-tiny-bit-of-plumbing",
+    "title": "One model, fifteen dancers: vectorizing components",
+    "section": "Step 6 — the tiny bit of plumbing",
+    "text": "Step 6 — the tiny bit of plumbing\nThe last worry people have about vectorized components is connections. If you had to wire an array by hand you’d be back to fifteen connect lines — so Modelica lets you loop over them:\nequation\n  for i in 1:n loop\n    connect(something.port[i], oscillator[i].frame_a);\n  end for;\nIn our mercury wave we actually didn’t use this: each Oscillator carries its own Fixed anchor, so a channel is fully self-contained and needs no external wiring at all. That’s not an accident — it’s a direct payoff of the “build one thing well” rule from Step 1. The cleaner your component, the less plumbing the array needs.",
+    "crumbs": [
+      "Modelica",
+      "One model, fifteen dancers: vectorizing components"
+    ]
+  },
+  {
+    "objectID": "037-VectorizingComponents.html#the-end-for-today",
+    "href": "037-VectorizingComponents.html#the-end-for-today",
+    "title": "One model, fifteen dancers: vectorizing components",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. We built one clean oscillator, stamped out fifteen of them with a single [n], and used each to say what’s shared and what’s unique — no copy-paste, no numbered variables, one knob to rule the count. 😊\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "One model, fifteen dancers: vectorizing components"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html",
+    "href": "039-IdealDiodeSVariable.html",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "",
+    "text": "The L-shaped ideal diode characteristic walked along by the curve parameter s, next to the three Modelica equations that describe it\nI hope you’ve got your preferred drink in hand ☕️🫖💧\nAsk an electronics engineer to draw an ideal diode’s characteristic and you’ll get two straight lines and a shrug. 🤷‍♂️ Reverse biased: no current. Forward biased: no voltage drop. Done. Next question.\nSo you might have thought: two straight lines, in an equation-based language? Easy! 😎\nHere are five attempts. One isn’t quite ideal, one crashes, and two of them run all the way to the end while lying to us. The fifth one is the trick hiding in plain sight inside the Modelica Standard Library (MSL), in a humble auxiliary variable called s.\nLet’s dig in.\n© 2025-2026 Clément Coïc — Licensed under creative commons 4.0. Non-commercial use only.",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html#the-ideal-diode-in-30-seconds",
+    "href": "039-IdealDiodeSVariable.html#the-ideal-diode-in-30-seconds",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "The ideal diode in 30 seconds",
+    "text": "The ideal diode in 30 seconds\nAn ideal diode has two states:\n\noff (blocking): \\(i = 0\\), whatever the (negative) voltage \\(v\\)\non (conducting): \\(v = 0\\), whatever the (positive) current \\(i\\)\n\nPlot \\(i\\) against \\(v\\) and you get a flipped L: a horizontal branch on the negative \\(v\\) axis, a vertical branch on the positive \\(i\\) axis, meeting at the origin.\nNow here is the catch. That L is not a function — in either direction:\n\n\\(i = f(v)\\)? At \\(v = 0\\), \\(i\\) can be anything from 0 to infinity. And negative voltage is not allowed. ❌\n\\(v = g(i)\\)? At \\(i = 0\\), \\(v\\) can be anything from minus infinity to 0. And positive current is not allowed. ❌\n\nYou might remember from acausality that Modelica doesn’t care which side of the equation a variable sits on — the tool decides what to compute from what. That’s great… as long as there is an equation relating \\(v\\) and \\(i\\). Here, the relationship itself refuses to be written as one. 😅",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html#the-test-bench",
+    "href": "039-IdealDiodeSVariable.html#the-test-bench",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "The test bench",
+    "text": "The test bench\nSame circuit for every round: a 10 V, 50 Hz sine source, the diode under test, and a 100 Ω load. If the diode is ideal, the load sees the positive half-waves only, with a current peaking at exactly \\(10/100 = 100\\) mA.\n\n\n\nHalf-wave rectifier test bench: sine source, replaceable diode and 100 Ohm load\n\n\nThe dashed box around the diode? That’s a replaceable component, like the ones we used to pick Christmas gifts 🎁. Each round just redeclares a different diode into the very same circuit:\nmodel Round5_Parametric\n  extends Rectifier(redeclare Diodes.Round5_ParametricDiode diode);\nend Round5_Parametric;\nAll the diodes below extend Modelica.Electrical.Analog.Interfaces.OnePort, which gives them two pins, the voltage v and the current i. Only the equations change.",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html#round-1-the-resistor-in-disguise",
+    "href": "039-IdealDiodeSVariable.html#round-1-the-resistor-in-disguise",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "Round 1 — The resistor in disguise 🥸",
+    "text": "Round 1 — The resistor in disguise 🥸\nLet’s start with what everybody writes first: a switch that is a small resistor when on.\nparameter Modelica.Units.SI.Resistance Ron = 1 \"Resistance when conducting\";\nequation\n  i = if v &gt; 0 then v/Ron else 0;\nResult: it runs! ✅ With Ron = 1 Ω, the peak current is 99 mA instead of 100 mA, and the diode drops about 0.1 V.\nNot bad… but not ideal either. And we want ideal. So let’s shrink Ron.",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html#round-2-just-set-ron-0",
+    "href": "039-IdealDiodeSVariable.html#round-2-just-set-ron-0",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "Round 2 — Just set Ron = 0 💥",
+    "text": "Round 2 — Just set Ron = 0 💥\nSame model, Ron = 0. My tool didn’t even manage the first step:\n\nFailed to take tiny step at start of integration due to error in model equations. Division by zero, (-1) / (diode.Ron) evaluates to: -1 / 0\n\nWell… fair enough. 🙄 Dividing by zero is still illegal, even in 2026.",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html#round-3-stop-dividing-start-switching-by-voltage",
+    "href": "039-IdealDiodeSVariable.html#round-3-stop-dividing-start-switching-by-voltage",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "Round 3 — Stop dividing, start switching (by voltage)",
+    "text": "Round 3 — Stop dividing, start switching (by voltage)\nOK, no more division. Let’s say what we mean with an if-equation: when on, the voltage is zero; when off, the current is zero. And we are on when the voltage is positive.\nBoolean on \"True when conducting\";\nequation\n  on = v &gt; 0;\n  if on then\n    v = 0 \"Closed switch: no voltage drop\";\n  else\n    i = 0 \"Open switch: no current\";\n  end if;\nLooks perfectly reasonable, right? The simulation even finishes… with a few warnings:\n\nMixed block did not converge during event iteration. Exhausted after restarting event iteration 5 times due to changing states in steady event-generating expressions.\n\nAnd then the result: the diode conducts in both directions. During the negative half-waves, it happily pushes −100 mA backwards through the load. Our diode became… a wire. 🤦\nWhat happened? Follow the logic at the first switching event:\n\n\\(v\\) becomes positive → on = true\n“on” means \\(v = 0\\) → so v &gt; 0 is now false → on = false\n“off” means \\(i = 0\\), so \\(v\\) is the source voltage again, positive → on = true\n…and around we go 🔁\n\nThe tool gives up after a few laps, leaves the diode on, and from then on \\(v\\) stays at exactly 0. A relation v &gt; 0 on a variable glued to zero never crosses anything, so no event ever gets triggered again. Stuck on, forever.",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html#round-4-then-switch-by-current",
+    "href": "039-IdealDiodeSVariable.html#round-4-then-switch-by-current",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "Round 4 — Then switch by current!",
+    "text": "Round 4 — Then switch by current!\nFine. If the voltage is useless when on, let’s decide with the current instead:\n  on = i &gt; 0;\n(Everything else identical.)\nResult: no warning. No error. A clean, quiet simulation… in which the diode never conducts. Zero current, the whole time. 😱\nSame story, mirrored: we start off, so \\(i = 0\\). The condition i &gt; 0 looks at a variable that the off-state glues to zero. It can never become true. Stuck off, forever — and this time the tool doesn’t even notice anything suspicious.\nThat one is the scariest of the four, if you ask me. Remember the useful illusion of correctness? A simulation that runs is not a simulation that is right. 😉",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html#the-pattern-behind-the-failures",
+    "href": "039-IdealDiodeSVariable.html#the-pattern-behind-the-failures",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "The pattern behind the failures",
+    "text": "The pattern behind the failures\nRounds 3 and 4 fail for the same reason:\n\n💡 Each state pins to zero exactly the variable you’d need to detect when to leave it.\n\n\nWhen on, \\(v \\equiv 0\\) — so \\(v\\) can’t tell you when to switch off.\nWhen off, \\(i \\equiv 0\\) — so \\(i\\) can’t tell you when to switch on.\n\nWhat we need is one variable that keeps moving in both states. Something that is “the voltage” on one branch of the L and “the current” on the other.",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html#round-5-meet-s",
+    "href": "039-IdealDiodeSVariable.html#round-5-meet-s",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "Round 5 — Meet s 🎉",
+    "text": "Round 5 — Meet s 🎉\nHere it is:\nReal s(start = 0, unit = \"1\") \"Position along the L-shaped characteristic\";\nBoolean off \"True when blocking\";\nequation\n  off = s &lt; 0;\n  v = if off then s*unitVoltage else 0;\n  i = if off then 0 else s*unitCurrent;\nThree lines. No division. No chicken-and-egg. Et voilà. ✅\nThink of s as the kilometre marker along the L. Start at the far left of the horizontal branch and walk towards the corner, then turn and climb the vertical branch:\n\n\\(s &lt; 0\\): you’re on the horizontal branch. Off. \\(s\\) is the voltage, and \\(i = 0\\).\n\\(s = 0\\): you’re standing at the corner.\n\\(s &gt; 0\\): you’re climbing the vertical branch. On. \\(s\\) is the current, and \\(v = 0\\).\n\nMathematicians call this a parametric description of a curve: instead of writing \\(i\\) as a function of \\(v\\) (impossible) or \\(v\\) as a function of \\(i\\) (also impossible), you write both as functions of a third variable. And an L is a perfectly nice function of “how far along the L you are”. 🤓\nWhy does this fix Rounds 3 and 4? Because s never gets glued to zero. When off, s follows the voltage; when on, s follows the current. The switching condition s &lt; 0 always watches a variable that is alive, so the tool can detect the zero-crossing in both directions, like any other event.\n\n\n\nLeft: the operating point of the Round 5 diode walking along the L, red when off, green when on. Right: s over time, negative during the blocking half-waves, positive during the conducting ones\n\n\nTwo small details worth a second look:\n\nunitVoltage and unitCurrent are constants equal to 1 V and 1 A. They do nothing numerically. They are there because s is dimensionless (unit = \"1\"), and v = s would make your unit checker frown — see units and quantities. 📏\noff is a Boolean that only changes at events. It’s a textbook discrete variable, as in our variability hierarchy.\n\nAnd yes, look at the right-hand plot: \\(s\\) goes down to −10 when blocking (volts!) but only up to 0.1 when conducting (amperes!). s doesn’t care. It’s a position, not a physical quantity. 😉\nTime for the scoreboard: the four rounds that made it to the finish line, against the ideal half-wave. 🏁\n\n\n\nDiode current in Rounds 1, 3, 4 and 5 compared with the expected ideal half-wave: Round 1 is slightly low, Round 3 conducts backwards, Round 4 never conducts, Round 5 matches",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html#what-the-msl-actually-does",
+    "href": "039-IdealDiodeSVariable.html#what-the-msl-actually-does",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "What the MSL actually does",
+    "text": "What the MSL actually does\nOpen Modelica.Electrical.Analog.Interfaces.IdealSemiconductor and you’ll find our friend:\nprotected\n  Real s(start=0, final unit=\"1\")\n    \"Auxiliary variable for actual position on the ideal diode characteristic\";\n  /* s = 0: knee point\n     s &lt; 0: below knee point, blocking\n     s &gt; 0: above knee point, conducting */\n  constant SI.Voltage unitVoltage=1 annotation (HideResult=true);\n  constant SI.Current unitCurrent=1 annotation (HideResult=true);\nequation\n  v = (s*unitCurrent)*(if off then 1 else Ron) + Vknee;\n  i = (s*unitVoltage)*(if off then Goff else 1) + Goff*Vknee;\nand Ideal.IdealDiode adds the missing piece: off = s &lt; 0;.\nSame idea as our three lines, plus three parameters:\n\n\n\nParameter\nMeaning\nMSL default\n\n\n\n\nRon\nslope of the “on” branch (tiny resistance)\n1e-5 Ω\n\n\nGoff\nslope of the “off” branch (tiny conductance)\n1e-5 S\n\n\nVknee\nshifts the corner to the right (forward threshold)\n0 V\n\n\n\nWith all three at zero, you get exactly Round 5.\n(Nice design detail: IdealSemiconductor leaves off to its children. The diode says off = s &lt; 0; the thyristors add a firing signal to the logic. Same curve, different “when do I switch” rules.)\nTo make sure I wasn’t fooling myself, I wrote a lossy version of Round 5 and put it next to the MSL diode, with exaggerated losses so the slopes are visible:\n\n\n\nOur parametric diode with losses and the MSL IdealDiode have identical characteristics; their current difference is zero\n\n\nIdentical curves. The difference between the two currents? About \\(10^{-18}\\) A. 🎯\n\n⚠️ Why the MSL isn’t perfectly ideal by default\nNotice the defaults: Ron = Goff = 1e-5, not zero. The MSL documentation says it plainly:\n\n“Note, there are circuits, where this ideal description with zero resistance and zero conductance is not possible. In order to prevent singularities during switching, the opened semiconductor has a small conductance […] and the closed semiconductor has a low resistance […]”\n\nOur resistive test bench is kind enough to accept a perfectly ideal diode. Put an ideal diode directly in series with an inductor, or directly across a capacitor, and “on” or “off” suddenly means forcing a state variable to jump — which no parameterization can fix. A tiny Ron and Goff keep everything solvable, at the cost of being very slightly wrong. The useful illusion of correctness, once again. 😊",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html#where-else-does-s-hide",
+    "href": "039-IdealDiodeSVariable.html#where-else-does-s-hide",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "Where else does s hide?",
+    "text": "Where else does s hide?\nOnce you’ve seen it, you’ll spot it everywhere there is a “kinked” characteristic:\n\n⚡ Ideal thyristors and GTO thyristors — same IdealSemiconductor base, same s.\n🔌 Ideal switches (Ideal.IdealOpeningSwitch, IdealClosingSwitch, …) — same idea, with the control signal deciding the branch.\n⚙️ Friction in Mechanics.Rotational and Mechanics.Translational — look for sa, the “path parameter of the friction characteristic”, combined with a stuck/sliding mode. Stick-slip is the mechanical cousin of our diode. 🤯\n\nThe recipe is always the same:\n\nDraw the characteristic.\nIf it’s not a function in either direction, walk along it with a curve parameter.\nLet the sign (or range) of that parameter tell you which branch you’re on.\n\nAll the models from today (five diodes, the rectifier, and the MSL comparison) are here: DiodeAttempts. Try the rounds yourself — and here’s a small challenge while you’re at it 🧩:\n\nWhat happens in Rounds 3 and 4 if you replace &gt; with &gt;=?\n\nMake a guess before you hit simulate. (Small hint: it doesn’t save them. But one of the two gets a lot further than you’d think… 😏) Then tell me what your tool does — especially if it fails in different ways! 👇",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
+    ]
+  },
+  {
+    "objectID": "039-IdealDiodeSVariable.html#the-end-for-today",
+    "href": "039-IdealDiodeSVariable.html#the-end-for-today",
+    "title": "The diode that couldn’t choose: 5 attempts to meet s",
+    "section": "The END for today",
+    "text": "The END for today\nEnough for today. Next time your model needs a component that “can’t decide” between two behaviours, don’t reach for if v &gt; 0 — reach for a curve parameter, and let it walk. 🚶\nBreak is over, go back to what you were doing.\nClem\nNext -&gt;",
+    "crumbs": [
+      "Modelica",
+      "The diode that couldn't choose: 5 attempts to meet s"
     ]
   },
   {

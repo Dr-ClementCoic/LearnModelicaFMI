@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Equation vs Algorithm: five mini-duels – Modelica &amp; FMI</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7b1b06e26e1e2798ccde3208f86b5bbd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./035-EquationVsAlgorithmDuels.html">Equation vs Algorithm: five mini-duels</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Modelica &amp; FMI</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./001-Commitment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A bit of context</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Modelica</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./002-Modelica101.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Modelica 101</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./003-FirstModel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./004-FirstSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./005-ModelRefactoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Your first Modelica model refactoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./007-AcausalityEquation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acausality, the secret service of Modelica</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./008-AcausalityModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">One model serves several purposes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./009-NeedForDynamicSimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The need for dynamic simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-WhatDynamicSimulationDoes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Dynamic Simulation Does?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./011-LetsIntegrate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Understand your model: let’s integrate!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./012-ReplaceableModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing your Christmas gift!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./013-ConditionalModels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Do you deserve a Christmas present?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./014-ModelVariants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A (technical) summary of model variants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./015-ModelUsage.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The different use of models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./017-BasicCode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The basic structure of Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./018-CodeEnhancement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing our first Modelica code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./020-WhatsInsideAConnector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What’s inside a connector?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./021-StreamConnectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Stream Connectors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./022-Initialization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initialization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./023-BuildingYourLibrary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Building Your Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./024-Annotations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Annotations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./025-Events.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Events</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./028-MultiDomainModeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multi-Domain Modeling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./029-UnitsAndQuantities.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Units &amp; Quantities</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./030-UnitConversionCookbook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Unit Conversion Cookbook</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./032-TheUsefulIllusionOfCorrectness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The useful illusion of correctness</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./033-IVPvsBVP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initial vs Boundary Value Problems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./034-AlgorithmInModelica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Algorithm in Modelica</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./035-EquationVsAlgorithmDuels.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Equation vs Algorithm: five mini-duels</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./036-FunctionsWithSuperpowers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Functions with superpowers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./037-VectorizingComponents.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">One model, fifteen dancers: vectorizing components</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./038-VariabilityIssues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5 quick ways to make your Modelica tool yell at you: demystifying variable variability</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./039-IdealDiodeSVariable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The diode that couldn’t choose: 5 attempts to meet s</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">FMI</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./006-SpreadingWithFMI.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spreading the word with FMI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./016-MEvsCS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Exchange vs Co-Simulation FMUs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./019-fmpySimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating our FMU with FMPy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./026-EventsInFMUs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Events in FMUs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./027-FMICheatSheet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FMI 3.0 &amp; FMPy Cheat Sheet</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./031-UnitsInFMUs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Units in FMUs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-ground-rules" id="toc-the-ground-rules" class="nav-link active" data-scroll-target="#the-ground-rules">The ground rules</a></li>
+  <li><a href="#round-1-spring-force" id="toc-round-1-spring-force" class="nav-link" data-scroll-target="#round-1-spring-force">Round 1 — Spring force 🌱</a></li>
+  <li><a href="#round-2-finding-a-root-by-bisection" id="toc-round-2-finding-a-root-by-bisection" class="nav-link" data-scroll-target="#round-2-finding-a-root-by-bisection">Round 2 — Finding a root by bisection 🎯</a></li>
+  <li><a href="#round-3-a-running-total" id="toc-round-3-a-running-total" class="nav-link" data-scroll-target="#round-3-a-running-total">Round 3 — A running total ➕</a></li>
+  <li><a href="#round-4-a-little-circuit" id="toc-round-4-a-little-circuit" class="nav-link" data-scroll-target="#round-4-a-little-circuit">Round 4 — A little circuit ⚡</a></li>
+  <li><a href="#round-5-saturation-the-honest-draw" id="toc-round-5-saturation-the-honest-draw" class="nav-link" data-scroll-target="#round-5-saturation-the-honest-draw">Round 5 — Saturation (the honest draw) 🌗</a></li>
+  <li><a href="#the-scoreboard" id="toc-the-scoreboard" class="nav-link" data-scroll-target="#the-scoreboard">The scoreboard</a></li>
+  <li><a href="#the-subtlety" id="toc-the-subtlety" class="nav-link" data-scroll-target="#the-subtlety">The subtlety</a></li>
+  <li><a href="#the-end-for-today" id="toc-the-end-for-today" class="nav-link" data-scroll-target="#the-end-for-today">The END for today</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./002-Modelica101.html">Modelica</a></li><li class="breadcrumb-item"><a href="./035-EquationVsAlgorithmDuels.html">Equation vs Algorithm: five mini-duels</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Equation vs Algorithm: five mini-duels</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/035/01_header.svg" class="img-fluid figure-img"></p>
+<figcaption>Equation vs Algorithm — five tiny duels</figcaption>
+</figure>
+</div>
+<p><em>I hope you’ve got your preferred drink in hand</em> ☕️🫖💧</p>
+<p>Equations and algorithms are not enemies. But today, I am going to make them fight anyway. 🥊</p>
+<p>Five rounds. Each round, the same small problem steps into the ring, and we solve it <em>both</em> ways. Some rounds equations win in a landslide. Some rounds algorithms walk it. And one round… ends in an honest draw.</p>
+<p>(I promised some examples at the end of <a href="./034-AlgorithmInModelica.html">article 034</a> — a promise is a promise. 😉)</p>
+<section id="the-ground-rules" class="level2">
+<h2 class="anchored" data-anchor-id="the-ground-rules">The ground rules</h2>
+<p>Quick reminder before the bell rings, in case you skipped <a href="./034-AlgorithmInModelica.html">the previous article</a>:</p>
+<ul>
+<li><code>equation</code> is for <strong>relations that are true</strong> — you declare, the tool solves</li>
+<li><code>algorithm</code> is for <strong>computations done step by step</strong> — you assign, in order</li>
+</ul>
+<p>That is the whole scoring system. Now let’s fight.</p>
+</section>
+<section id="round-1-spring-force" class="level2">
+<h2 class="anchored" data-anchor-id="round-1-spring-force">Round 1 — Spring force 🌱</h2>
+<p>A spring: force is stiffness times displacement.</p>
+<p><strong>Equation corner:</strong></p>
+<pre class="modelica"><code>equation
+  F = k * x;</code></pre>
+<p>One line. A relation. And here is the magic: if the tool knows <code>F</code>, it can find <code>x</code>. If it knows <code>x</code>, it can find <code>F</code>. Same equation, both directions.</p>
+<p><strong>Algorithm corner:</strong></p>
+<pre class="modelica"><code>algorithm
+  F := k * x;</code></pre>
+<p>Looks almost identical, right? But that <code>:=</code> quietly picked a winner: now <code>F</code> is <em>computed from</em> <code>x</code>, and never the other way around. You just threw away half of what the equation could do.</p>
+<p><strong>Verdict:</strong> 🟩 <strong>Equation wins.</strong> For a physical relation, the acausal version is strictly more useful. (Remember <a href="./007-AcausalityEquation.html">acausality</a>? This is it, in one line.)</p>
+</section>
+<section id="round-2-finding-a-root-by-bisection" class="level2">
+<h2 class="anchored" data-anchor-id="round-2-finding-a-root-by-bisection">Round 2 — Finding a root by bisection 🎯</h2>
+<p>Now find where a function crosses zero, <code>f(x) = 0</code>, using a <em>specific</em> recipe: bracket the root between two points, then keep halving the interval until it is small enough.</p>
+<p><strong>Equation corner:</strong></p>
+<pre class="modelica"><code>equation
+  f(x) = 0;</code></pre>
+<p>Honestly? If you just want <em>a</em> solution and <code>f</code> is well-behaved, this is lovely — let the tool solve it. But it does <strong>not</strong> let you say <em>how</em> to search. There is no single relation that means “halve the bracket until it is tiny.”</p>
+<p><strong>Algorithm corner:</strong></p>
+<pre class="modelica"><code>algorithm
+  a := lo;
+  b := hi;                         // f(a) and f(b) must have opposite signs
+  while (b - a) &gt; 1e-9 loop
+    m := 0.5 * (a + b);
+    if f(a) * f(m) &lt;= 0 then
+      b := m;                       // root is in [a, m]
+    else
+      a := m;                       // root is in [m, b]
+    end if;
+  end while;
+  root := 0.5 * (a + b);</code></pre>
+<p>The order and the repetition <em>are</em> the point. A recipe, not a relation.</p>
+<p><strong>Verdict:</strong> 🟦 <strong>Algorithm wins</strong> — the moment you need a particular numerical procedure, with your own convergence criterion, step-by-step is the only honest way to write it.</p>
+<blockquote class="blockquote">
+<p>And there is a subtlety here… I won’t say it now 😅 Just read more and you’ll have it.</p>
+</blockquote>
+</section>
+<section id="round-3-a-running-total" class="level2">
+<h2 class="anchored" data-anchor-id="round-3-a-running-total">Round 3 — A running total ➕</h2>
+<p>Sum the elements of a vector, but only the ones above a threshold. A little bookkeeping.</p>
+<p><strong>Algorithm corner:</strong></p>
+<pre class="modelica"><code>function sumAbove
+  input Real v[:];
+  input Real threshold;
+  output Real s;
+algorithm
+  s := 0;
+  for i in 1:size(v, 1) loop
+    if v[i] &gt; threshold then
+      s := s + v[i];               // accumulate
+    end if;
+  end for;
+end sumAbove;</code></pre>
+<p>Clear, obvious, and it reads exactly like the sentence I just wrote.</p>
+<p><strong>Equation corner:</strong></p>
+<p>You <em>could</em> lean on built-ins and array tricks, but the moment the rule gets slightly custom (“skip these, weight those, reset here”), the equation version turns into a puzzle. Accumulation is inherently a <em>sequence</em> of updates.</p>
+<p><strong>Verdict:</strong> 🟦 <strong>Algorithm wins.</strong> Bookkeeping and aggregation are its natural home.</p>
+</section>
+<section id="round-4-a-little-circuit" class="level2">
+<h2 class="anchored" data-anchor-id="round-4-a-little-circuit">Round 4 — A little circuit ⚡</h2>
+<p>Two resistors, one shared voltage, currents that must add up. Several unknowns, all tangled together.</p>
+<p><strong>Equation corner:</strong></p>
+<pre class="modelica"><code>equation
+  v = R1 * i1;
+  v = R2 * i2;
+  i = i1 + i2;</code></pre>
+<p>Three relations, three unknowns. Notice I never said which one to solve first. I just stated what is <em>true</em>, and the tool untangles the simultaneous system for me. (Sorting equations for you is one of the compiler’s superpowers 💡.)</p>
+<p><strong>Algorithm corner:</strong></p>
+<pre class="modelica"><code>algorithm
+  // first I have to solve the system on paper myself...
+  i1 := v / R1;
+  i2 := v / R2;
+  i  := i1 + i2;</code></pre>
+<p>See the problem? I had to do the algebra <em>by hand</em> before I could even write the assignments. And if <code>v</code> were the unknown instead of <code>i</code>, I would have to rearrange everything again. And there is another point here: we would not necessarily have to write <code>i = i1 + i2</code>. In an object-oriented model, <code>i</code> could be a connector variable that the tool computes automatically, from the two resistors would be connected in parallel. But in an algorithm, I have to explicitly compute it.</p>
+<p><strong>Verdict:</strong> 🟩 <strong>Equation wins</strong>, decisively. Coupled systems are exactly what the tool loves to solve.</p>
+</section>
+<section id="round-5-saturation-the-honest-draw" class="level2">
+<h2 class="anchored" data-anchor-id="round-5-saturation-the-honest-draw">Round 5 — Saturation (the honest draw) 🌗</h2>
+<p>Clamp a signal between a minimum and a maximum. Simple enough — and this time, both corners look good.</p>
+<p><strong>Equation corner:</strong></p>
+<pre class="modelica"><code>equation
+  y = if u &gt; uMax then uMax
+      elseif u &lt; uMin then uMin
+      else u;</code></pre>
+<p><strong>Algorithm corner:</strong></p>
+<pre class="modelica"><code>algorithm
+  if u &gt; uMax then
+    y := uMax;
+  elseif u &lt; uMin then
+    y := uMin;
+  else
+    y := u;
+  end if;</code></pre>
+<p>Both are perfectly readable. The equation version is compact and declarative. The algorithm version is arguably easier to extend if the logic grows more branchy. Neither one embarrasses itself.</p>
+<p><strong>Verdict:</strong> 🤝 <strong>Draw.</strong> And that is a feature, not a bug — plenty of small logic sits comfortably in either camp. Pick the one your future self will read more easily. It also depends on how much this saturation is intrinsically connected with the rest of your model. (And remember: branchy conditions can create <a href="./025-Events.html">events</a>, whichever style you choose.)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/images/035/02_scoreboard.svg" class="img-fluid figure-img"></p>
+<figcaption>The scoreboard — who wins which round and why</figcaption>
+</figure>
+</div>
+</section>
+<section id="the-scoreboard" class="level2">
+<h2 class="anchored" data-anchor-id="the-scoreboard">The scoreboard</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 43%">
+<col style="width: 30%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Round</th>
+<th>Problem</th>
+<th>Winner</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td>Spring force</td>
+<td>🟩 Equation</td>
+<td>Relation works both directions</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td>Bisection root</td>
+<td>🟦 Algorithm</td>
+<td>A converging search is a recipe</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td>Filtered sum</td>
+<td>🟦 Algorithm</td>
+<td>Accumulation is a sequence</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td>Little circuit</td>
+<td>🟩 Equation</td>
+<td>Tool solves the coupled system</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td>Saturation</td>
+<td>🤝 Draw</td>
+<td>Small logic reads fine either way</td>
+</tr>
+</tbody>
+</table>
+<p>And here is the one-line heuristic to take home:</p>
+<blockquote class="blockquote">
+<p>If you are describing <strong>what is physically true</strong>, reach for <code>equation</code>. If you are describing <strong>what to do, in order</strong>, reach for <code>algorithm</code>. If you cannot decide — it is probably a draw, so optimize for readability. 😉</p>
+</blockquote>
+</section>
+<section id="the-subtlety" class="level2">
+<h2 class="anchored" data-anchor-id="the-subtlety">The subtlety</h2>
+<p>I mentioned a subtlety in Round 2, and here it is: not everything has to be part of your model or your code. This bisection example is a <em>numerical method</em> that is most likely very well implemented in the tool you are using. When you write the equation <code>f(x) = 0</code>, the compiler will most likely just call it, and you don’t have to worry about the details.</p>
+<p>So one could argue that this is not a good example. However, this is actually a point I wanted to make and here was a mean to do it 😅</p>
+<p>Another point I want to hint towards to is that often algorithms are pieces of code that you might use in several locations. It is a good idea to encapsulate them in a function, so that you can call it from different places. This is also a good way to make your code more readable and maintainable, and to add additional insights on your algorithms - such as smoothness degree, its derivatives, etc. And that is for another time, another article.</p>
+</section>
+<section id="the-end-for-today" class="level2">
+<h2 class="anchored" data-anchor-id="the-end-for-today">The END for today</h2>
+<p>Five rounds, and no knockout of one style over the other. That was the point: <code>equation</code> and <code>algorithm</code> are teammates who each shine on different problems. Knowing <em>which</em> is the actual skill.</p>
+<p><em>Break is over, go back to what you were doing.</em></p>
+<p>Clem</p>
+<p><a href="./036-FunctionsWithSuperpowers.html">Next</a> -&gt;</p>
+
+
+</section>
+
+<p>© 2025-2026 Clément Coïc — Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">creative commons 4.0</a>. Non-commercial use only.</p></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

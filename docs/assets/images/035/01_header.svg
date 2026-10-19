@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Equation vs Algorithm — five mini-duels</title>
+  <desc id="desc">An energetic boxing-ring header where a glowing equation corner clashes with a glowing algorithm corner in a burst of impact, framed by five round markers, illustrating that each style wins on different problems.</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#2c5364"/>
+      <stop offset="55%" stop-color="#203a43"/>
+      <stop offset="100%" stop-color="#0b171c"/>
+    </radialGradient>
+    <radialGradient id="spot" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="greenOrb" cx="38%" cy="34%" r="72%">
+      <stop offset="0%" stop-color="#c4f5d4"/>
+      <stop offset="45%" stop-color="#5fd598"/>
+      <stop offset="100%" stop-color="#2a9d68"/>
+    </radialGradient>
+    <radialGradient id="blueOrb" cx="38%" cy="34%" r="72%">
+      <stop offset="0%" stop-color="#cfeeff"/>
+      <stop offset="45%" stop-color="#5fb2ec"/>
+      <stop offset="100%" stop-color="#2a72c0"/>
+    </radialGradient>
+    <radialGradient id="burst" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff3c4"/>
+      <stop offset="55%" stop-color="#ffd166"/>
+      <stop offset="100%" stop-color="#f4a259"/>
+    </radialGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="12" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softText" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#spot)"/>
+
+  <!-- Energy rays radiating from the clash -->
+  <g stroke-linecap="round" opacity="0.5">
+    <g stroke="#ffd166" stroke-width="6">
+      <line x1="600" y1="330" x2="600" y2="150"/>
+      <line x1="600" y1="330" x2="405" y2="205"/>
+      <line x1="600" y1="330" x2="795" y2="205"/>
+      <line x1="600" y1="330" x2="360" y2="360"/>
+      <line x1="600" y1="330" x2="840" y2="360"/>
+      <line x1="600" y1="330" x2="470" y2="500"/>
+      <line x1="600" y1="330" x2="730" y2="500"/>
+    </g>
+  </g>
+  <g stroke="#7fd9ff" stroke-width="3" opacity="0.35" stroke-linecap="round">
+    <line x1="600" y1="330" x2="505" y2="170"/>
+    <line x1="600" y1="330" x2="695" y2="170"/>
+    <line x1="600" y1="330" x2="410" y2="450"/>
+    <line x1="600" y1="330" x2="790" y2="450"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="82" text-anchor="middle" font-family="Georgia, serif" font-size="52" fill="#ffffff" font-weight="bold" filter="url(#softText)">Equation <tspan fill="#ffd166">vs</tspan> Algorithm</text>
+  <text x="600" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="27" fill="#bfe3ef" letter-spacing="3">FIVE MINI-DUELS</text>
+
+  <!-- Left corner: equation -->
+  <g filter="url(#glow)">
+    <circle cx="235" cy="345" r="102" fill="url(#greenOrb)"/>
+  </g>
+  <circle cx="235" cy="345" r="102" fill="none" stroke="#eafff2" stroke-width="2" opacity="0.6"/>
+  <text x="235" y="332" text-anchor="middle" font-family="Courier New, monospace" font-size="30" fill="#0e3a22" font-weight="bold">F = k·x</text>
+  <text x="235" y="372" text-anchor="middle" font-family="Georgia, serif" font-size="23" fill="#0e3a22" font-style="italic">equation</text>
+  <text x="235" y="500" text-anchor="middle" font-family="Georgia, serif" font-size="23" fill="#bdeccb">relations that are true</text>
+
+  <!-- Right corner: algorithm -->
+  <g filter="url(#glow)">
+    <circle cx="965" cy="345" r="102" fill="url(#blueOrb)"/>
+  </g>
+  <circle cx="965" cy="345" r="102" fill="none" stroke="#eaf7ff" stroke-width="2" opacity="0.6"/>
+  <text x="965" y="326" text-anchor="middle" font-family="Courier New, monospace" font-size="25" fill="#0c2c48" font-weight="bold">for i loop</text>
+  <text x="965" y="356" text-anchor="middle" font-family="Courier New, monospace" font-size="25" fill="#0c2c48" font-weight="bold">x := …</text>
+  <text x="965" y="392" text-anchor="middle" font-family="Georgia, serif" font-size="23" fill="#0c2c48" font-style="italic">algorithm</text>
+  <text x="965" y="500" text-anchor="middle" font-family="Georgia, serif" font-size="23" fill="#bfe4f5">steps, done in order</text>
+
+  <!-- Central impact burst -->
+  <g filter="url(#glow)">
+    <path fill="url(#burst)" d="M600 235
+      l22 55 55-22 -30 52 60 12 -55 28 42 45 -60 -8 8 61 -42 -45 -42 45 8 -61 -60 8 42 -45 -55 -28 60 -12 -30 -52 55 22z"/>
+  </g>
+  <circle cx="600" cy="330" r="62" fill="#7a3b00" opacity="0.15"/>
+  <text x="600" y="322" text-anchor="middle" font-family="Georgia, serif" font-size="40" fill="#7a3b00" font-weight="bold">VS</text>
+  <text x="600" y="366" text-anchor="middle" font-size="34">🥊</text>
+
+  <!-- Scorecard strip -->
+  <g font-family="Georgia, serif" font-size="23" fill="#21323a" text-anchor="middle">
+    <rect x="452" y="560" width="296" height="46" rx="23" fill="#0e2129" opacity="0.55"/>
+    <circle cx="490" cy="583" r="18" fill="#5fd598"/><text x="490" y="591">1</text>
+    <circle cx="545" cy="583" r="18" fill="#5fb2ec"/><text x="545" y="591">2</text>
+    <circle cx="600" cy="583" r="18" fill="#5fb2ec"/><text x="600" y="591">3</text>
+    <circle cx="655" cy="583" r="18" fill="#5fd598"/><text x="655" y="591">4</text>
+    <circle cx="710" cy="583" r="18" fill="#ffd166"/><text x="710" y="591">5</text>
+  </g>
+</svg>
